@@ -12,10 +12,6 @@ mv ~/.claude ~/.claude.bak
 git clone https://github.com/feiskyer/claude-code-settings.git ~/.claude
 ```
 
-## Guidances
-
-- [Claude Code with Github Copilot as Model Provider](guidances/github-copilot.md)
-
 ## NOTICES
 
 The default config uses Github Copilot as Claude Code model provider and require the Copilot API proxy [copilot-api](https://github.com/ericc-ch/copilot-api) running. You can install the copilot-api by running:
@@ -26,13 +22,12 @@ npm install -g copilot-api
 
 Then run `copilot-api start` and follow the outputs to authorize your github copilot account.
 
-After that, start a new terminal and then you can use claude at any projects. For convenience, you can use tmux to manage terminal sessions, e.g.
+After that, start a new terminal and then you can use claude at any projects.
+
+For convenience, you can use tmux to manage terminal sessions, e.g.
 
 ```sh
-# Option 1: start in foreground (so you can see its logs)
-tmux new-session -s copilot 'copilot-api start'
-
-# Option 2: Run in background (only use when you have already authorized)
+# Run copilot-api in background
 tmux new-session -d -s copilot 'copilot-api start'
 ```
 
@@ -57,6 +52,7 @@ Located in `commands/eureka.md`, this command captures technical breakthroughs a
 **Usage:** `/eureka <breakthrough description>`
 
 **Examples:**
+
 - `/eureka "Solved the race condition in user sync"`
 - `/eureka "Optimized database queries from 3s to 50ms using connection pooling"`
 
@@ -180,6 +176,10 @@ Located in `commands/cc/create-command.md`, this command creates new Claude Code
 **Usage:** `/cc:create-command <command-name> [description]`
 
 </details>
+
+## Guidances
+
+- [Claude Code with Github Copilot as Model Provider](guidances/github-copilot.md)
 
 ## LICENSE
 
