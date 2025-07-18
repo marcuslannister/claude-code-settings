@@ -1,6 +1,6 @@
 ---
 description: Review GitHub pull request with detailed code analysis
-argument-hint: <pr-number>
+argument-hint: [pr-number]
 allowed-tools: Write, Read, LS, Glob, Grep, Bash(gh:*), Bash(git:*)
 ---
 
@@ -46,12 +46,12 @@ gh pr diff 78
 # review comments should be posted to the changed file
 gh api repos/OWNER/REPO/pulls/PR_NUMBER/comments \
     --method POST \
-    --field body="<your-comment>" \
-    --field commit_id="<commit-id>" \
+    --field body="[your-comment]" \
+    --field commit_id="[commitID]" \
     --field path="path/to/file" \
     --field line=lineNumber \
     --field side="RIGHT"
 
-# sample command to fetch commit-id
+# sample command to fetch commitID
 gh api repos/OWNER/REPO/pulls/PR_NUMBER --jq '.head.sha'
 ```

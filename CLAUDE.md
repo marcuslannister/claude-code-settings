@@ -30,7 +30,7 @@ All command files must include YAML frontmatter with required metadata:
 ```yaml
 ---
 description: Brief description of the command
-argument-hint: <expected arguments format>
+argument-hint: [expected arguments format]
 allowed-tools: List of tools the command can use
 ---
 ```
@@ -38,7 +38,7 @@ allowed-tools: List of tools the command can use
 **Required fields:**
 
 - `description`: Clear, concise description of command purpose
-- `argument-hint`: Format showing expected arguments (e.g., `<problem or question>`)
+- `argument-hint`: Format showing expected arguments (e.g., `[problem or question]`)
 - `allowed-tools`: Comma-separated list of tools (e.g., `Read, Edit, Write, Bash(*)`)
 
 ### Command Documentation

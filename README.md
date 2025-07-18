@@ -49,7 +49,7 @@ Located in `commands/eureka.md`, this command captures technical breakthroughs a
 - Extracts reusable patterns for future reference
 - Integrates with project documentation (README, CHANGELOG)
 
-**Usage:** `/eureka <breakthrough description>`
+**Usage:** `/eureka [breakthrough description]`
 
 **Examples:**
 
@@ -101,7 +101,7 @@ Located in `commands/reflection-harder.md`, this command provides deep analysis 
 
 Located in `commands/think-harder.md`, this command activates enhanced analytical thinking for complex problems requiring deep, multi-faceted analysis.
 
-**Usage:** `/think-harder <problem or question>`
+**Usage:** `/think-harder [problem or question]`
 
 </details>
 
@@ -112,7 +112,7 @@ Located in `commands/think-harder.md`, this command activates enhanced analytica
 
 Located in `commands/think-ultra.md`, this command activates maximum cognitive processing for ultra-comprehensive analysis of the most complex problems.
 
-**Usage:** `/think-ultra <complex problem or question>`
+**Usage:** `/think-ultra [complex problem or question]`
 
 </details>
 
@@ -154,7 +154,7 @@ Located in `commands/gh/fix-issue.md`, this command provides comprehensive GitHu
 - Ensures full test suite passes
 - Opens pull request for review
 
-**Usage:** `/gh:fix-issue <issue-number>`
+**Usage:** `/gh:fix-issue [issue-number]`
 
 </details>
 
@@ -173,7 +173,7 @@ Located in `commands/cc/create-command.md`, this command creates new Claude Code
 - Validates command syntax and functionality
 - Supports both project-level and user-level commands
 
-**Usage:** `/cc:create-command <command-name> [description]`
+**Usage:** `/cc:create-command [command-name] [description]`
 
 </details>
 
