@@ -15,7 +15,7 @@ git clone https://github.com/feiskyer/claude-code-settings.git ~/.claude
 npm install -g copilot-api
 
 # Authorize your GitHub Copilot account
-copilot-api start
+copilot-api auth
 
 # For convenience, run copilot-api in background with tmux
 tmux new-session -d -s copilot 'copilot-api start'
@@ -41,6 +41,7 @@ tmux new-session -d -s copilot 'copilot-api start'
 - `/think-ultra [complex problem]` - Ultra-comprehensive analysis
 - `/reflection` - Analyze and improve Claude Code instructions
 - `/reflection-harder` - Comprehensive session analysis and learning
+- `/eureka [breakthrough]` - Document technical breakthroughs
 
 ### GitHub Integration
 
@@ -49,7 +50,6 @@ tmux new-session -d -s copilot 'copilot-api start'
 
 ### Documentation & Knowledge
 
-- `/eureka [breakthrough]` - Document technical breakthroughs
 - `/cc:create-command [name] [description]` - Create new Claude Code commands
 
 ## Guidances
