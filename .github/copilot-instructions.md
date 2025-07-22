@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code and Github Copilot when working with code in this repository.
 
 ## Environment Setup
 
@@ -93,4 +93,4 @@ When creating or modifying command prompts:
 
 ## Guidances
 
-Claude Code guidances should be put under `guidance` directory and linked at README.md.
+Claude Code guidances should be put under `guidances/` directory and linked at README.md.
