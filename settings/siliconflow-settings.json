@@ -1,0 +1,10 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.siliconflow.cn/",
+    "ANTHROPIC_API_KEY": "<your-siliconflow-api-key>",
+    "ANTHROPIC_MODEL": "moonshotai/Kimi-K2-Instruct",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
+    "DISABLE_TELEMETRY": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  }
+}
