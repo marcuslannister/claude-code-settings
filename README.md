@@ -55,6 +55,7 @@ tmux new-session -d -s copilot 'copilot-api start'
 ## Guidances
 
 - [Claude Code with Github Copilot as Model Provider](guidances/github-copilot.md)
+- [Claude Code with LLM Gateway (LiteLLM) as Model Provider](guidances/llm-gateway-litellm.md)
 
 ## LICENSE
 

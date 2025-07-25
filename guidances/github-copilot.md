@@ -1,6 +1,6 @@
 # Claude Code with Github Copilot as Model Provider
 
-Guidance for how to connect Github Copilot as model provider for Claude Code.
+Guidance for how to connect [Github Copilot](https://github.com/features/copilot) as model provider for Claude Code.
 
 > NOTICE: calling Github Copilot is not against its policy as this is officially supported per doc [here](https://docs.github.com/en/copilot/how-tos/build-copilot-extensions/building-a-copilot-agent-for-your-copilot-extension/using-copilots-llm-for-your-agent). And actually, there are lots of AI tools (e.g. Aider and Cline VSCode extension) already support Github Copilot as one of the LLM providers.
 
