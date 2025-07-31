@@ -52,6 +52,30 @@ tmux new-session -d -s copilot 'copilot-api start'
 
 - `/cc:create-command [name] [description]` - Create new Claude Code commands
 
+## Agents
+
+The `agents/` directory contains specialized AI [subagents](https://docs.anthropic.com/en/docs/claude-code/sub-agents) that extend Claude Code's capabilities.
+
+<details>
+<summary>Available Agents</summary>
+
+- **pr-reviewer** - Expert code reviewer for GitHub pull requests
+- **github-issue-fixer** - GitHub issue resolution specialist
+- **instruction-reflector** - Analyzes and improves Claude Code instructions
+- **deep-reflector** - Comprehensive session analysis and learning capture
+- **insight-documenter** - Technical breakthrough documentation specialist
+- **kiro-assistant** - Quick development assistance with Kiro's approach
+- **kiro-feature-designer** - Creates comprehensive feature design documents
+- **kiro-spec-creator** - Creates complete feature specifications
+- **kiro-task-executor** - Executes specific tasks from feature specs
+- **kiro-task-planner** - Generates implementation task lists
+- **ui-engineer** - UI/UX development specialist
+- **deep-thinker** - Enhanced analytical thinking for complex problems
+- **ultra-thinker** - Ultra-comprehensive analytical thinking
+- **command-creator** - Expert at creating new Claude Code custom commands
+
+</details>
+
 ## Settings
 
 [Sample Settings](settings/README.md) - Pre-configured settings for various model providers and setups.
