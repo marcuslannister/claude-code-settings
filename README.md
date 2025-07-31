@@ -52,6 +52,35 @@ tmux new-session -d -s copilot 'copilot-api start'
 
 - `/cc:create-command [name] [description]` - Create new Claude Code commands
 
+## Settings
+
+[Sample Settings](settings/README.md) - Pre-configured settings for various model providers and setups.
+
+<details>
+<summary>Available Settings</summary>
+
+#### [copilot-settings.json](settings/copilot-settings.json)
+
+Using Claude Code with GitHub Copilot proxy. Points to localhost:4141 for the Anthropic API base URL.
+
+#### [litellm-settings.json](settings/litellm-settings.json)
+
+Using Claude Code with LiteLLM gateway. Points to localhost:4000 for the Anthropic API base URL.
+
+#### [qwen-settings.json](settings/qwen-settings.json)
+
+Using Claude Code with Qwen models via Alibaba's DashScope API. Uses the Qwen3-Coder-Plus model through a claude-code-proxy.
+
+#### [siliconflow-settings.json](settings/siliconflow-settings.json)
+
+Using Claude Code with SiliconFlow API. Uses the Moonshot AI Kimi-K2-Instruct model.
+
+#### [vertex-settings.json](settings/vertex-settings.json)
+
+Using Claude Code with Google Cloud Vertex AI. Uses Claude Opus 4 model with Google Cloud project settings.
+
+</details>
+
 ## Guidances
 
 - [Claude Code with Github Copilot as Model Provider](guidances/github-copilot.md)
