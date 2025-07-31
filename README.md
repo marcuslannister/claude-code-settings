@@ -83,8 +83,14 @@ Using Claude Code with Google Cloud Vertex AI. Uses Claude Opus 4 model with Goo
 
 ## Guidances
 
-- [Claude Code with Github Copilot as Model Provider](guidances/github-copilot.md)
-- [Claude Code with LLM Gateway (LiteLLM) as Model Provider](guidances/llm-gateway-litellm.md)
+- [Claude Code with Github Copilot as Model Provider](guidances/github-copilot.md).
+- [Claude Code with LLM Gateway (LiteLLM) as Model Provider](guidances/llm-gateway-litellm.md).
+
+## References
+
+- [Claude Code official document](https://docs.anthropic.com/en/docs/claude-code/overview) - must read official document.
+- [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) - curated list of slash-commands, CLAUDE.md files, CLI tools, and other resources.
+- [wshobson/agents](https://github.com/wshobson/agents) - comprehensive collection of specialized AI subagents for Claude Code.
 
 ## LICENSE
 
