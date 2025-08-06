@@ -1,6 +1,6 @@
 # Claude Code Settings and Commands for Vibe Coding
 
-A curated collection of Claude Code configurations and custom commands designed for enhanced development workflows. This setup includes specialized commands for feature development (Kiro workflow), code analysis, GitHub integration, and knowledge management.
+A curated collection of Claude Code settings, custom commands and sub-agents designed for enhanced development workflows. This setup includes specialized commands and sub-agents for feature development (Kiro workflow), code analysis, GitHub integration, and knowledge management.
 
 ## Setup
 
@@ -104,6 +104,10 @@ Using Claude Code with SiliconFlow API. Uses the Moonshot AI Kimi-K2-Instruct mo
 Using Claude Code with Google Cloud Vertex AI. Uses Claude Opus 4 model with Google Cloud project settings.
 
 </details>
+
+## Limitations
+
+**WebSearch** tool in Claude Code is an [Anthropic specific tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool) and it is not available when you’re not using the official Anthropic API. Hence, if you need web search, you’d need to connect Claude Code with extertnal web search MCP servers, e.g. [Tavily MCP](https://docs.tavily.com/documentation/mcp), [Brave MCP](https://github.com/brave/brave-search-mcp-server), [Firecrawl MCP](https://docs.firecrawl.dev/mcp-server) or [DuckDuckGo Search MCP](https://github.com/nickclyde/duckduckgo-mcp-server).
 
 ## Guidances
 
