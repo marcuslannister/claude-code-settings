@@ -89,6 +89,10 @@ Using Claude Code with GitHub Copilot proxy. Points to localhost:4141 for the An
 
 Using Claude Code with LiteLLM gateway. Points to localhost:4000 for the Anthropic API base URL.
 
+### [deepseek-settings.json](settings/deepseek-settings.json)
+
+Using Claude Code with DeepSeek v3.1 (via DeepSeek's official Anthropic-compatible API).
+
 #### [qwen-settings.json](settings/qwen-settings.json)
 
 Using Claude Code with Qwen models via Alibaba's DashScope API. Uses the Qwen3-Coder-Plus model through a claude-code-proxy.
