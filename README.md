@@ -70,8 +70,6 @@ The `agents/` directory contains specialized AI [subagents](https://docs.anthrop
 - **kiro-task-executor** - Executes specific tasks from feature specs
 - **kiro-task-planner** - Generates implementation task lists
 - **ui-engineer** - UI/UX development specialist
-- **deep-thinker** - Enhanced analytical thinking for complex problems
-- **ultra-thinker** - Ultra-comprehensive analytical thinking
 - **command-creator** - Expert at creating new Claude Code custom commands
 
 </details>
