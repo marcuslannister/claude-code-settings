@@ -21,7 +21,13 @@ copilot-api auth
 tmux new-session -d -s copilot 'copilot-api start'
 ```
 
-> **Note:** This configuration uses GitHub Copilot as the Claude Code model provider through the [copilot-api](https://github.com/ericc-ch/copilot-api) proxy.
+**Note:**
+
+- This configuration uses GitHub Copilot as the Claude Code model provider through the [copilot-api](https://github.com/ericc-ch/copilot-api) proxy.
+- Make sure the following models are available in your account; if not, replace them with your own model names:
+  - ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4
+  - ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4
+  - ANTHROPIC_SMALL_FAST_MODEL: gpt-5-mini
 
 ## Commands
 
@@ -81,11 +87,11 @@ The `agents/` directory contains specialized AI [subagents](https://docs.anthrop
 <details>
 <summary>Available Settings</summary>
 
-#### [copilot-settings.json](settings/copilot-settings.json)
+### [copilot-settings.json](settings/copilot-settings.json)
 
 Using Claude Code with GitHub Copilot proxy. Points to localhost:4141 for the Anthropic API base URL.
 
-#### [litellm-settings.json](settings/litellm-settings.json)
+### [litellm-settings.json](settings/litellm-settings.json)
 
 Using Claude Code with LiteLLM gateway. Points to localhost:4000 for the Anthropic API base URL.
 
@@ -93,15 +99,15 @@ Using Claude Code with LiteLLM gateway. Points to localhost:4000 for the Anthrop
 
 Using Claude Code with DeepSeek v3.1 (via DeepSeek's official Anthropic-compatible API).
 
-#### [qwen-settings.json](settings/qwen-settings.json)
+### [qwen-settings.json](settings/qwen-settings.json)
 
 Using Claude Code with Qwen models via Alibaba's DashScope API. Uses the Qwen3-Coder-Plus model through a claude-code-proxy.
 
-#### [siliconflow-settings.json](settings/siliconflow-settings.json)
+### [siliconflow-settings.json](settings/siliconflow-settings.json)
 
 Using Claude Code with SiliconFlow API. Uses the Moonshot AI Kimi-K2-Instruct model.
 
-#### [vertex-settings.json](settings/vertex-settings.json)
+### [vertex-settings.json](settings/vertex-settings.json)
 
 Using Claude Code with Google Cloud Vertex AI. Uses Claude Opus 4 model with Google Cloud project settings.
 

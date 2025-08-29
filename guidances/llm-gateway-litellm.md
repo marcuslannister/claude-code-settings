@@ -16,7 +16,7 @@ pip install -U 'litellm[proxy]'
 Create a LiteLLM config file `litellm_config.yaml` with Github Copilot as the examples:
 
 ```yaml
-general_settings: 
+general_settings:
   master_key: dummy
 litellm_settings:
   drop_params: true
@@ -87,7 +87,7 @@ Open the link, login and authenticate your Github Copilot account.
     "ANTHROPIC_BASE_URL": "http://localhost:4000",
     "ANTHROPIC_AUTH_TOKEN": "dummy",
     "ANTHROPIC_MODEL": "claude-sonnet-4",
-    "ANTHROPIC_SMALL_FAST_MODEL": "claude-3.7-sonnet",
+    "ANTHROPIC_SMALL_FAST_MODEL": "gpt-5-mini",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_TELEMETRY": "1",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
@@ -107,7 +107,7 @@ Open another terminal and then run `claude` at your will. DO read its [best prac
 export ANTHROPIC_BASE_URL="http://localhost:4000"
 export ANTHROPIC_AUTH_TOKEN="dummy"
 export ANTHROPIC_MODEL="claude-sonnet-4"
-export ANTHROPIC_SMALL_FAST_MODEL="claude-3.7-sonnet"
+export ANTHROPIC_SMALL_FAST_MODEL="gpt-5-mini"
 export DISABLE_TELEMETRY="1"
 export DISABLE_NON_ESSENTIAL_MODEL_CALLS="1"
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC="1"

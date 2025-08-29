@@ -43,7 +43,7 @@ Once succeeds, you’d see the model list and API address:
     "ANTHROPIC_BASE_URL": "http://localhost:4141",
     "ANTHROPIC_AUTH_TOKEN": "dummy",
     "ANTHROPIC_MODEL": "claude-sonnet-4",
-    "ANTHROPIC_SMALL_FAST_MODEL": "claude-3.7-sonnet",
+    "ANTHROPIC_SMALL_FAST_MODEL": "gpt-5-mini",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
   }
@@ -62,7 +62,7 @@ If the above configure file doesn't work, use env variable directly:
 export ANTHROPIC_BASE_URL="http://localhost:4141"
 export ANTHROPIC_AUTH_TOKEN="dummy"
 export ANTHROPIC_MODEL="claude-sonnet-4"
-export ANTHROPIC_SMALL_FAST_MODEL="claude-3.7-sonnet"
+export ANTHROPIC_SMALL_FAST_MODEL="gpt-5-mini"
 export DISABLE_NON_ESSENTIAL_MODEL_CALLS="1"
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC="1"
 
