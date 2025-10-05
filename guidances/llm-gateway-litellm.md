@@ -17,7 +17,7 @@ Create a LiteLLM config file `litellm_config.yaml` with Github Copilot as the ex
 
 ```yaml
 general_settings:
-  master_key: dummy
+  master_key: sk-dummy
 litellm_settings:
   drop_params: true
 model_list:
@@ -45,9 +45,9 @@ model_list:
       editor-plugin-version: "copilot/1.155.0"  # Plugin version
       Copilot-Integration-Id: "vscode-chat"     # Integration ID
       user-agent: "GithubCopilot/1.155.0"       # User agent
-- model_name: claude-sonnet-4
+- model_name: claude-sonnet-4.5
   litellm_params:
-    model: github_copilot/claude-sonnet-4
+    model: github_copilot/claude-sonnet-4.5
     extra_headers:
       editor-version: "vscode/1.85.1"           # Editor version
       editor-plugin-version: "copilot/1.155.0"  # Plugin version
@@ -85,9 +85,9 @@ Open the link, login and authenticate your Github Copilot account.
 {
   "env": {
     "ANTHROPIC_BASE_URL": "http://localhost:4000",
-    "ANTHROPIC_AUTH_TOKEN": "dummy",
-    "ANTHROPIC_MODEL": "claude-sonnet-4",
-    "ANTHROPIC_SMALL_FAST_MODEL": "gpt-5-mini",
+    "ANTHROPIC_AUTH_TOKEN": "sk-dummy",
+    "ANTHROPIC_MODEL": "claude-sonnet-4.5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-5-mini",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_TELEMETRY": "1",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
@@ -105,9 +105,9 @@ Open another terminal and then run `claude` at your will. DO read its [best prac
 
 ```sh
 export ANTHROPIC_BASE_URL="http://localhost:4000"
-export ANTHROPIC_AUTH_TOKEN="dummy"
-export ANTHROPIC_MODEL="claude-sonnet-4"
-export ANTHROPIC_SMALL_FAST_MODEL="gpt-5-mini"
+export ANTHROPIC_AUTH_TOKEN="sk-dummy"
+export ANTHROPIC_MODEL="claude-sonnet-4.5"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="gpt-5-mini"
 export DISABLE_TELEMETRY="1"
 export DISABLE_NON_ESSENTIAL_MODEL_CALLS="1"
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC="1"

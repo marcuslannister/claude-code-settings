@@ -16,7 +16,7 @@ This repository contains Claude Code settings, configurations and guidances. The
 
 - `settings.json`: Contains environment variables for API configuration
 - Uses `localhost:4141` as the API base URL
-- Configured to use `claude-sonnet-4` as the primary model
+- Configured to use `claude-sonnet-4.5` as the primary model
 - Telemetry and non-essential traffic are disabled
 
 ## Custom Commands

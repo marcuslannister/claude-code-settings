@@ -11,27 +11,58 @@ mv ~/.claude ~/.claude.bak
 # Clone the claude-code-settings
 git clone https://github.com/feiskyer/claude-code-settings.git ~/.claude
 
-# Install the GitHub Copilot API proxy
-npm install -g copilot-api
+# Install LiteLLM proxy
+pip install -U 'litellm[proxy]'
 
-# Authorize your GitHub Copilot account
-copilot-api auth
+# Start litellm proxy (which would listen on http://0.0.0.0:4000)
+litellm -c guidances/litellm_config.yaml
 
-# For convenience, run copilot-api in background with tmux
-tmux new-session -d -s copilot 'copilot-api start'
+# For convenience, run litellm proxy in background with tmux
+# tmux new-session -d -s copilot 'litellm -c guidances/litellm_config.yaml'
 ```
+
+Once started, you'll see:
+
+```sh
+...
+Please visit https://github.com/login/device and enter code XXXX-XXXX to authenticate.
+...
+```
+
+Open the link, login and authenticate your Github Copilot account.
 
 **Note:**
 
-- This configuration uses GitHub Copilot as the Claude Code model provider through the [copilot-api](https://github.com/ericc-ch/copilot-api) proxy.
-- Make sure the following models are available in your account; if not, replace them with your own model names:
-  - ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4
-  - ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4
-  - ANTHROPIC_SMALL_FAST_MODEL: gpt-5-mini
+1. The default settings is leveraging [LiteLLM Proxy Server](https://docs.litellm.ai/docs/simple_proxy) as LLM Gateway to Github Copilot. You can also use [copilot-api](https://github.com/ericc-ch/copilot-api) as the proxy as well (remember change your port to 4141).
+2. Make sure the following models are available in your account; if not, replace them with your own model names:
+
+- ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4.5
+- ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4
+- ANTHROPIC_DEFAULT_HAIKU_MODEL: gpt-5-mini
 
 ## Commands
 
-### Development Workflow
+### Github Spec Kit Workflow
+
+**Github Spec Kit** - Unified interface for Spec-Driven Development.
+
+To use it, run the following command to initialize your project:
+
+```sh
+uvx --from git+https://github.com/github/spec-kit.git specify init <project_name>
+```
+
+Available commands:
+
+- `/constitution` - Create or update governing principles and development guidelines.
+- `/specify` - Define requirements and user stories for the desired outcome.
+- `/clarify` - Resolve underspecified areas (run before `/plan` unless explicitly skipped).
+- `/plan` - Generate a technical implementation plan for the chosen stack.
+- `/tasks` - Produce actionable task lists for implementation.
+- `/analyze` - Check consistency and coverage after `/tasks` and before `/implement`.
+- `/implement` - Execute all tasks to build the feature according to the plan.
+
+### Kiro Spec Workflow
 
 **Kiro Workflow** - Complete feature development from spec to execution. The Kiro commands provide a structured workflow for feature development:
 

@@ -26,7 +26,7 @@ Once succeeds, you’d see the model list and API address:
 - claude-3.5-sonnet
 - claude-3.7-sonnet
 - claude-3.7-sonnet-thought
-- claude-sonnet-4
+- claude-sonnet-4.5
 - claude-opus-4
 - gemini-2.0-flash-001
 - gemini-2.5-pro
@@ -41,9 +41,9 @@ Once succeeds, you’d see the model list and API address:
 {
   "env": {
     "ANTHROPIC_BASE_URL": "http://localhost:4141",
-    "ANTHROPIC_AUTH_TOKEN": "dummy",
-    "ANTHROPIC_MODEL": "claude-sonnet-4",
-    "ANTHROPIC_SMALL_FAST_MODEL": "gpt-5-mini",
+    "ANTHROPIC_AUTH_TOKEN": "sk-dummy",
+    "ANTHROPIC_MODEL": "claude-sonnet-4.5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-5-mini",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
   }
@@ -60,9 +60,9 @@ If the above configure file doesn't work, use env variable directly:
 
 ```sh
 export ANTHROPIC_BASE_URL="http://localhost:4141"
-export ANTHROPIC_AUTH_TOKEN="dummy"
-export ANTHROPIC_MODEL="claude-sonnet-4"
-export ANTHROPIC_SMALL_FAST_MODEL="gpt-5-mini"
+export ANTHROPIC_AUTH_TOKEN="sk-dummy"
+export ANTHROPIC_MODEL="claude-sonnet-4.5"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="gpt-5-mini"
 export DISABLE_NON_ESSENTIAL_MODEL_CALLS="1"
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC="1"
 
