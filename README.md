@@ -1,6 +1,8 @@
 # Claude Code Settings and Commands for Vibe Coding
 
-A curated collection of Claude Code settings, custom commands and sub-agents designed for enhanced development workflows. This setup includes specialized commands and sub-agents for feature development (Kiro workflow), code analysis, GitHub integration, and knowledge management.
+A curated collection of Claude Code settings, custom commands and sub-agents designed for enhanced development workflows. This setup includes specialized commands and sub-agents for feature development (spec-driven workflow), code analysis, GitHub integration, and knowledge management.
+
+> > For OpenAI Codex settings, configurations and custom prompts, please refer [feiskyer/codex-settings](https://github.com/feiskyer/codex-settings).
 
 ## Setup
 
@@ -15,7 +17,7 @@ git clone https://github.com/feiskyer/claude-code-settings.git ~/.claude
 pip install -U 'litellm[proxy]'
 
 # Start litellm proxy (which would listen on http://0.0.0.0:4000)
-litellm -c guidances/litellm_config.yaml
+litellm -c ~/.claude/guidances/litellm_config.yaml
 
 # For convenience, run litellm proxy in background with tmux
 # tmux new-session -d -s copilot 'litellm -c guidances/litellm_config.yaml'
@@ -51,6 +53,8 @@ To use it, run the following command to initialize your project:
 ```sh
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name>
 ```
+
+Alternatively, you can also copy [.specify](.specify) to your project root directory.
 
 Available commands:
 
