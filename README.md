@@ -2,7 +2,7 @@
 
 A curated collection of Claude Code settings, custom commands and sub-agents designed for enhanced development workflows. This setup includes specialized commands and sub-agents for feature development (spec-driven workflow), code analysis, GitHub integration, and knowledge management.
 
-> > For OpenAI Codex settings, configurations and custom prompts, please refer [feiskyer/codex-settings](https://github.com/feiskyer/codex-settings).
+> For OpenAI Codex settings, configurations and custom prompts, please refer [feiskyer/codex-settings](https://github.com/feiskyer/codex-settings).
 
 ## Setup
 
@@ -151,6 +151,55 @@ Using Claude Code with Google Cloud Vertex AI. Uses Claude Opus 4 model with Goo
 ## Limitations
 
 **WebSearch** tool in Claude Code is an [Anthropic specific tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool) and it is not available when you’re not using the official Anthropic API. Hence, if you need web search, you’d need to connect Claude Code with extertnal web search MCP servers, e.g. [Tavily MCP](https://docs.tavily.com/documentation/mcp), [Brave MCP](https://github.com/brave/brave-search-mcp-server), [Firecrawl MCP](https://docs.firecrawl.dev/mcp-server) or [DuckDuckGo Search MCP](https://github.com/nickclyde/duckduckgo-mcp-server).
+
+## Use in VSCode Extension
+
+For Claude Code 2.0+ extension in VSCode, if you’re not using Claude.ai subscription, please put the environment variables manually in your vscode settings.json:
+
+```json
+{
+  "claude-code.environmentVariables": [
+    {
+      "name": "ANTHROPIC_BASE_URL",
+      "value": "http://localhost:4000"
+    },
+    {
+      "name": "ANTHROPIC_AUTH_TOKEN",
+      "value": "sk-dummy"
+    },
+    {
+      "name": "ANTHROPIC_MODEL",
+      "value": "opusplan"
+    },
+    {
+      "name": "ANTHROPIC_DEFAULT_SONNET_MODEL",
+      "value": "claude-sonnet-4.5"
+    },
+    {
+      "name": "ANTHROPIC_DEFAULT_OPUS_MODEL",
+      "value": "claude-opus-4"
+    },
+    {
+      "name": "ANTHROPIC_DEFAULT_HAIKU_MODEL",
+      "value": "gpt-5-mini"
+    },
+    {
+      "name": "DISABLE_NON_ESSENTIAL_MODEL_CALLS",
+      "value": "1"
+    },
+    {
+      "name": "DISABLE_TELEMETRY",
+      "value": "1"
+    },
+    {
+      "name": "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC",
+      "value": "1"
+    }
+  ]
+}
+```
+
+Note that the contents of [~/.claude/config.json](config.json) is also required to skip claude.ai login.
 
 ## Guidances
 
