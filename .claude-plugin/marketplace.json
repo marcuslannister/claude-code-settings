@@ -1,0 +1,21 @@
+{
+  "name": "claude-code-settings",
+  "owner": {
+    "name": "Pengfei Ni"
+  },
+  "metadata": {
+    "version": "1.1.0",
+    "description": "Claude Code settings, commands and agents for vibe coding"
+  },
+  "plugins": [
+    {
+      "name": "claude-code-settings",
+      "source": "./",
+      "description": "Claude Code settings, commands and agents for vibe coding",
+      "version": "1.1.0",
+      "author": {
+        "name": "Pengfei Ni"
+      }
+    }
+  ]
+}

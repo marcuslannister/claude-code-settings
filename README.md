@@ -6,6 +6,8 @@ A curated collection of Claude Code settings, custom commands and sub-agents des
 
 ## Setup
 
+### Manully Setup
+
 ```sh
 # Backup original claude settings
 mv ~/.claude ~/.claude.bak
@@ -41,6 +43,17 @@ Open the link, login and authenticate your Github Copilot account.
 - ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4.5
 - ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4
 - ANTHROPIC_DEFAULT_HAIKU_MODEL: gpt-5-mini
+
+### Using Claude Code Plugin
+
+```sh
+/plugin marketplace add feiskyer/claude-code-settings
+/plugin install claude-code-settings
+```
+
+**Note:**:
+
+* [~/.claude/settings.json](settings.json) is not configured via Claude Code Plugin, you'd need to configure it manually.
 
 ## Commands
 

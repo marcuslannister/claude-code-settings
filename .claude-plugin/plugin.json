@@ -1,0 +1,20 @@
+{
+  "name": "claude-code-settings",
+  "version": "1.0.0",
+  "description": "Claude Code settings, commands and agents for vibe coding",
+  "author": {
+    "name": "Pengfei Ni",
+    "url": "https://github.com/feiskyer/claude-code-settings"
+  },
+  "homepage": "https://github.com/feiskyer/claude-code-settings",
+  "repository": "https://github.com/feiskyer/claude-code-settings",
+  "license": "MIT",
+  "keywords": [
+    "copilot",
+    "litellm",
+    "kiro",
+    "claude-code",
+    "vibe-coding",
+    "spec-driven-development"
+  ]
+}
