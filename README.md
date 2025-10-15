@@ -51,6 +51,14 @@ Open the link, login and authenticate your Github Copilot account.
 /plugin install claude-code-settings
 ```
 
+#### One-Command Installation 
+Use the [Claude Plugins CLI](https://claude-plugins.dev) to skip the marketplace setup:
+```bash
+npx claude-plugins install @feiskyer/claude-code-settings/claude-code-settings
+```
+
+This automatically adds the marketplace and installs the plugin in a single step.
+
 **Note:**:
 
 * [~/.claude/settings.json](settings.json) is not configured via Claude Code Plugin, you'd need to configure it manually.
