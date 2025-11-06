@@ -9,8 +9,8 @@ This repository contains Claude Code settings, configurations and guidances. The
 ### Required Dependencies
 
 - `copilot-api`: Install globally with `npm install -g copilot-api`
-- Run `copilot-api start` to authorize GitHub Copilot account
-- Use tmux for session management: `tmux new-session -d -s copilot 'copilot-api start'`
+- Run `copilot-api start --proxy-env` to authorize GitHub Copilot account
+- Use tmux for session management: `tmux new-session -d -s copilot 'copilot-api start --proxy-env'`
 
 ### Configuration
 

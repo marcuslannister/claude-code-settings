@@ -51,8 +51,10 @@ Open the link, login and authenticate your Github Copilot account.
 /plugin install claude-code-settings
 ```
 
-#### One-Command Installation 
+#### One-Command Installation
+
 Use the [Claude Plugins CLI](https://claude-plugins.dev) to skip the marketplace setup:
+
 ```bash
 npx claude-plugins install @feiskyer/claude-code-settings/claude-code-settings
 ```
@@ -173,7 +175,10 @@ Using Claude Code with Google Cloud Vertex AI. Uses Claude Opus 4 model with Goo
 
 **WebSearch** tool in Claude Code is an [Anthropic specific tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool) and it is not available when you’re not using the official Anthropic API. Hence, if you need web search, you’d need to connect Claude Code with extertnal web search MCP servers, e.g. [Tavily MCP](https://docs.tavily.com/documentation/mcp), [Brave MCP](https://github.com/brave/brave-search-mcp-server), [Firecrawl MCP](https://docs.firecrawl.dev/mcp-server) or [DuckDuckGo Search MCP](https://github.com/nickclyde/duckduckgo-mcp-server).
 
-## Use in VSCode Extension
+## FAQs
+
+<details>
+<summary>Login Issue of Claude Code 2.0+ extension in VSCode</summary>
 
 For Claude Code 2.0+ extension in VSCode, if you’re not using Claude.ai subscription, please put the environment variables manually in your vscode settings.json:
 
@@ -221,6 +226,27 @@ For Claude Code 2.0+ extension in VSCode, if you’re not using Claude.ai subscr
 ```
 
 Note that the contents of [~/.claude/config.json](config.json) is also required to skip claude.ai login.
+</details>
+
+<details>
+<summary>Missing API Key and Invalid API Key issues</summary>
+
+Ensure the API key you configured in `ANTHROPIC_AUTH_TOKEN` is added to approved API key in `~/.claude.json`, e.g.
+
+```json
+{
+  "customApiKeyResponses": {
+    "approved": [
+      "sk-dummy"
+    ],
+    "rejected": []
+  },
+  ... (your other settings)
+}
+```
+
+
+</details>
 
 ## Guidances
 

@@ -13,7 +13,7 @@ npm install -g copilot-api @anthropic-ai/claude-code
 ## 2) Start copilot-api and authenticate to Github Copilot
 
 ```
-$ copilot-api start
+$ copilot-api start --proxy-env
 ...
 Please visit https://github.com/login/device and enter code XXXX-XXXX to authenticate
 ...
