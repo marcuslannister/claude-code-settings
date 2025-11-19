@@ -169,6 +169,10 @@ Using Claude Code with SiliconFlow API. Uses the Moonshot AI Kimi-K2-Instruct mo
 
 Using Claude Code with Google Cloud Vertex AI. Uses Claude Opus 4 model with Google Cloud project settings.
 
+### [azure-settings.json](settings/azure-settings.json)
+
+Configuration for using Claude Code with Azure AI Foundry. Uses Claude Opus 4.1 + Sonnet 4.5 model with opusplan mode.
+
 </details>
 
 ## Limitations
