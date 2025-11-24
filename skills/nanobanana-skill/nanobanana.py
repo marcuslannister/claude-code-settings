@@ -11,7 +11,7 @@ from PIL import Image
 from io import BytesIO
 
 # Load environment variables
-load_dotenv()
+load_dotenv(os.path.expanduser("~") + "/.nanobanana.env")
 
 # Google API configuration from environment variables
 api_key = os.getenv("GEMINI_API_KEY") or ""
