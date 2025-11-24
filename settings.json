@@ -13,6 +13,9 @@
   "permissions": {
     "allow": [
       "Skill(codex-skill)",
+      "Skill(claude-code-settings:codex-skill)",
+      "Skill(nanobanana-skill)",
+      "Skill(claude-code-settings:nanobanana-skill)",
       "Bash(codex:*)"
     ],
     "deny": [],

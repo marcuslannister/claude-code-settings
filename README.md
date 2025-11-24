@@ -67,6 +67,11 @@ This automatically adds the marketplace and installs the plugin in a single step
 
 ## Commands
 
+The `commands/` directory contains [custom slash commands](https://code.claude.com/docs/en/slash-commands) that extend Claude Code's slash commands, which could be invoked via `/<command-name> [arguments]`.
+
+<details>
+<summary>Github Spec Kit Workflow</summary>
+
 ### Github Spec Kit Workflow
 
 **Github Spec Kit** - Unified interface for Spec-Driven Development.
@@ -89,6 +94,11 @@ Available commands:
 - `/analyze` - Check consistency and coverage after `/tasks` and before `/implement`.
 - `/implement` - Execute all tasks to build the feature according to the plan.
 
+</details>
+
+<details>
+<summary>Kiro Spec Workflow</summary>
+
 ### Kiro Spec Workflow
 
 **Kiro Workflow** - Complete feature development from spec to execution. The Kiro commands provide a structured workflow for feature development:
@@ -99,6 +109,11 @@ Available commands:
 4. `/kiro:execute [task]` - Execute specific implementation tasks
 5. `/kiro:vibe [question]` - Quick development assistance
 
+</details>
+
+<details>
+<summary>Analysis & Reflection</summary>
+
 ### Analysis & Reflection
 
 - `/think-harder [problem]` - Enhanced analytical thinking
@@ -107,14 +122,63 @@ Available commands:
 - `/reflection-harder` - Comprehensive session analysis and learning
 - `/eureka [breakthrough]` - Document technical breakthroughs
 
+</details>
+
+<details>
+<summary>GitHub Integration</summary>
+
 ### GitHub Integration
 
 - `/gh:review-pr [PR_NUMBER]` - Comprehensive PR review and comments
 - `/gh:fix-issue [issue-number]` - Complete issue resolution workflow
 
+</details>
+
+<details>
+<summary>Documentation & Knowledge</summary>
+
 ### Documentation & Knowledge
 
 - `/cc:create-command [name] [description]` - Create new Claude Code commands
+
+</details>
+
+## Skills
+
+The `skills/` directory contains [agent skills](https://code.claude.com/docs/en/skills) that extend claude code with more specialized capabilities.
+
+<details>
+<summary>Available Skills</summary>
+
+### [codex-skill](skills/codex-skill)
+
+Non-interactive automation mode for hands-off task execution using OpenAI Codex. Use when you want to leverage codex, gpt-5, or gpt-5.1 to implement features or plans designed by Claude.
+
+**Key Features:**
+- Multiple execution modes (read-only, workspace-write, danger-full-access)
+- Model selection support (gpt-5, gpt-5.1, gpt-5.1-codex, etc.)
+- Autonomous execution without approval prompts
+- JSON output support for structured results
+- Resumable sessions
+
+**Requirements:** Codex CLI installed (`npm i -g @openai/codex` or `brew install codex`)
+
+### [nanobanana-skill](skills/nanobanana-skill)
+
+Generate or edit images using Google Gemini API via nanobanana. Use when creating, generating, or editing images.
+
+**Key Features:**
+- Image generation with various aspect ratios
+- Image editing capabilities
+- Multiple model options (gemini-3-pro-image-preview, gemini-2.5-flash-image)
+- Resolution options (1K, 2K, 4K)
+- Support for various aspect ratios (square, portrait, landscape, ultra-wide)
+
+**Requirements:**
+- GEMINI_API_KEY configured in `~/.nanobanana.env`
+- Python3 with google-genai, Pillow, python-dotenv
+
+</details>
 
 ## Agents
 
@@ -260,7 +324,8 @@ Ensure the API key you configured in `ANTHROPIC_AUTH_TOKEN` is added to approved
 ## References
 
 - [Claude Code official document](https://docs.anthropic.com/en/docs/claude-code/overview) - must read official document.
-- [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) - curated list of slash-commands, CLAUDE.md files, CLI tools, and other resources.
+- [anthropics/skills](https://github.com/anthropics/skills) - official list of claude code skills that teach Claude how to complete specific tasks in a repeatable way
+- [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) - curated list of slash-commands, CLAUDE.md files, CLI tools, and other resources.
 - [wshobson/agents](https://github.com/wshobson/agents) - comprehensive collection of specialized AI subagents for Claude Code.
 
 ## LICENSE
