@@ -93,7 +93,6 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # Sveltekit cache directory
 .svelte-kit/
@@ -125,6 +124,13 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS generated
+.DS_Store
+
 # yarn v3
 .pnp.*
 .yarn/*
@@ -146,3 +152,10 @@ statsig
 todos
 history.jsonl
 debug
+file-history/
+plugins/marketplaces/
+plugins/known_marketplaces.json
+.update.lock
+
+# Project specific
+WARP.md
