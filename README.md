@@ -48,7 +48,15 @@ Open the link, login and authenticate your Github Copilot account.
 
 ```sh
 /plugin marketplace add feiskyer/claude-code-settings
+
+# Install all of the settings (commands, agents and skills)
 /plugin install claude-code-settings
+
+# Install codex-skill only
+/plugin install codex-skill
+
+# Install nanobanana-skill only
+/plugin install nanobanana-skill
 ```
 
 #### One-Command Installation
@@ -143,16 +151,23 @@ Available commands:
 
 </details>
 
-## Skills
+## Skills (Separate Plugins)
 
-The `skills/` directory contains [agent skills](https://code.claude.com/docs/en/skills) that extend claude code with more specialized capabilities.
+Skills are now distributed as separate plugins for modular installation. Install only what you need:
 
 <details>
-<summary>Available Skills</summary>
+<summary>Available Skill Plugins</summary>
 
-### [codex-skill](skills/codex-skill)
+### [codex-skill](plugins/codex-skill)
 
 Non-interactive automation mode for hands-off task execution using OpenAI Codex. Use when you want to leverage codex, gpt-5, or gpt-5.1 to implement features or plans designed by Claude.
+
+**Installation:**
+
+```sh
+/plugin marketplace add feiskyer/claude-code-settings
+/plugin install codex-skill
+```
 
 **Key Features:**
 - Multiple execution modes (read-only, workspace-write, danger-full-access)
@@ -163,9 +178,16 @@ Non-interactive automation mode for hands-off task execution using OpenAI Codex.
 
 **Requirements:** Codex CLI installed (`npm i -g @openai/codex` or `brew install codex`)
 
-### [nanobanana-skill](skills/nanobanana-skill)
+### [nanobanana-skill](plugins/nanobanana-skill)
 
 Generate or edit images using Google Gemini API via nanobanana. Use when creating, generating, or editing images.
+
+**Installation:**
+
+```sh
+/plugin marketplace add feiskyer/claude-code-settings
+/plugin install nanobanana-skill
+```
 
 **Key Features:**
 - Image generation with various aspect ratios
@@ -176,7 +198,7 @@ Generate or edit images using Google Gemini API via nanobanana. Use when creatin
 
 **Requirements:**
 - GEMINI_API_KEY configured in `~/.nanobanana.env`
-- Python3 with google-genai, Pillow, python-dotenv
+- Python3 with google-genai, Pillow, python-dotenv (install via `pip install -r requirements.txt` in the plugin directory)
 
 </details>
 

@@ -16,6 +16,24 @@
       "author": {
         "name": "Pengfei Ni"
       }
+    },
+    {
+      "name": "codex-skill",
+      "source": "./plugins/codex-skill",
+      "description": "Leverage OpenAI Codex (GPT-5/GPT-5.1) for non-interactive automation mode and hands-off task execution",
+      "version": "1.0.0",
+      "author": {
+        "name": "Pengfei Ni"
+      }
+    },
+    {
+      "name": "nanobanana-skill",
+      "source": "./plugins/nanobanana-skill",
+      "description": "Generate or edit images using Google Gemini API via nanobanana",
+      "version": "1.0.0",
+      "author": {
+        "name": "Pengfei Ni"
+      }
     }
   ]
 }

@@ -11,8 +11,8 @@ Generate or edit images using Google Gemini API through the nanobanana tool.
 ## Requirements
 
 1. **GEMINI_API_KEY**: Must be configured in `~/.nanobanana.env` or `export GEMINI_API_KEY=<your-api-key>`
-2. **Python3 with depedent packages installed**: google-genai, Pillow, python-dotenv. They could be installed via `python3 -m pip install -U python-dotenv google-genai Pillow` if not installed yet.
-3. **Executable**: `nanobanana.py`
+2. **Python3 with depedent packages installed**: google-genai, Pillow, python-dotenv. They could be installed via `python3 -m pip install -r ${CLAUDE_PLUGIN_ROOT}/skills/nanobanana-skill/requirements.txt` if not installed yet.
+3. **Executable**: `${CLAUDE_PLUGIN_ROOT}/skills/nanobanana-skill/nanobanana.py`
 
 ## Instructions
 
@@ -28,7 +28,7 @@ Generate or edit images using Google Gemini API through the nanobanana tool.
 2. Run the nanobanana script with appropriate parameters:
 
    ```bash
-   nanobanana.py --prompt "description of image" --output "filename.png"
+   python3 ${CLAUDE_PLUGIN_ROOT}/skills/nanobanana-skill/nanobanana.py --prompt "description of image" --output "filename.png"
    ```
 
 3. Show the user the saved image path when complete
@@ -43,7 +43,7 @@ Generate or edit images using Google Gemini API through the nanobanana tool.
 2. Run with input images:
 
    ```bash
-   nanobanana.py --prompt "editing instructions" --input image1.png image2.png --output "edited.png"
+   python3 ${CLAUDE_PLUGIN_ROOT}/skills/nanobanana-skill/nanobanana.py --prompt "editing instructions" --input image1.png image2.png --output "edited.png"
    ```
 
 ## Available Options
@@ -77,13 +77,13 @@ Generate or edit images using Google Gemini API through the nanobanana tool.
 ### Generate a simple image
 
 ```bash
-nanobanana.py --prompt "A serene mountain landscape at sunset with a lake"
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/nanobanana-skill/nanobanana.py --prompt "A serene mountain landscape at sunset with a lake"
 ```
 
 ### Generate with specific size and output
 
 ```bash
-nanobanana.py \
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/nanobanana-skill/nanobanana.py \
   --prompt "Modern minimalist logo for a tech startup" \
   --size 1024x1024 \
   --output "logo.png"
@@ -92,7 +92,7 @@ nanobanana.py \
 ### Generate landscape image with high resolution
 
 ```bash
-nanobanana.py \
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/nanobanana-skill/nanobanana.py \
   --prompt "Futuristic cityscape with flying cars" \
   --size 1344x768 \
   --resolution 2K \
@@ -102,7 +102,7 @@ nanobanana.py \
 ### Edit existing images
 
 ```bash
-nanobanana.py \
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/nanobanana-skill/nanobanana.py \
   --prompt "Add a rainbow in the sky" \
   --input photo.png \
   --output "photo-with-rainbow.png"
@@ -111,7 +111,7 @@ nanobanana.py \
 ### Use faster model
 
 ```bash
-nanobanana.py \
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/nanobanana-skill/nanobanana.py \
   --prompt "Quick sketch of a cat" \
   --model gemini-2.5-flash-image \
   --output "cat-sketch.png"
