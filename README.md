@@ -6,7 +6,7 @@ A curated collection of Claude Code settings, custom commands and sub-agents des
 
 ## Setup
 
-### Manully Setup
+### Manual Setup
 
 ```sh
 # Backup original claude settings
@@ -33,11 +33,11 @@ Please visit https://github.com/login/device and enter code XXXX-XXXX to authent
 ...
 ```
 
-Open the link, login and authenticate your Github Copilot account.
+Open the link, log in and authenticate your GitHub Copilot account.
 
 **Note:**
 
-1. The default settings is leveraging [LiteLLM Proxy Server](https://docs.litellm.ai/docs/simple_proxy) as LLM Gateway to Github Copilot. You can also use [copilot-api](https://github.com/ericc-ch/copilot-api) as the proxy as well (remember change your port to 4141).
+1. The default configuration is leveraging [LiteLLM Proxy Server](https://docs.litellm.ai/docs/simple_proxy) as LLM gateway to GitHub Copilot. You can also use [copilot-api](https://github.com/ericc-ch/copilot-api) as the proxy as well (remember to change your port to 4141).
 2. Make sure the following models are available in your account; if not, replace them with your own model names:
 
 - ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4.5
@@ -69,7 +69,7 @@ npx claude-plugins install @feiskyer/claude-code-settings/claude-code-settings
 
 This automatically adds the marketplace and installs the plugin in a single step.
 
-**Note:**:
+**Note:**
 
 * [~/.claude/settings.json](settings.json) is not configured via Claude Code Plugin, you'd need to configure it manually.
 
@@ -78,11 +78,11 @@ This automatically adds the marketplace and installs the plugin in a single step
 The `commands/` directory contains [custom slash commands](https://code.claude.com/docs/en/slash-commands) that extend Claude Code's slash commands, which could be invoked via `/<command-name> [arguments]`.
 
 <details>
-<summary>Github Spec Kit Workflow</summary>
+<summary>GitHub Spec Kit Workflow</summary>
 
-### Github Spec Kit Workflow
+### GitHub Spec Kit Workflow
 
-**Github Spec Kit** - Unified interface for Spec-Driven Development.
+**GitHub Spec Kit** - Unified interface for Spec-Driven Development.
 
 To use it, run the following command to initialize your project:
 
@@ -148,6 +148,15 @@ Available commands:
 ### Documentation & Knowledge
 
 - `/cc:create-command [name] [description]` - Create new Claude Code commands
+
+</details>
+
+<details>
+<summary>Utilities</summary>
+
+### Utilities
+
+- `/translate [text]` - Translate English/Japanese tech content to Chinese
 
 </details>
 
@@ -257,13 +266,21 @@ Using Claude Code with Google Cloud Vertex AI. Uses Claude Opus 4 model with Goo
 
 ### [azure-settings.json](settings/azure-settings.json)
 
-Configuration for using Claude Code with Azure AI Foundry. Uses Claude Opus 4.1 + Sonnet 4.5 model with opusplan mode.
+Configuration for using Claude Code with Azure AI (Anthropic-compatible endpoint). Points to Azure AI services endpoint.
+
+### [azure-foundry-settings.json](settings/azure-foundry-settings.json)
+
+Configuration for using Claude Code with Azure AI Foundry native mode. Uses `CLAUDE_CODE_USE_FOUNDRY` flag with Claude Opus 4.1 + Sonnet 4.5 model.
+
+### [minimax.json](settings/minimax.json)
+
+Configuration for using Claude Code with MiniMax API. Uses the MiniMax-M2 model.
 
 </details>
 
 ## Limitations
 
-**WebSearch** tool in Claude Code is an [Anthropic specific tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool) and it is not available when you’re not using the official Anthropic API. Hence, if you need web search, you’d need to connect Claude Code with extertnal web search MCP servers, e.g. [Tavily MCP](https://docs.tavily.com/documentation/mcp), [Brave MCP](https://github.com/brave/brave-search-mcp-server), [Firecrawl MCP](https://docs.firecrawl.dev/mcp-server) or [DuckDuckGo Search MCP](https://github.com/nickclyde/duckduckgo-mcp-server).
+**WebSearch** tool in Claude Code is an [Anthropic specific tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool) and it is not available when you’re not using the official Anthropic API. Hence, if you need web search, you'd need to connect Claude Code with external web search MCP servers, e.g. [Tavily MCP](https://docs.tavily.com/documentation/mcp), [Brave MCP](https://github.com/brave/brave-search-mcp-server), [Firecrawl MCP](https://docs.firecrawl.dev/mcp-server) or [DuckDuckGo Search MCP](https://github.com/nickclyde/duckduckgo-mcp-server).
 
 ## FAQs
 
@@ -335,18 +352,17 @@ Ensure the API key you configured in `ANTHROPIC_AUTH_TOKEN` is added to approved
 }
 ```
 
-
 </details>
 
 ## Guidances
 
-- [Claude Code with Github Copilot as Model Provider](guidances/github-copilot.md).
+- [Claude Code with GitHub Copilot as Model Provider](guidances/github-copilot.md).
 - [Claude Code with LLM Gateway (LiteLLM) as Model Provider](guidances/llm-gateway-litellm.md).
 
 ## References
 
 - [Claude Code official document](https://docs.anthropic.com/en/docs/claude-code/overview) - must read official document.
-- [anthropics/skills](https://github.com/anthropics/skills) - official list of claude code skills that teach Claude how to complete specific tasks in a repeatable way
+- [anthropics/skills](https://github.com/anthropics/skills) - official list of Claude Code skills that teach Claude how to complete specific tasks in a repeatable way
 - [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) - curated list of slash-commands, CLAUDE.md files, CLI tools, and other resources.
 - [wshobson/agents](https://github.com/wshobson/agents) - comprehensive collection of specialized AI subagents for Claude Code.
 
