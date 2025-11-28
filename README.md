@@ -1,10 +1,38 @@
-# Claude Code Settings and Commands for Vibe Coding
+# Claude Code Settings/Commands/Skills for Vibe Coding
 
-A curated collection of Claude Code settings, custom commands and sub-agents designed for enhanced development workflows. This setup includes specialized commands and sub-agents for feature development (spec-driven workflow), code analysis, GitHub integration, and knowledge management.
+A curated collection of Claude Code settings, custom commands, skills and sub-agents designed for enhanced development workflows. This setup includes specialized commands, skills and sub-agents for feature development (spec-driven workflow), code analysis, GitHub integration, and knowledge management.
 
 > For OpenAI Codex settings, configurations and custom prompts, please refer [feiskyer/codex-settings](https://github.com/feiskyer/codex-settings).
 
 ## Setup
+
+### Using Claude Code Plugin
+
+```sh
+/plugin marketplace add feiskyer/claude-code-settings
+
+# Install main plugin (commands, agents and skills)
+/plugin install claude-code-settings
+
+# Alternatively, install individual skills without commands/agents
+/plugin install codex-skill               # Codex automation
+/plugin install nanobanana-skill          # Image generation
+/plugin install kiro-skill                # Kiro workflow
+/plugin install spec-kit-skill            # Spec-Kit workflow
+/plugin install youtube-transcribe-skill  # YouTube transcript extraction
+```
+
+Alternatively, run one-command installation via the [Claude Plugins CLI](https://claude-plugins.dev) to skip the marketplace setup:
+
+```bash
+npx claude-plugins install @feiskyer/claude-code-settings/claude-code-settings
+```
+
+This automatically adds the marketplace and installs the plugin in a single step.
+
+**Note:**
+
+- [~/.claude/settings.json](settings.json) is not configured via Claude Code Plugin, you'd need to configure it manually.
 
 ### Manual Setup
 
@@ -44,80 +72,9 @@ Open the link, log in and authenticate your GitHub Copilot account.
 - ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4
 - ANTHROPIC_DEFAULT_HAIKU_MODEL: gpt-5-mini
 
-### Using Claude Code Plugin
-
-```sh
-/plugin marketplace add feiskyer/claude-code-settings
-
-# Install all of the settings (commands, agents and skills)
-/plugin install claude-code-settings
-
-# Install codex-skill only
-/plugin install codex-skill
-
-# Install nanobanana-skill only
-/plugin install nanobanana-skill
-```
-
-#### One-Command Installation
-
-Use the [Claude Plugins CLI](https://claude-plugins.dev) to skip the marketplace setup:
-
-```bash
-npx claude-plugins install @feiskyer/claude-code-settings/claude-code-settings
-```
-
-This automatically adds the marketplace and installs the plugin in a single step.
-
-**Note:**
-
-* [~/.claude/settings.json](settings.json) is not configured via Claude Code Plugin, you'd need to configure it manually.
-
 ## Commands
 
 The `commands/` directory contains [custom slash commands](https://code.claude.com/docs/en/slash-commands) that extend Claude Code's slash commands, which could be invoked via `/<command-name> [arguments]`.
-
-<details>
-<summary>GitHub Spec Kit Workflow</summary>
-
-### GitHub Spec Kit Workflow
-
-**GitHub Spec Kit** - Unified interface for Spec-Driven Development.
-
-To use it, run the following command to initialize your project:
-
-```sh
-uvx --from git+https://github.com/github/spec-kit.git specify init <project_name>
-```
-
-Alternatively, you can also copy [.specify](.specify) to your project root directory.
-
-Available commands:
-
-- `/constitution` - Create or update governing principles and development guidelines.
-- `/specify` - Define requirements and user stories for the desired outcome.
-- `/clarify` - Resolve underspecified areas (run before `/plan` unless explicitly skipped).
-- `/plan` - Generate a technical implementation plan for the chosen stack.
-- `/tasks` - Produce actionable task lists for implementation.
-- `/analyze` - Check consistency and coverage after `/tasks` and before `/implement`.
-- `/implement` - Execute all tasks to build the feature according to the plan.
-
-</details>
-
-<details>
-<summary>Kiro Spec Workflow</summary>
-
-### Kiro Spec Workflow
-
-**Kiro Workflow** - Complete feature development from spec to execution. The Kiro commands provide a structured workflow for feature development:
-
-1. `/kiro:spec [feature]` - Create requirements and acceptance criteria
-2. `/kiro:design [feature]` - Develop architecture and component design
-3. `/kiro:task [feature]` - Generate implementation task lists
-4. `/kiro:execute [task]` - Execute specific implementation tasks
-5. `/kiro:vibe [question]` - Quick development assistance
-
-</details>
 
 <details>
 <summary>Analysis & Reflection</summary>
@@ -160,12 +117,12 @@ Available commands:
 
 </details>
 
-## Skills (Separate Plugins)
+## Skills
 
 Skills are now distributed as separate plugins for modular installation. Install only what you need:
 
 <details>
-<summary>Available Skill Plugins</summary>
+<summary>codex-skill - handoff task to Codex CLI</summary>
 
 ### [codex-skill](plugins/codex-skill)
 
@@ -179,6 +136,7 @@ Non-interactive automation mode for hands-off task execution using OpenAI Codex.
 ```
 
 **Key Features:**
+
 - Multiple execution modes (read-only, workspace-write, danger-full-access)
 - Model selection support (gpt-5, gpt-5.1, gpt-5.1-codex, etc.)
 - Autonomous execution without approval prompts
@@ -186,6 +144,11 @@ Non-interactive automation mode for hands-off task execution using OpenAI Codex.
 - Resumable sessions
 
 **Requirements:** Codex CLI installed (`npm i -g @openai/codex` or `brew install codex`)
+
+</details>
+
+<details>
+<summary>nanobanana-skill - draw image with Gemini nanobanana</summary>
 
 ### [nanobanana-skill](plugins/nanobanana-skill)
 
@@ -199,6 +162,7 @@ Generate or edit images using Google Gemini API via nanobanana. Use when creatin
 ```
 
 **Key Features:**
+
 - Image generation with various aspect ratios
 - Image editing capabilities
 - Multiple model options (gemini-3-pro-image-preview, gemini-2.5-flash-image)
@@ -206,8 +170,114 @@ Generate or edit images using Google Gemini API via nanobanana. Use when creatin
 - Support for various aspect ratios (square, portrait, landscape, ultra-wide)
 
 **Requirements:**
+
 - GEMINI_API_KEY configured in `~/.nanobanana.env`
 - Python3 with google-genai, Pillow, python-dotenv (install via `pip install -r requirements.txt` in the plugin directory)
+
+</details>
+
+<details>
+<summary>youtube-transcribe-skill - Extract YouTube subtitles</summary>
+
+### [youtube-transcribe-skill](plugins/youtube-transcribe-skill)
+
+Extract subtitles/transcripts from YouTube video link.
+
+**Installation:**
+
+```sh
+/plugin marketplace add feiskyer/claude-code-settings
+/plugin install youtube-transcribe-skill
+```
+
+**Key Features:**
+
+- Dual extraction methods: CLI (fast) and Browser Automation (fallback)
+- Automatic subtitle language selection (zh-Hans, zh-Hant, en)
+- Efficient DOM-based extraction for browser method
+- Saves transcripts to local text files
+
+**Requirements:**
+
+- `yt-dlp` (for CLI method)
+- or `chrome-devtools-mcp` (for browser automation method)
+
+</details>
+
+<details>
+<summary>kiro-skill - Interactive Feature Development</summary>
+
+### [kiro-skill](./skills/kiro-skill)
+
+Interactive feature development workflow from idea to implementation.
+
+**Triggered by**: "kiro", or references to `.kiro/specs/` directory
+
+**Installation:**
+
+```sh
+/plugin marketplace add feiskyer/claude-code-settings
+/plugin install kiro-skill
+```
+
+**Workflow**:
+
+1. **Requirements** → Define what needs to be built (EARS format with user stories)
+2. **Design** → Determine how to build it (architecture, components, data models)
+3. **Tasks** → Create actionable implementation steps (test-driven, incremental)
+4. **Execute** → Implement tasks one at a time
+
+**Usage**:
+
+```text
+You: "I need to create a kiro feature spec for user authentication"
+Claude: [Automatically uses kiro-skill]
+```
+
+</details>
+
+<details>
+<summary>spec-kit-skill - Constitution-Based Development</summary>
+
+### [spec-kit-skill](./skills/spec-kit-skill)
+
+GitHub Spec-Kit integration for constitution-based spec-driven development.
+
+**Triggered by**: "spec-kit", "speckit", "constitution", "specify", or references to `.specify/` directory
+
+**Installation:**
+
+```sh
+/plugin marketplace add feiskyer/claude-code-settings
+/plugin install spec-kit-skill
+```
+
+**Prerequisites**:
+
+```sh
+# Install spec-kit CLI
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+
+# Initialize project
+specify init . --ai claude
+```
+
+**7-Phase Workflow**:
+
+1. **Constitution** → Establish governing principles
+2. **Specify** → Define functional requirements
+3. **Clarify** → Resolve ambiguities (max 5 questions)
+4. **Plan** → Create technical strategy
+5. **Tasks** → Generate dependency-ordered tasks
+6. **Analyze** → Validate consistency (read-only)
+7. **Implement** → Execute implementation
+
+**Usage**:
+
+```text
+You: "Let's create a constitution for this project"
+Claude: [Automatically uses spec-kit-skill, detects CLI, guides through phases]
+```
 
 </details>
 
@@ -223,11 +293,6 @@ The `agents/` directory contains specialized AI [subagents](https://docs.anthrop
 - **instruction-reflector** - Analyzes and improves Claude Code instructions
 - **deep-reflector** - Comprehensive session analysis and learning capture
 - **insight-documenter** - Technical breakthrough documentation specialist
-- **kiro-assistant** - Quick development assistance with Kiro's approach
-- **kiro-feature-designer** - Creates comprehensive feature design documents
-- **kiro-spec-creator** - Creates complete feature specifications
-- **kiro-task-executor** - Executes specific tasks from feature specs
-- **kiro-task-planner** - Generates implementation task lists
 - **ui-engineer** - UI/UX development specialist
 - **command-creator** - Expert at creating new Claude Code custom commands
 
@@ -333,6 +398,7 @@ For Claude Code 2.0+ extension in VSCode, if you’re not using Claude.ai subscr
 ```
 
 Note that the contents of [~/.claude/config.json](config.json) is also required to skip claude.ai login.
+
 </details>
 
 <details>

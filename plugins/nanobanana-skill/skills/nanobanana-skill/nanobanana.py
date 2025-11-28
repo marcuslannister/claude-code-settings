@@ -3,7 +3,6 @@
 import os
 import argparse
 import uuid
-from pathlib import Path
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -112,19 +111,24 @@ def main():
         model=args.model,
         contents=contents,
         config=types.GenerateContentConfig(
-            response_modalities=['TEXT', 'IMAGE'],
+            response_modalities=["TEXT", "IMAGE"],
             tools=[types.Tool(google_search=types.GoogleSearch())],
             image_config=types.ImageConfig(
                 aspect_ratio=aspect_ratio,
                 image_size=args.resolution,
             ),
+            thinking_config=types.ThinkingConfig(
+                include_thoughts=True,
+            ),
         ),
     )
 
-    if (response.candidates is None
+    if (
+        response.candidates is None
         or len(response.candidates) == 0
         or response.candidates[0].content is None
-        or response.candidates[0].content.parts is None):
+        or response.candidates[0].content.parts is None
+    ):
         raise ValueError("No data received from the API.")
 
     # Extract image from response
@@ -140,7 +144,9 @@ def main():
             print(f"\n\nImage saved to: {args.output}")
 
     if not image_saved:
-        print(f"\n\nWarning: No image data found in the API response. This usually means the model returned only text. Please try again with a different prompt to make image generation more clear.")
+        print(
+            "\n\nWarning: No image data found in the API response. This usually means the model returned only text. Please try again with a different prompt to make image generation more clear."
+        )
 
 
 if __name__ == "__main__":

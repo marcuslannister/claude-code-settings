@@ -1,7 +1,7 @@
 {
-  "name": "claude-code-settings",
-  "version": "2.1.0",
-  "description": "Claude Code settings and skills for spec-driven development workflows",
+  "name": "spec-kit-skill",
+  "version": "1.0.0",
+  "description": "GitHub Spec-Kit integration for constitution-based spec-driven development (7-phase workflow)",
   "author": {
     "name": "Pengfei Ni",
     "url": "https://github.com/feiskyer/claude-code-settings"
@@ -10,13 +10,11 @@
   "repository": "https://github.com/feiskyer/claude-code-settings",
   "license": "MIT",
   "keywords": [
-    "copilot",
-    "litellm",
-    "kiro",
     "spec-kit",
-    "claude-code",
-    "skills",
-    "spec-driven-development",
-    "constitution-based-development"
+    "constitution",
+    "specify",
+    "github",
+    "workflow",
+    "claude-code"
   ]
 }

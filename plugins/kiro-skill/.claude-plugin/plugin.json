@@ -1,7 +1,7 @@
 {
-  "name": "claude-code-settings",
-  "version": "2.1.0",
-  "description": "Claude Code settings and skills for spec-driven development workflows",
+  "name": "kiro-skill",
+  "version": "1.0.0",
+  "description": "Interactive feature development workflow from idea to implementation (Requirements → Design → Tasks → Execute)",
   "author": {
     "name": "Pengfei Ni",
     "url": "https://github.com/feiskyer/claude-code-settings"
@@ -10,13 +10,12 @@
   "repository": "https://github.com/feiskyer/claude-code-settings",
   "license": "MIT",
   "keywords": [
-    "copilot",
-    "litellm",
     "kiro",
-    "spec-kit",
-    "claude-code",
-    "skills",
-    "spec-driven-development",
-    "constitution-based-development"
+    "specs",
+    "requirements",
+    "design",
+    "tasks",
+    "workflow",
+    "claude-code"
   ]
 }

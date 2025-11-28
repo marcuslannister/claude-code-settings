@@ -4,15 +4,33 @@
     "name": "Pengfei Ni"
   },
   "metadata": {
-    "version": "1.2.0",
-    "description": "Claude Code settings, commands and agents for vibe coding"
+    "version": "2.1.0",
+    "description": "Claude Code settings and skills for spec-driven development workflows"
   },
   "plugins": [
     {
       "name": "claude-code-settings",
       "source": "./",
-      "description": "Claude Code settings, commands and agents for vibe coding",
-      "version": "1.2.0",
+      "description": "Claude Code settings, commands, agent and skills (all in one)",
+      "version": "2.1.0",
+      "author": {
+        "name": "Pengfei Ni"
+      }
+    },
+    {
+      "name": "kiro-skill",
+      "source": "./plugins/kiro-skill",
+      "description": "Interactive feature development workflow from idea to implementation (Requirements → Design → Tasks → Execute)",
+      "version": "1.0.0",
+      "author": {
+        "name": "Pengfei Ni"
+      }
+    },
+    {
+      "name": "spec-kit-skill",
+      "source": "./plugins/spec-kit-skill",
+      "description": "GitHub Spec-Kit integration for constitution-based spec-driven development (7-phase workflow)",
+      "version": "1.0.0",
       "author": {
         "name": "Pengfei Ni"
       }
@@ -30,6 +48,15 @@
       "name": "nanobanana-skill",
       "source": "./plugins/nanobanana-skill",
       "description": "Generate or edit images using Google Gemini API via nanobanana",
+      "version": "1.0.0",
+      "author": {
+        "name": "Pengfei Ni"
+      }
+    },
+    {
+      "name": "youtube-transcribe-skill",
+      "source": "./plugins/youtube-transcribe-skill",
+      "description": "Extract subtitles/transcripts from YouTube videos via CLI or browser automation",
       "version": "1.0.0",
       "author": {
         "name": "Pengfei Ni"
