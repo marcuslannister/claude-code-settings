@@ -1,6 +1,7 @@
 ---
 name: youtube-transcribe-skill
 description: Extract subtitles/transcripts from a YouTube video URL and save as a local file. Use when you need to extract subtitles from a YouTube video.
+allowed-tools: Read, Write, Glob, Grep, Task, Bash(cat:*), Bash(ls:*), Bash(tree:*), Bash(yt-dlp:*)
 ---
 
 # YouTube Transcript Extraction

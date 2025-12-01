@@ -1,7 +1,7 @@
 ---
 name: nanobanana-skill
 description: Generate or edit images using Google Gemini API via nanobanana. Use when the user asks to create, generate, edit images with nanobanana, or mentions image generation/editing tasks.
-allowed-tools: Bash
+allowed-tools: Read, Write, Glob, Grep, Task, Bash(cat:*), Bash(ls:*), Bash(tree:*), Bash(python3:*)
 ---
 
 # Nanobanana Image Generation Skill

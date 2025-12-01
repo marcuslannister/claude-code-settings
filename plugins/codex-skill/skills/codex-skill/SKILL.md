@@ -1,6 +1,7 @@
 ---
 name: codex-skill
 description: Use when user asks to leverage codex, gpt-5, or gpt-5.1 to implement something (usually implement a plan or feature designed by Claude). Provides non-interactive automation mode for hands-off task execution without approval prompts.
+allowed-tools: Read, Write, Glob, Grep, Task, Bash(cat:*), Bash(ls:*), Bash(tree:*), Bash(codex:*)
 ---
 
 # Codex

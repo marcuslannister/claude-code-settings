@@ -16,6 +16,7 @@ A curated collection of Claude Code settings, custom commands, skills and sub-ag
 
 # Alternatively, install individual skills without commands/agents
 /plugin install codex-skill               # Codex automation
+/plugin install autonomous-skill          # Long-running task automation
 /plugin install nanobanana-skill          # Image generation
 /plugin install kiro-skill                # Kiro workflow
 /plugin install spec-kit-skill            # Spec-Kit workflow
@@ -144,6 +145,39 @@ Non-interactive automation mode for hands-off task execution using OpenAI Codex.
 - Resumable sessions
 
 **Requirements:** Codex CLI installed (`npm i -g @openai/codex` or `brew install codex`)
+
+</details>
+
+<details>
+<summary>autonomous-skill - Long-running task automation</summary>
+
+### [autonomous-skill](plugins/autonomous-skill)
+
+Execute complex, long-running tasks across multiple sessions using a dual-agent pattern (Initializer + Executor) with automatic session continuation.
+
+**Installation:**
+
+```sh
+/plugin marketplace add feiskyer/claude-code-settings
+/plugin install autonomous-skill
+```
+
+**Key Features:**
+
+- Dual-agent pattern (Initializer creates task list, Executor completes tasks)
+- Auto-continuation across sessions with progress tracking
+- Task isolation with per-task directories (`.autonomous/<task-name>/`)
+- Progress persistence via `task_list.md` and `progress.md`
+- Headless mode execution using Claude CLI
+
+**Usage:**
+
+```text
+You: "Please use autonomous skill to build a REST API for a todo app"
+Claude: [Creates .autonomous/build-rest-api-todo/, initializes task list, starts execution]
+```
+
+**Requirements:** Claude CLI installed
 
 </details>
 
