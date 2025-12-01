@@ -13,7 +13,7 @@ pip install -U 'litellm[proxy]'
 
 ## 2) Configure and Start LiteLLM Proxy
 
-Create a LiteLLM config file `litellm_config.yaml` with Github Copilot as the examples:
+Create a LiteLLM config file `litellm_config.yaml` with GitHub Copilot as the examples:
 
 ```yaml
 general_settings:
@@ -77,9 +77,9 @@ Please visit https://github.com/login/device and enter code XXXX-XXXX to authent
 ...
 ```
 
-Open the link, login and authenticate your Github Copilot account.
+Open the link, login and authenticate your GitHub Copilot account.
 
-## 3) Create Claude Code configure file `~/.claude/settings.json` with following contents
+## 3) Create Claude Code configure file `~/.claude/settings.json` with the following contents
 
 ```json
 {

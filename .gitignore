@@ -156,6 +156,7 @@ file-history/
 plugins/marketplaces/
 plugins/known_marketplaces.json
 .update.lock
+plans/*.md
 
 # Project specific
 WARP.md

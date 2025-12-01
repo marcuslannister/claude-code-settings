@@ -1,6 +1,6 @@
 # Claude Code Settings/Commands/Skills for Vibe Coding
 
-A curated collection of Claude Code settings, custom commands, skills and sub-agents designed for enhanced development workflows. This setup includes specialized commands, skills and sub-agents for feature development (spec-driven workflow), code analysis, GitHub integration, and knowledge management.
+A curated collection of Claude Code settings, custom commands, skills and sub-agents designed for enhanced development workflows. This setup includes specialized commands, skills and subagents for feature development (spec-driven workflow), code analysis, GitHub integration, and knowledge management.
 
 > For OpenAI Codex settings, configurations and custom prompts, please refer [feiskyer/codex-settings](https://github.com/feiskyer/codex-settings).
 
@@ -23,7 +23,7 @@ A curated collection of Claude Code settings, custom commands, skills and sub-ag
 /plugin install youtube-transcribe-skill  # YouTube transcript extraction
 ```
 
-Alternatively, run one-command installation via the [Claude Plugins CLI](https://claude-plugins.dev) to skip the marketplace setup:
+Alternatively, run a one-command installation via the [Claude Plugins CLI](https://claude-plugins.dev) to skip the marketplace setup:
 
 ```bash
 npx claude-plugins install @feiskyer/claude-code-settings/claude-code-settings
@@ -164,7 +164,7 @@ Execute complex, long-running tasks across multiple sessions using a dual-agent 
 
 **Key Features:**
 
-- Dual-agent pattern (Initializer creates task list, Executor completes tasks)
+- Dual-agent pattern (Initializer creates a task list, Executor completes tasks)
 - Auto-continuation across sessions with progress tracking
 - Task isolation with per-task directories (`.autonomous/<task-name>/`)
 - Progress persistence via `task_list.md` and `progress.md`
@@ -215,7 +215,7 @@ Generate or edit images using Google Gemini API via nanobanana. Use when creatin
 
 ### [youtube-transcribe-skill](plugins/youtube-transcribe-skill)
 
-Extract subtitles/transcripts from YouTube video link.
+Extract subtitles/transcripts from a YouTube video link.
 
 **Installation:**
 
@@ -379,14 +379,14 @@ Configuration for using Claude Code with MiniMax API. Uses the MiniMax-M2 model.
 
 ## Limitations
 
-**WebSearch** tool in Claude Code is an [Anthropic specific tool](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool) and it is not available when you’re not using the official Anthropic API. Hence, if you need web search, you'd need to connect Claude Code with external web search MCP servers, e.g. [Tavily MCP](https://docs.tavily.com/documentation/mcp), [Brave MCP](https://github.com/brave/brave-search-mcp-server), [Firecrawl MCP](https://docs.firecrawl.dev/mcp-server) or [DuckDuckGo Search MCP](https://github.com/nickclyde/duckduckgo-mcp-server).
+**WebSearch** tool in Claude Code is an [Anthropic specific tool,](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool) and it is not available when you’re not using the official Anthropic API. Hence, if you need web search, you'd need to connect Claude Code with external web search MCP servers, e.g. [Tavily MCP](https://docs.tavily.com/documentation/mcp), [Brave MCP](https://github.com/brave/brave-search-mcp-server), [Firecrawl MCP](https://docs.firecrawl.dev/mcp-server) or [DuckDuckGo Search MCP](https://github.com/nickclyde/duckduckgo-mcp-server).
 
 ## FAQs
 
 <details>
 <summary>Login Issue of Claude Code 2.0+ extension in VSCode</summary>
 
-For Claude Code 2.0+ extension in VSCode, if you’re not using Claude.ai subscription, please put the environment variables manually in your vscode settings.json:
+For Claude Code 2.0+ extension in VSCode, if you're not using a Claude.ai subscription, please put the environment variables manually in your vscode settings.json:
 
 ```json
 {
@@ -431,7 +431,7 @@ For Claude Code 2.0+ extension in VSCode, if you’re not using Claude.ai subscr
 }
 ```
 
-Note that the contents of [~/.claude/config.json](config.json) is also required to skip claude.ai login.
+Note that the contents of [~/.claude/config.json](config.json) are also required to skip claude.ai login.
 
 </details>
 
@@ -440,7 +440,7 @@ Note that the contents of [~/.claude/config.json](config.json) is also required 
 
 Ensure the API key you configured in `ANTHROPIC_AUTH_TOKEN` is added to approved API key in `~/.claude.json`, e.g.
 
-```json
+```javascript
 {
   "customApiKeyResponses": {
     "approved": [
@@ -464,7 +464,7 @@ Ensure the API key you configured in `ANTHROPIC_AUTH_TOKEN` is added to approved
 - [Claude Code official document](https://docs.anthropic.com/en/docs/claude-code/overview) - must read official document.
 - [anthropics/skills](https://github.com/anthropics/skills) - official list of Claude Code skills that teach Claude how to complete specific tasks in a repeatable way
 - [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) - curated list of slash-commands, CLAUDE.md files, CLI tools, and other resources.
-- [wshobson/agents](https://github.com/wshobson/agents) - comprehensive collection of specialized AI subagents for Claude Code.
+- [wshobson/agents](https://github.com/wshobson/agents) - a comprehensive collection of specialized AI subagents for Claude Code.
 
 ## LICENSE
 
