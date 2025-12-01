@@ -225,7 +225,6 @@ interface UserModel {
 ```
 
 [Continue with other sections...]
-```
 
 ### Review & Iteration
 
@@ -342,7 +341,7 @@ Create `.kiro/specs/{feature-name}/tasks.md` with:
 3. **Ask for Approval**
    - After creating/updating tasks
    - Ask: "Do the tasks look good?"
-   - Make modifications if user requests changes
+     - Make modifications if user requests changes
    - Continue feedback-revision cycle until explicit approval
    - **Stop once approved - do not proceed to implementation**
 
