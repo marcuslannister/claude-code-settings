@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code and Github Copilot when working with code in this repository.
+This file provides guidance to Claude Code and GitHub Copilot when working with code in this repository.
 
 ## Environment Setup
 
-This repository contains Claude Code settings, configurations and guidances. The default setup uses GitHub Copilot as the model provider through a proxy API.
+This repository contains Claude Code settings, configurations and guidance. The default setup uses GitHub Copilot as the model provider through a proxy API.
 
 ### Required Dependencies
 
@@ -71,7 +71,7 @@ Run commands using the slash syntax:
 - `/cc:create-command mycommand` - Create a new command
 - `/gh:review-pr 123` - Review pull request #123
 
-All available commands should be documented at README.md in Commands section.
+All available commands should be documented at README.md in the Commands section.
 
 ### Prompt Engineering Principles
 
@@ -87,9 +87,9 @@ When creating or modifying command prompts:
 ### Behavioral Guidelines
 
 - **Concise communication**: Provide direct answers without unnecessary preamble or elaboration
-- **Follow existing patterns**: Always check similar commands for consistent structure and approach
+- **Follow existing patterns**: Always check similar commands for a consistent structure and approach
 - **Prefer editing over creating**: Always edit existing files rather than creating new ones unless absolutely necessary
-- **Use TodoWrite for complex tasks**: Track multi-step processes and ensure completion of all requirements
+- **Use TodoWrite for complex tasks**: Track multistep processes and ensure completion of all requirements
 
 ## Guidances
 

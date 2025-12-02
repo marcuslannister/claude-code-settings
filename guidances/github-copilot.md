@@ -1,8 +1,8 @@
-# Claude Code with Github Copilot as Model Provider
+# Claude Code with GitHub Copilot as Model Provider
 
-Guidance for how to connect [Github Copilot](https://github.com/features/copilot) as model provider for Claude Code.
+Guidance for how to connect [GitHub Copilot](https://github.com/features/copilot) as a model provider for Claude Code.
 
-> NOTICE: calling Github Copilot is not against its policy as this is officially supported per doc [here](https://docs.github.com/en/copilot/how-tos/build-copilot-extensions/building-a-copilot-agent-for-your-copilot-extension/using-copilots-llm-for-your-agent). And actually, there are lots of AI tools (e.g. Aider and Cline VSCode extension) already support Github Copilot as one of the LLM providers.
+> NOTICE: calling GitHub Copilot is not against its policy as this is officially supported per doc [here](https://docs.github.com/en/copilot/how-tos/build-copilot-extensions/building-a-copilot-agent-for-your-copilot-extension/using-copilots-llm-for-your-agent). And actually, there are lots of AI tools (e.g. Aider and Cline VSCode extension) already support GitHub Copilot as one of the LLM providers.
 
 ## 1) Install Claude Code and Copilot API proxy
 
@@ -10,7 +10,7 @@ Guidance for how to connect [Github Copilot](https://github.com/features/copilot
 npm install -g copilot-api @anthropic-ai/claude-code
 ```
 
-## 2) Start copilot-api and authenticate to Github Copilot
+## 2) Start copilot-api and authenticate to GitHub Copilot
 
 ```
 $ copilot-api start --proxy-env
@@ -19,7 +19,7 @@ Please visit https://github.com/login/device and enter code XXXX-XXXX to authent
 ...
 ```
 
-Once succeeds, you’d see the model list and API address:
+Once succeeds, you'd see the model list and API address:
 
 ```sh
 ...
@@ -35,7 +35,7 @@ Once succeeds, you’d see the model list and API address:
   ➜ Listening on: http://localhost:4141/ (all interfaces)
 ```
 
-## 3) Create Claude Code configure file `~/.claude/settings.json` with following contents
+## 3) Create Claude Code configure file `~/.claude/settings.json` with the following contents
 
 ```json
 {
@@ -56,7 +56,7 @@ Open another terminal and then run `claude` at your will. DO read its [best prac
 
 ## Alternative config
 
-If the above configure file doesn't work, use env variable directly:
+If the above-configured file doesn't work, use the env variable directly:
 
 ```sh
 export ANTHROPIC_BASE_URL="http://localhost:4141"
