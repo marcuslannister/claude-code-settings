@@ -46,3 +46,7 @@ Configuration for using Claude Code with Azure AI Foundry native mode. Uses `CLA
 ### [minimax.json](minimax.json)
 
 Configuration for using Claude Code with MiniMax API. Uses the MiniMax-M2 model.
+
+### [openrouter-settings.json](openrouter-settings.json)
+
+Configuration for using Claude Code with OpenRouter API. OpenRouter provides access to many models through a unified API. Note: `ANTHROPIC_API_KEY` must be explicitly blank while `ANTHROPIC_AUTH_TOKEN` contains your OpenRouter API key. By default, Claude Code uses Anthropic model aliases (Sonnet, Opus, Haiku), which OpenRouter automatically maps. You can override with custom models using `ANTHROPIC_DEFAULT_SONNET_MODEL`, `ANTHROPIC_DEFAULT_OPUS_MODEL`, and `ANTHROPIC_DEFAULT_HAIKU_MODEL`.

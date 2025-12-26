@@ -375,6 +375,10 @@ Configuration for using Claude Code with Azure AI Foundry native mode. Uses `CLA
 
 Configuration for using Claude Code with MiniMax API. Uses the MiniMax-M2 model.
 
+### [openrouter-settings.json](settings/openrouter-settings.json)
+
+Using Claude Code with OpenRouter API. OpenRouter provides access to many models through a unified API. Note: `ANTHROPIC_API_KEY` must be blank while `ANTHROPIC_AUTH_TOKEN` contains your OpenRouter API key.
+
 </details>
 
 ## Limitations
