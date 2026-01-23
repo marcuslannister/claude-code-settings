@@ -242,6 +242,51 @@ Extract subtitles/transcripts from a YouTube video link.
 </details>
 
 <details>
+<summary>deep-research - Multi-Agent Research Orchestration</summary>
+
+### [deep-research](./skills/deep-research)
+
+Multi-agent orchestration workflow for deep research. Decomposes research goals into parallel sub-objectives, spawns `claude -p` sub-processes, aggregates results, and delivers polished reports.
+
+**Triggered by**: "深度调研", "deep research", "wide research", "multi-agent research", or systematic research needs
+
+**Key Features:**
+
+- **Multi-agent orchestration**: Splits research goals into parallel sub-tasks executed via `claude -p`
+- **Skills-first approach**: Prioritizes installed skills, then MCP tools (firecrawl → exa), then WebFetch/WebSearch
+- **Structured delivery**: Produces file-based reports with executive summaries, not chat messages
+- **Chapter-by-chapter refinement**: Iterative polishing with source verification
+- **Comprehensive logging**: Dispatcher logs, per-task logs, raw data caching
+- **Scale-aware execution**: Micro (1-2 tasks) to large (15+) with appropriate parallelization
+
+**Use Cases:**
+
+- Systematic web/document research
+- Competitive/industry analysis
+- Batch URL/dataset processing
+- Long-form writing with evidence integration
+
+**Directory Structure:**
+
+```
+.research/<name>/
+├── prompts/           # Sub-task prompts
+├── child_outputs/     # Sub-process outputs
+├── logs/              # Execution logs
+├── raw/               # Cached raw data
+└── final_report.md    # Polished deliverable
+```
+
+**Usage:**
+
+```text
+You: "深度调研一下 AI Agent 框架的现状"
+Claude: [Initiates reconnaissance, proposes sub-objectives, waits for confirmation, then orchestrates parallel research]
+```
+
+</details>
+
+<details>
 <summary>kiro-skill - Interactive Feature Development</summary>
 
 ### [kiro-skill](./skills/kiro-skill)
