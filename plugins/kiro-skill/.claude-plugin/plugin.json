@@ -1,6 +1,6 @@
 {
   "name": "kiro-skill",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Interactive feature development workflow from idea to implementation (Requirements → Design → Tasks → Execute)",
   "author": {
     "name": "Pengfei Ni",
