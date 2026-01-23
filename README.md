@@ -23,17 +23,24 @@ A curated collection of Claude Code settings, custom commands, skills and sub-ag
 /plugin install youtube-transcribe-skill  # YouTube transcript extraction
 ```
 
-Alternatively, run a one-command installation via the [Claude Plugins CLI](https://claude-plugins.dev) to skip the marketplace setup:
-
-```bash
-npx claude-plugins install @feiskyer/claude-code-settings/claude-code-settings
-```
-
-This automatically adds the marketplace and installs the plugin in a single step.
-
 **Note:**
 
 - [~/.claude/settings.json](settings.json) is not configured via Claude Code Plugin, you'd need to configure it manually.
+
+### Using npx skills
+
+`npx skills` could be used to install skills only for your AI coding tools.
+
+```sh
+# List skills
+npx -y skills add -l feiskyer/claude-code-settings
+
+# Install all skills
+npx -y skills add --all feiskyer/claude-code-settings
+
+# Manually select a list of skills to install
+npx -y skills add feiskyer/claude-code-settings
+```
 
 ### Manual Setup
 
