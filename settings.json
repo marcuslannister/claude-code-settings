@@ -8,8 +8,10 @@
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-5-mini",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_TELEMETRY": "1",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
   },
+
   "alwaysThinkingEnabled": true,
   "permissions": {
     "allow": [
@@ -26,6 +28,7 @@
     "deny": [],
     "ask": []
   },
+
   "statusLine": {
     "type": "command",
     "command": "~/.claude/status-line.sh"

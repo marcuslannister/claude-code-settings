@@ -167,3 +167,5 @@ plans/*.md
 # Project specific
 WARP.md
 .research
+/image-cache
+stats-cache.json
