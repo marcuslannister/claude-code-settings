@@ -1,10 +1,11 @@
 {
+  "model": "opusplan",
   "env": {
     "ANTHROPIC_BASE_URL": "http://localhost:4000",
     "ANTHROPIC_AUTH_TOKEN": "sk-dummy",
-    "ANTHROPIC_MODEL": "claude-opus-4.6",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4.5",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4.6",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4.6",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-sonnet-4.6",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-5-mini",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_TELEMETRY": "1",
@@ -13,6 +14,7 @@
     "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
   },
   "alwaysThinkingEnabled": true,
+
   "permissions": {
     "allow": [
       "Skill(codex-skill)",
@@ -25,7 +27,10 @@
       "Skill(claude-code-settings:autonomous-skill)",
       "Bash(codex:*)"
     ],
-    "deny": ["Bash(rm -rf:*)", "Bash(rm -fr:*)"],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)"
+    ],
     "ask": [
       "Bash(sudo:*)",
       "Bash(chmod 777:*)",

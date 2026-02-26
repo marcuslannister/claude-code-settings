@@ -9,6 +9,7 @@ lerna-debug.log*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*.pyc
 *$py.class
 .DS_Store
 
@@ -163,9 +164,16 @@ plugins/marketplaces/
 plugins/known_marketplaces.json
 .update.lock
 plans/*.md
+/ccline
+/plugins/cache
+plugins/install-counts-cache.json
+plugins/blocklist.json
+/tasks
+/usage-data/facets
 
 # Project specific
 WARP.md
 .research
 /image-cache
 stats-cache.json
+/backups
