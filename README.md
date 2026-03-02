@@ -436,6 +436,20 @@ Using Claude Code with OpenRouter API. OpenRouter provides access to many models
 
 </details>
 
+## Scripts
+
+The [`scripts/`](scripts/) directory contains utility shell scripts for maintaining your Claude Code setup.
+
+| Script | Description |
+|--------|-------------|
+| [`update-cc-plugins.sh`](scripts/update-cc-plugins.sh) | Update all installed Claude Code marketplaces and plugins/skills in one command |
+
+**Usage:**
+
+```sh
+bash ~/.claude/scripts/update-cc-plugins.sh
+```
+
 ## Limitations
 
 **WebSearch** tool in Claude Code is an [Anthropic specific tool,](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool) and it is not available when you’re not using the official Anthropic API. Hence, if you need web search, you'd need to connect Claude Code with external web search MCP servers, e.g. [Tavily MCP](https://docs.tavily.com/documentation/mcp), [Brave MCP](https://github.com/brave/brave-search-mcp-server), [Firecrawl MCP](https://docs.firecrawl.dev/mcp-server) or [DuckDuckGo Search MCP](https://github.com/nickclyde/duckduckgo-mcp-server).
