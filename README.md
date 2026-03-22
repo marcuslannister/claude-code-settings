@@ -58,7 +58,7 @@ pip install -U 'litellm[proxy]'
 litellm -c ~/.claude/guidances/litellm_config.yaml
 
 # For convenience, run litellm proxy in background with tmux
-# tmux new-session -d -s copilot 'litellm -c guidances/litellm_config.yaml'
+# tmux new-session -d -s copilot 'litellm -c ~/.claude/guidances/litellm_config.yaml'
 ```
 
 Once started, you'll see:
