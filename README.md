@@ -76,10 +76,8 @@ Open the link, log in and authenticate your GitHub Copilot account.
 1. The default configuration is leveraging [LiteLLM Proxy Server](https://docs.litellm.ai/docs/simple_proxy) as LLM gateway to GitHub Copilot. You can also use [copilot-api](https://github.com/ericc-ch/copilot-api) as the proxy as well (remember to change your port to 4141).
 2. Make sure the following models are available in your account; if not, replace them with your own model names:
 
-   - ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4.5
-
-   - ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4
-
+   - ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4.6
+   - ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4.6
    - ANTHROPIC_DEFAULT_HAIKU_MODEL: gpt-5-mini
 
 ## Skills
@@ -512,11 +510,11 @@ For Claude Code 2.0+ extension in VSCode, if you're not using a Claude.ai subscr
     },
     {
       "name": "ANTHROPIC_DEFAULT_SONNET_MODEL",
-      "value": "claude-sonnet-4.5"
+      "value": "claude-sonnet-4.6"
     },
     {
       "name": "ANTHROPIC_DEFAULT_OPUS_MODEL",
-      "value": "claude-opus-4"
+      "value": "claude-opus-4.6"
     },
     {
       "name": "ANTHROPIC_DEFAULT_HAIKU_MODEL",
