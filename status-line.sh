@@ -27,6 +27,7 @@ BAR_WIDTH=10
 CONTEXT_WARN_PCT=70
 CONTEXT_CRIT_PCT=90
 DEFAULT_CTX_LIMIT=200000
+CTX_LIMIT_1M=1000000
 
 # Colors (using $'...' for proper escape sequence interpretation)
 C_RESET=$'\033[0m'
@@ -48,6 +49,13 @@ INPUT=$(cat)
 MODEL=$(echo "$INPUT" | jq -r '.model.display_name // "unknown"')
 MODEL_ID=$(echo "$INPUT" | jq -r '.model.id // ""')
 CWD=$(echo "$INPUT" | jq -r '.workspace.current_dir // "."')
+
+# Detect 1M context models (Anthropic, Vertex, Bedrock all use "1m" in model ID)
+if echo "$MODEL_ID" | grep -qi '1m'; then
+    CTX_LIMIT=$CTX_LIMIT_1M
+else
+    CTX_LIMIT=$DEFAULT_CTX_LIMIT
+fi
 TRANSCRIPT=$(echo "$INPUT" | jq -r '.transcript_path // ""')
 DIR=$(basename "$CWD")
 
@@ -184,7 +192,7 @@ main() {
     total_in=${total_in:-0}
     out_tok=${out_tok:-0}
 
-    ctx_pct=$(awk "BEGIN {printf \"%.1f\", ($total_in / $DEFAULT_CTX_LIMIT) * 100}")
+    ctx_pct=$(awk "BEGIN {printf \"%.1f\", ($total_in / $CTX_LIMIT) * 100}")
     duration=$(get_session_duration)
     cost=$(calculate_cost "$total_in" "$out_tok")
     git_info=$(get_git_info)
