@@ -2,14 +2,14 @@
 
 A curated collection of Claude Code settings, skills and sub-agents designed for enhanced development workflows. This setup includes specialized skills and subagents for feature development (spec-driven workflow), code analysis, GitHub integration, and knowledge management.
 
-> For OpenAI Codex settings, configurations and custom prompts, please refer [feiskyer/codex-settings](https://github.com/feiskyer/codex-settings).
+> For OpenAI Codex settings, configurations and custom prompts, please refer [marcuslannister/codex-settings](https://github.com/marcuslannister/codex-settings).
 
 ## Setup
 
 ### Using Claude Code Plugin
 
 ```sh
-/plugin marketplace add feiskyer/claude-code-settings
+/plugin marketplace add marcuslannister/claude-code-settings
 
 # Install main plugin (skills and agents)
 /plugin install claude-code-settings
@@ -33,13 +33,13 @@ A curated collection of Claude Code settings, skills and sub-agents designed for
 
 ```sh
 # List skills
-npx -y skills add -l feiskyer/claude-code-settings
+npx -y skills add -l marcuslannister/claude-code-settings
 
 # Install all skills
-npx -y skills add --all feiskyer/claude-code-settings
+npx -y skills add --all marcuslannister/claude-code-settings
 
 # Manually select a list of skills to install
-npx -y skills add feiskyer/claude-code-settings
+npx -y skills add marcuslannister/claude-code-settings
 ```
 
 ### Manual Setup
@@ -49,7 +49,7 @@ npx -y skills add feiskyer/claude-code-settings
 mv ~/.claude ~/.claude.bak
 
 # Clone the claude-code-settings
-git clone https://github.com/feiskyer/claude-code-settings.git ~/.claude
+git clone https://github.com/marcuslannister/claude-code-settings.git ~/.claude
 
 # Install LiteLLM proxy
 pip install -U 'litellm[proxy]'
@@ -94,7 +94,7 @@ Non-interactive automation mode for hands-off task execution using OpenAI Codex.
 **Installation:**
 
 ```sh
-/plugin marketplace add feiskyer/claude-code-settings
+/plugin marketplace add marcuslannister/claude-code-settings
 /plugin install codex-skill
 ```
 
@@ -120,7 +120,7 @@ Execute complex, long-running tasks across multiple sessions using a dual-agent 
 **Installation:**
 
 ```sh
-/plugin marketplace add feiskyer/claude-code-settings
+/plugin marketplace add marcuslannister/claude-code-settings
 /plugin install autonomous-skill
 ```
 
@@ -153,7 +153,7 @@ Generate or edit images using Google Gemini API via nanobanana. Use when creatin
 **Installation:**
 
 ```sh
-/plugin marketplace add feiskyer/claude-code-settings
+/plugin marketplace add marcuslannister/claude-code-settings
 /plugin install nanobanana-skill
 ```
 
@@ -182,7 +182,7 @@ Extract subtitles/transcripts from a YouTube video link.
 **Installation:**
 
 ```sh
-/plugin marketplace add feiskyer/claude-code-settings
+/plugin marketplace add marcuslannister/claude-code-settings
 /plugin install youtube-transcribe-skill
 ```
 
@@ -257,7 +257,7 @@ Interactive feature development workflow from idea to implementation.
 **Installation:**
 
 ```sh
-/plugin marketplace add feiskyer/claude-code-settings
+/plugin marketplace add marcuslannister/claude-code-settings
 /plugin install kiro-skill
 ```
 
@@ -289,7 +289,7 @@ GitHub Spec-Kit integration for constitution-based spec-driven development.
 **Installation:**
 
 ```sh
-/plugin marketplace add feiskyer/claude-code-settings
+/plugin marketplace add marcuslannister/claude-code-settings
 /plugin install spec-kit-skill
 ```
 
