@@ -1,5 +1,4 @@
 {
-  "model": "sonnet",
   "env": {
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_TELEMETRY": "1",
@@ -8,7 +7,6 @@
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
   },
-  "alwaysThinkingEnabled": true,
   "attribution": {
     "commit": "",
     "pr": ""
@@ -50,9 +48,9 @@
       "Bash(eval:*)"
     ]
   },
-
   "statusLine": {
     "type": "command",
     "command": "~/.claude/status-line.sh"
-  }
+  },
+  "alwaysThinkingEnabled": true
 }
