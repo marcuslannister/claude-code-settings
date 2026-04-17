@@ -170,6 +170,8 @@ plugins/install-counts-cache.json
 plugins/blocklist.json
 /tasks
 /usage-data/facets
+settings.local.json
+**/settings.local.json
 
 # Project specific
 WARP.md
