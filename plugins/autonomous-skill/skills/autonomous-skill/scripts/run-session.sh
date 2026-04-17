@@ -23,7 +23,7 @@ MAX_TURNS_EXEC=100
 DEFAULT_MODEL="sonnet"
 DEFAULT_MAX_BUDGET="5.00"
 DEFAULT_EFFORT="high"
-DEFAULT_PERMISSION_MODE="auto"
+DEFAULT_PERMISSION_MODE="bypassPermissions"
 DEFAULT_COMPLETION_PROMISE="DONE"
 
 # Resolve skill directory
@@ -82,7 +82,7 @@ Options:
   --model <model>            Model alias or ID (default: sonnet)
   --fallback-model <m>       Fallback model if primary overloaded
   --effort <level>           Thinking effort: low|medium|high (default: high)
-  --permission-mode <m>      Permission mode (default: auto)
+  --permission-mode <m>      Permission mode (default: bypassPermissions)
   --add-dir <dirs>           Extra directories to allow access
   --list, -l                 List all tasks with progress
   --help, -h                 Show this help
@@ -249,7 +249,7 @@ task_exists() {
 
 build_claude_args() {
     local -a args=()
-    args+=(--output-format stream-json)
+    args+=(--output-format stream-json --verbose)
     args+=(--model "$opt_model")
     args+=(--effort "$opt_effort")
     args+=(--max-budget-usd "$opt_max_budget")
