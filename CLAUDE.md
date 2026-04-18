@@ -37,3 +37,29 @@ A distribution of Claude Code configuration — skills, subagents, hooks, rules,
 - Prefer `fd name` for path discovery and `fd -t d name` for directory discovery.
 - Fall back to `grep` or `find` only when `rg` or `fd` is unavailable.
 
+## Never
+
+- Modify `.env`, lockfiles, or CI secrets without explicit approval
+- Remove a referenced symbol without searching call sites first
+- Commit without running tests when the project has a fast test suite
+
+## Always
+
+- Show diff before committing
+- Update CHANGELOG for user-facing changes if the project keeps one
+
+## Verification
+
+- Run the project's test and lint commands before declaring a change complete
+- API changes: update or add contract tests if the project has them
+- UI changes: capture before/after screenshots
+
+## Compact Instructions
+
+Preserve:
+
+1. Architecture decisions (NEVER summarize)
+2. Modified files and key changes
+3. Current verification status (pass/fail commands)
+4. Open risks, TODOs, rollback notes
+
