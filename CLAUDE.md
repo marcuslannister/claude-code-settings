@@ -28,3 +28,7 @@ A distribution of Claude Code configuration — skills, subagents, hooks, rules,
 - Commits: follow the existing short `chore:` / `feat:` / `fix:` style (see `git log`).
 - Never commit `.claude/settings.local.json` or anything under `sessions/`, `projects/`, `shell-snapshots/`, `file-history/` — all gitignored.
 - When modifying a skill, re-run `/health` afterwards to catch oversized SKILL.md, missing frontmatter, or description drift.
+
+## Version Control
+- If the repository contains `.jj/`, prefer `jj` over Git porcelain for status, diff, log, commit, and push-related work unless the user explicitly asks for Git.
+
