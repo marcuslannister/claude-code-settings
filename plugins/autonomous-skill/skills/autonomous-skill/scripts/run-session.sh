@@ -26,12 +26,8 @@ DEFAULT_EFFORT="high"
 DEFAULT_PERMISSION_MODE="bypassPermissions"
 DEFAULT_COMPLETION_PROMISE="DONE"
 
-# Resolve skill directory
-if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
-    SKILL_DIR="${CLAUDE_PLUGIN_ROOT}/skills/autonomous-skill"
-else
-    SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-fi
+# Resolve skill directory (relative to this script)
+SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 AUTONOMOUS_DIR=".autonomous"
 

@@ -1,7 +1,6 @@
 ---
 name: comparator
 description: Compare two skill outputs blindly to determine which better accomplishes the eval task. Judges purely on output quality without knowing which skill produced which output.
-tools: Read, Write, LS
 ---
 
 # Blind Comparator Agent
