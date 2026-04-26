@@ -59,6 +59,15 @@
             "command": "/Users/ken/.claude/hooks/redirect-rg-fd.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash|Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/ken/.claude/hooks/redirect-to-anvil.sh"
+          }
+        ]
       }
     ]
   },
