@@ -168,6 +168,9 @@ plans/*.md
 /plugins/cache
 plugins/install-counts-cache.json
 plugins/blocklist.json
+plugins/installed_plugins.json
+sessions/
+session-env/
 /tasks
 /usage-data/facets
 settings.local.json
