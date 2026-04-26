@@ -1,3 +1,22 @@
 {
-  "mcpServers": {}
+  "mcpServers": {
+    "anvil": {
+      "type": "stdio",
+      "command": "/Users/ken/.emacs.d/anvil-stdio.sh",
+      "args": [
+        "--server-id=anvil",
+        "--init-function=anvil-enable",
+        "--stop-function=anvil-disable"
+      ],
+      "env": {}
+    },
+    "anvil-emacs-eval": {
+      "type": "stdio",
+      "command": "/Users/ken/.emacs.d/anvil-stdio.sh",
+      "args": [
+        "--server-id=emacs-eval"
+      ],
+      "env": {}
+    }
+  }
 }
