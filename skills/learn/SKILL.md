@@ -1,8 +1,9 @@
 ---
 name: learn
-description: "Invoke when diving deep into an unfamiliar domain, preparing a research article, or turning collected sources into publishable output. Runs a six-phase workflow: collect, digest, outline, fill in, refine, publish. Not for quick lookups or single-file reads."
+description: "Runs a six-phase research workflow to turn unfamiliar domains or collected sources into publish-ready output. Not for quick lookups or single-file reads."
+when_to_use: "学习一下, 深入研究, 研究一下, 整理成文章, research, deep dive, help me understand, compile sources, unfamiliar domain"
 metadata:
-  version: "3.8.0"
+  version: "3.14.0"
 ---
 
 # Learn: From Raw Materials to Published Output
@@ -10,13 +11,13 @@ metadata:
 Prefix your first line with 🥷 inline, not as its own paragraph.
 
 
-Your role: collect, organize, translate, explain, structure. You support the user's thinking; you do not replace it.
+Collect, organize, translate, explain, structure. Support the user's thinking; do not replace it.
 
 ## Pre-check
 
-Before starting, check whether `/read` and `/write` skills are installed (search for their SKILL.md in the skills directories). Warn if missing but do not block:
-- `/read` missing: warn that Phase 1 will fall back to the environment's native fetch capability or `curl` instead of `/read`.
-- `/write` missing: warn that Phase 5 will not be able to strip AI patterns from the draft. Phases 1-4 are unaffected.
+Check whether `/read` and `/write` skills are installed (look for their SKILL.md in the skills directories). Warn if missing, do not block:
+- `/read` missing -- Phase 1 fetch falls back to native `WebFetch` / `curl`; coverage on paywalled, JS-heavy, and Chinese-platform pages degrades.
+- `/write` missing -- Phase 5 AI-pattern stripping falls back to manual scan. Phases 1-4 are unaffected.
 
 ## Choose Mode
 
@@ -24,19 +25,21 @@ Ask the user to confirm the mode, using the environment's native question or app
 
 | Mode | Goal | Entry | Exit |
 |------|------|-------|------|
-| **Deep Research** | Understand a domain well enough to write about it | Phase 1 | Phase 6: publish |
+| **Deep Research** | Understand a domain well enough to write about it | Phase 1 | Phase 6: publish-ready draft |
 | **Quick Reference** | Build a working mental model fast, no article planned | Phase 2 | Phase 2: notes only |
-| **Write to Learn** | Already have materials, force understanding through writing | Phase 3 | Phase 6: publish |
+| **Write to Learn** | Already have materials, force understanding through writing | Phase 3 | Phase 6: publish-ready draft |
 
 If unsure, suggest Quick Reference.
 
 ## Phase 1: Collect
 
-Gather primary sources only: papers that introduced key ideas, official lab/product blogs, posts from the people who built the thing, canonical "build it from scratch" repositories. Not summaries. Not explainers.
+Gather primary sources only: papers that introduced key ideas, official lab/product blogs, posts from builders, canonical "build it from scratch" repositories. Not summaries. Not explainers.
 
-For each source: download, convert to Markdown, file into a structured directory organized by sub-topic. Use `/read` for individual pages.
+Three ordered steps per source -- no shortcuts, no merging:
 
-**Source Discovery:** if a web search plugin is installed (e.g., PipeLLM search), use it. Strategy: fast search to map the landscape, then deep search on the 2-3 most promising sub-topics. Otherwise: use the environment's native web search or fetch capability, or fall back to `curl + defuddle.md`.
+1. **Discover** -- use an installed search plugin (e.g., PipeLLM) to map the landscape, then deep-search the 2-3 most promising sub-topics. No plugin: use the environment's native web search. Output is a URL list; do not fetch content here.
+2. **Fetch** -- every URL goes through `/read`. `/read` already owns the proxy cascade, paywall detection, and platform routing (WeChat, Feishu, PDF, GitHub). `WebFetch` and raw `curl` silently fail on JS-heavy or paywalled sites and skip all of that. If `/read` is missing (Pre-check warned), fall back to native fetch and accept reduced coverage.
+3. **File** -- `/read` saves to `~/Downloads/{title}.md`. Move each file into a sub-topic directory under the research project after the fetch returns. Move, don't refetch.
 
 Target: 5-10 sources for a blog post, 15-20 for a deep technical survey.
 
@@ -80,27 +83,34 @@ Pass the draft with a specific brief:
 
 Do not summarize sections the user has not written. Do not draft new sections from scratch. Edits only.
 
-Then run `/write` on the refined draft to strip any AI patterns that crept in during refinement.
+Then strip AI patterns from the draft. If `/write` is installed, invoke it. If not, do it manually: scan for filler phrases, binary contrasts, dramatic fragmentation, and overused adverbs. Cut them without changing meaning.
 
-## Phase 6: Self-review and Publish
+## Phase 6: Self-review and Publish Readiness
 
 The user reads the entire article linearly before publishing. Not with AI. Mark everything that feels off, fix it, read again. Two passes minimum.
 
-When it reads clean from start to finish, publish it.
+When it reads clean from start to finish, the draft is ready for the user to publish.
 
-## Hard Rules
-
-- **No skipping Phase 5.** Refine always runs before publish.
-- **Primary sources only in Phase 1.** If the person who wrote it did not build or research the thing, it is secondary.
-- **Contradictions must be preserved.** Never silently resolve a disagreement between sources.
-- **Phase 6 is the user's job.** AI does not do the final self-review pass.
+**After the user confirms the article is ready to publish, stop.** Do not upload, post, distribute, or perform any publish action unless explicitly asked.
 
 ## Gotchas
 
 | What happened | Rule |
 |---------------|------|
 | Collected 30 secondary explainers instead of primary sources | Phase 1 targets papers, official blogs, and repos by builders. Summaries are not sources. |
+| Used `WebFetch` or `curl` on URLs while `/read` was installed | Phase 1 fetch is not optional. `/read` owns the proxy cascade, paywall detection, and platform routing. Bypassing it silently loses coverage on paywalled, JS-heavy, or Chinese-platform pages. |
 | Treated a convincing explainer as ground truth | Ask: does this appear in at least two different contexts from the same source? |
-| Skipped Phase 5 because the outline felt done | Refine always runs before publish. "Good enough" is Phase 4 thinking. |
-| Two sources contradicted; silently picked one | Note both positions and the evidence each gives. Never silently resolve a contradiction. |
-| Published before the self-review pass | The user reads the entire article linearly before it ships. AI does not do this step. |
+| Phase 2 wrote summaries instead of teaching the concept | Digest means building the mental model. Summarizing is not digesting. |
+| AI offered to upload the article to a blog or social platform after the user said it was ready | Stop at confirmation. Publishing is the user's action, not yours. |
+
+## Specification Writing Mode
+
+Activate when: "codify design rules", "write a spec", "document patterns", or synthesizing design system
+
+Workflow:
+1. **Collect**: Gather all references (existing docs, code, screenshots)
+2. **Extract patterns**: Identify recurring decisions (spacing scale, color palette, typography rules)
+3. **Codify**: Write explicit rules with examples and anti-patterns
+4. **Validate**: Check that the spec covers all observed cases
+
+Output: Structured specification document (e.g., design.md, API.md, style-guide.md)

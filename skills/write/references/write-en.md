@@ -17,6 +17,8 @@ Eliminate predictable AI writing patterns. Write like a human: varied, imperfect
 
 ### Word Choice
 
+Examples, not exhaustive -- any word used to signal importance rather than to say something is suspect.
+
 **Overused adverbs: kill them all:**
 "quietly", "deeply", "fundamentally", "remarkably", "arguably", "certainly", "really", "just", "literally", "genuinely", "honestly", "simply", "actually"
 
@@ -49,6 +51,8 @@ Eliminate predictable AI writing patterns. Write like a human: varied, imperfect
 > OK: "is"
 
 ### Sentence Structures to Avoid
+
+Examples, not exhaustive -- any construction that performs insight rather than delivers it belongs here.
 
 **Negative parallelism**: the single most common AI tell:
 > NO: "It's not bold. It's backwards." / "Not because X, but because Y." / "The question isn't X. The question is Y."

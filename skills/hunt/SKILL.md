@@ -1,8 +1,9 @@
 ---
 name: hunt
-description: Invoke when debugging any error, crash, unexpected behavior, or failing test. Finds root cause before applying any fix. Not for code review or new features.
+description: "Finds root cause of errors, crashes, unexpected behavior, and failing tests before applying any fix. Not for code review or new features."
+when_to_use: "排查, 查查, 报错, 崩溃, 不工作, 不对, 跑不通, debug, why broken, not working, what's wrong, fix error, stack trace"
 metadata:
-  version: "3.8.0"
+  version: "3.15.0"
 ---
 
 # Hunt: Diagnose Before You Fix
@@ -44,15 +45,25 @@ Do not claim progress without observable evidence matching at least one of these
 
 ## Hard Rules
 
-- **Same symptom after a fix is a hard stop.** The previous hypothesis was wrong. Re-read the execution path from scratch.
-- **After three failed hypotheses, stop.** Surface to the user: what was checked, what was ruled out, what is unknown. Ask how to proceed.
-- **Never state environment details from memory.** Run detection first: `sw_vers`, `xcodebuild -version`, `node --version`, `rustc --version`. State the actual output.
+- **Same symptom after a fix is a hard stop; so is "let me just try this."** Both mean the hypothesis is unfinished. Re-read the execution path from scratch before touching code again.
+- **After three failed hypotheses, stop.** Use the Handoff format below to surface what was checked, what was ruled out, and what is unknown. Ask how to proceed.
+- **Verify before claiming.** Never state versions, function names, or file locations from memory. Run `sw_vers` / `node --version` / grep first. No results = re-examine the path.
 - **External tool failure: diagnose before switching.** When an MCP tool or API fails, determine why first (server running? API key valid? Config correct?) before trying an alternative.
 - **Pay attention to deflection.** When someone says "that part doesn't matter," treat it as a signal. The area someone avoids examining is often where the problem lives.
 - **Visual/rendering bugs: static analysis first.** Trace paint layers, stacking contexts, and layer order in DevTools before adding console.log or visual debug overlays. Logs cannot capture what the compositor does. Only add instrumentation after static analysis fails.
 - **Fix the cause, not the symptom.** If the fix touches more than 5 files, pause and confirm scope with the user.
-- **Grep before touching.** Before modifying any file or calling any identifier in a fix, grep to confirm it exists at the expected location. No results = re-examine the execution path. Do not edit or reference from memory.
-- If you catch yourself writing a fix before finishing the trace, or thinking "let me just try this," stop.
+
+## Bisect Mode
+
+Activate when the symptom is "used to work, now broken" or "broke after an update". Random-walking forward from the current state wastes context and produces random fixes.
+
+**Flow:**
+
+1. Find `last-known-good`: use the most recent tag where the behavior was correct (`git tag --sort=-version:refname | head -5`). Do not use a date or a raw SHA as the anchor.
+2. Define a pass/fail test command before starting. The command must be runnable non-interactively and produce an unambiguous exit code. Write it down once; reuse it at every step.
+3. Run `git bisect start`, `git bisect bad` (current), `git bisect good <tag>`. Let bisect drive; do not jump ahead.
+4. Context conservation: do not re-read large files at each step. Read once, note the key function or line, reference from notes. Bisect output is the state; keep it in the terminal, not in context.
+5. When bisect names the culprit commit: read only that commit's diff, not surrounding history. Identify the specific line that introduced the regression.
 
 ## Confirm or Discard
 
@@ -63,21 +74,71 @@ Add one targeted instrument: a log line, a failing assertion, or the smallest te
 | What happened | Rule |
 |---------------|------|
 | Patched client pane instead of local pane | Trace the execution path backward before touching any file |
-| Same error after 4 patches, each burying the real cause | Same symptom = stop and re-read the whole execution path from scratch |
-| Diagnosed "macOS 26 beta," it was a stable release | Run `sw_vers` first; never state versions from memory |
 | MCP not loading, switched tools instead of diagnosing | Check server status, API key, config before switching methods |
-| Wrote the fix before finishing the trace | "Let me just try this" = incomplete hypothesis. Stop. |
-| Restarted 8 times without reading the actual error response | Read the last error verbatim before restarting |
 | Orchestrator said RUNNING but TTS vendor was misconfigured | In multi-stage pipelines, test each stage in isolation |
-| Used `format_size` (nonexistent), should have been `bytes_to_human` | Grep for the function name before writing a call to it |
+| Race condition diagnosed as a stale-state bug | For timing-sensitive issues, inspect event timestamps and ordering before state |
+| Reproduced locally but failed in CI | Align the environment first (runtime version, env vars, timezone), then chase the code |
+| Stack trace points deep into a library | Walk back 3 frames into your own code; the bug is almost always there, not in the dependency |
+| Worked when launched from app, broke when opened via file association / drag-drop / deep link / external proxy | Reproduce using the exact entry point the user described. App-internal init differs from cold-launch-with-file init; state may not be ready when the document arrives. |
 
 ## Outcome
 
+### Success Format
+
 ```
-Root cause:  [what was wrong, file:line]
-Fix:         [what changed, file:line]
-Confirmed:   [evidence or test that proves the fix]
-Tests:       [pass/fail count, regression test location]
+Root cause:        [what was wrong, file:line]
+Fix:               [what changed, file:line]
+Confirmed:         [evidence or test that proves the fix]
+Tests:             [pass/fail count, regression test location]
+Regression guard:  [test file:line] or [none, reason]
 ```
 
 Status: **resolved**, **resolved with caveats** (state them), or **blocked** (state what is unknown).
+
+**Regression guard rule**: for any bug that recurred or was previously "fixed", the fix is not done until:
+1. A regression test exists that fails on the unfixed code and passes on the fixed code.
+2. The test lives in the project's test suite, not a temporary file.
+3. The commit message states why the bug recurred and why this fix prevents it.
+
+### Handoff Format (after 3 failed hypotheses)
+
+```
+Symptom:
+[Original error description, one sentence]
+
+Hypotheses Tested:
+1. [Hypothesis 1] → [Test method] → [Result: ruled out because...]
+2. [Hypothesis 2] → [Test method] → [Result: ruled out because...]
+3. [Hypothesis 3] → [Test method] → [Result: ruled out because...]
+
+Evidence Collected:
+- [Log snippets / stack traces / file content]
+- [Reproduction steps]
+- [Environment info: versions, config, runtime]
+
+Ruled Out:
+- [Root causes that have been eliminated]
+
+Unknowns:
+- [What is still unclear]
+- [What information is missing]
+
+Suggested Next Steps:
+1. [Next investigation direction]
+2. [External tools or permissions that may be needed]
+3. [Additional context the user should provide]
+```
+
+Status: **blocked**
+
+## Rendering Bug Mode
+
+Activate when: "PDF looks wrong", "page break issue", "font not rendering", or broken PDF output
+
+Diagnosis checklist:
+- **WeasyPrint bugs**: `rgba()` causes double-rectangle bug (use solid hex), `page-break-inside: avoid` ignored (use explicit breaks)
+- **Font loading**: Check @font-face paths, CORS headers, file format support
+- **Page overflow**: Calculate content height vs page height, suggest line-height/padding reduction
+- **Browser print CSS**: Confirm `@media print` rules, `@page` margins, orphan/widow control
+
+Static analysis first (CSS review), then reproduce if needed.

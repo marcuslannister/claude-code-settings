@@ -1,8 +1,9 @@
 ---
 name: check
-description: Invoke after any implementation task completes or before merging. Reviews the diff, auto-fixes safe issues, runs specialist security and architecture reviewers on large diffs. Not for exploring ideas or debugging.
+description: "Reviews code diffs after implementation, auto-fixes safe issues, and runs specialist security and architecture reviewers on large diffs. Also triages issues and PRs when the user mentions them. Not for exploring ideas or debugging."
+when_to_use: "review, 看看代码, 检查一下, 有没有问题, 是否需要优化, 合并前, 看看issue, 看看PR, review my code, check changes, before merge, code review"
 metadata:
-  version: "3.8.0"
+  version: "3.14.0"
 ---
 
 # Check: Review Before You Ship
@@ -15,6 +16,28 @@ Read the diff, find the problems, fix what can be fixed safely, ask about the re
 ## Get the Diff
 
 Get the full diff between the current branch and the base branch. If unclear, ask. If already on the base branch, ask which commits to review.
+
+## Triage Mode
+
+Activate when the user mentions: issue, PR, "review all", triage, "batch", or "批量处理". Skip the diff flow and run this instead.
+
+**Flow:**
+
+1. `gh issue list -R <repo> --state open --limit 20` and `gh pr list -R <repo> --state open` to pull pending items.
+2. For each item, check if a fix already exists before analyzing:
+   ```
+   git tag --sort=-version:refname | head -1          # latest tag
+   git log --oneline <tag>..HEAD | grep -i "<keyword>" # merged but unreleased?
+   ```
+   Three outcomes: already shipped (close with note), merged but unreleased (reply "已修复，等下一个版本 release", close), or no fix (analyze).
+3. Classify each item using the Category A-E system in `~/www/CLAUDE.md`. Do not copy the definitions here; read them from that file.
+4. Draft every reply and show it to Tang for confirmation before calling `gh issue comment` or any GitHub write operation.
+5. If no open items exist: shift to historical analysis. Run `gh issue list -R <repo> --state closed --limit 50` and look for recurring themes, fixes closed without resolution, and deferred features with demand. Produce a short per-project summary with **Fix candidates** and **Feature candidates**. Do not implement without approval.
+
+**Sign-off line (append to standard sign-off):**
+```
+triage:           N reviewed, N closed, N deferred
+```
 
 ## Scope
 
@@ -32,7 +55,7 @@ State the depth before proceeding.
 
 Before reading code, check scope drift: do the diff and the stated goal match? Label: **on target** / **drift** / **incomplete**.
 
-Drift signals (any one is enough to label drift):
+Drift signals (examples, not exhaustive -- any one is enough to label drift):
 - A changed file has no connection to the stated goal
 - The diff includes pure refactoring (renames, formatting, restructuring) when the goal was a bug fix or feature
 - A new dependency appears that the goal did not mention
@@ -40,6 +63,8 @@ Drift signals (any one is enough to label drift):
 - A new abstraction or helper was introduced that is not required by the goal
 
 ## Hard Stops (fix before merging)
+
+Examples, not exhaustive -- flag any diff that could cause irreversible harm if merged unreviewed.
 
 - **Destructive auto-execution**: any task marked "safe" or "auto-run" that modifies user-visible state (history files, config, preferences, installed software) must require explicit confirmation.
 - **Release artifacts missing**: verify every artifact listed in the release template exists as a local file and has been uploaded before declaring done.
@@ -91,10 +116,20 @@ If any of these phrases appear in your reasoning, stop and run verification firs
 | PR comment sounded like a report | 1-2 sentences, natural, like a colleague. Not structured, not AI-sounding. |
 | PR comment used bullet points | Write as paragraphs; thank the contributor first |
 | article.en.md inside _posts_en/ doubled the suffix | Check naming convention of existing files in the target directory first |
-| Released with no artifacts attached | Verify every artifact exists locally and is uploaded |
-| "Trivial one-line fix" broke things | If the urge to skip verification arises, run tests anyway |
 | Deployed without env vars set | Run `vercel env ls` before deploying; diff against local keys |
 | Push failed from auth mismatch | Run `git remote -v` before the first push in a new project |
+
+## Document Review Mode
+
+Activate when: PDF, document, release notes, white paper, final version, or "check this document"
+
+Review checklist:
+- **Privacy scan**: Detect PII (names, companies, employment dates, salary hints, location details). Hard stop if any text implies job seeking, competitor info, or personal data leakage.
+- **Tone consistency**: Flag voice shifts, register mismatches, formulaic phrasing. Check for AI patterns (see `/write` skill for detection rules).
+- **Bilingual validation**: For CN/EN pairs, confirm translation accuracy and terminology consistency. Use `/write` skill's bilingual rules.
+- **Rendering check**: Placeholder text remaining (`Lorem ipsum`, `TODO`, `[TBD]`), style violations, font fallbacks, broken image links.
+
+Output format: same as code review sign-off, but replace `verification:` with `privacy: clear / N issues found`.
 
 ## Sign-off
 
