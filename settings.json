@@ -1,9 +1,4 @@
 {
-  "alwaysThinkingEnabled": true,
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
   "env": {
     "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
@@ -12,7 +7,10 @@
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_TELEMETRY": "1"
   },
-  "model": "claude-opus-4-7",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Skill(codex-skill)",
@@ -24,16 +22,6 @@
       "Skill(autonomous-skill)",
       "Skill(claude-code-settings:autonomous-skill)",
       "Bash(codex:*)"
-    ],
-    "ask": [
-      "Bash(sudo:*)",
-      "Bash(chmod 777:*)",
-      "Bash(git push --force:*)",
-      "Bash(git push -f:*)",
-      "Bash(git reset --hard:*)",
-      "Bash(git clean -fd:*)",
-      "Bash(npm publish:*)",
-      "Bash(eval:*)"
     ],
     "deny": [
       "Bash(rm -rf:*)",
@@ -48,10 +36,23 @@
       "Read(**/*secret*)",
       "Read(**/*.pem)",
       "Read(**/*.key)"
+    ],
+    "ask": [
+      "Bash(sudo:*)",
+      "Bash(chmod 777:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -fd:*)",
+      "Bash(npm publish:*)",
+      "Bash(eval:*)"
     ]
   },
+  "model": "claude-opus-4-7",
   "statusLine": {
-    "command": "~/.claude/status-line.sh",
-    "type": "command"
-  }
+    "type": "command",
+    "command": "~/.claude/status-line.sh"
+  },
+  "alwaysThinkingEnabled": true,
+  "theme": "light"
 }
