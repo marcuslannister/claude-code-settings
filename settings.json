@@ -49,10 +49,34 @@
     ]
   },
   "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/ken/.claude/hooks/redirect-rg-fd.sh"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/status-line.sh"
   },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
+  },
   "alwaysThinkingEnabled": true,
-  "theme": "light"
+  "theme": "light",
+  "enabledPlugins": {
+    "codex@openai-codex": true
+  }
 }
