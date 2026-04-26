@@ -29,9 +29,6 @@ A distribution of Claude Code configuration — skills, subagents, hooks, rules,
 - Never commit `.claude/settings.local.json` or anything under `sessions/`, `projects/`, `shell-snapshots/`, `file-history/` — all gitignored.
 - When modifying a skill, re-run `/health` afterwards to catch oversized SKILL.md, missing frontmatter, or description drift.
 
-## Version Control
-- If the repository contains `.jj/`, prefer `jj` over Git porcelain for status, diff, log, commit, and push-related work unless the user explicitly asks for Git.
-
 ## Shell tooling
 - Prefer `rg "pattern"` for text search and `rg --files` for file listing.
 - Prefer `fd name` for path discovery and `fd -t d name` for directory discovery.
