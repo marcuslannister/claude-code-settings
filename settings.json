@@ -48,7 +48,7 @@
       "Bash(eval:*)"
     ]
   },
-  "model": "claude-opus-4-7",
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/status-line.sh"
