@@ -33,6 +33,12 @@ Any of these can appear if they serve the design intentionally. They cannot appe
 
 Final test: if you swapped in completely different content and the layout still made sense without changes, you built a template, not a design. Redo it.
 
+## Placeholders Over Imitations
+
+When an icon, image, or component is unavailable: use a placeholder. In hi-fi design a labeled placeholder is always better than a low-quality attempt at the real thing. Examples: a grey rectangle for a hero image, a monogram wordmark for a missing logo, a dashed border for a component not yet designed.
+
+Never draw illustrative imagery using inline SVG. SVG is for icons and geometric shapes. For photography, illustrations, or product shots, use a placeholder and ask the user to supply real assets.
+
 ## Production Quality Baseline
 
 Check before handoff. These are not aesthetic choices, they are non-negotiable.
@@ -83,11 +89,57 @@ Check before handoff. These are not aesthetic choices, they are non-negotiable.
 - Minimum hit area: keep every interactive target at least 40×40px so even small controls feel generous and precise; extend with a centered pseudo-element when the visible element is smaller, and never let hit areas of two interactive elements overlap
 - Light-mode app surface hierarchy: adjacent nested surfaces must be visually distinguishable. Minimum: background-color step of at least 4% lightness between sidebar and main area, and between main area and cards; or a shadow of at least `0 1px 3px rgba(0,0,0,0.10)` on elevated cards. A white card on a near-white background with `box-shadow: 0 1px 2px rgba(0,0,0,0.05)` is invisible -- that is not depth, it is noise.
 - Dark-mode surface hierarchy: the page canvas is a near-black solid (e.g. `#08090a`). Elevation is communicated by adding semi-transparent white overlays on top of that canvas: cards at `rgba(255,255,255,0.02)`, elevated surfaces at `0.04`, prominent panels at `0.05`. Borders follow the same logic: `rgba(255,255,255,0.05)` for subtle, `0.08` for standard. Traditional drop shadows (dark on dark) are nearly invisible; luminance stepping through background opacity is the primary depth cue on dark surfaces.
-- Border radius system: define a named radius scale during direction lock instead of picking values ad-hoc. A minimal scale is 3–4 tiers (e.g. `{4px, 8px, 12px, pill}`); a richer system might run 6–8 tiers. The point is committing to a named set before the first component so that all surfaces speak the same spatial language — not covering every possible radius value.
+- Border radius system: define a named radius scale during direction lock instead of picking values ad-hoc. A minimal scale is 3–4 tiers (e.g. `{4px, 8px, 12px, pill}`); a richer system might run 6–8 tiers. The point is committing to a named set before the first component so that all surfaces speak the same spatial language -- not covering every possible radius value.
+
+### Adding to Existing UI
+
+When extending an existing interface, first spend time understanding its visual vocabulary. Match all of the following before writing the first line of new code:
+- Copywriting tone and reading level (technical? casual? punchy?)
+- Color palette and semantic color roles (which tokens mean "danger", "success", "muted")
+- Hover and click states: scale, color shift, underline, background fill
+- Animation style: duration, easing, whether interactions bounce or are strictly ease-out
+- Shadow and card treatment: which surfaces are elevated, which are flush
+- Layout density and whitespace rhythm
+- Border radius choices and whether buttons are pill, square, or a specific fixed value
+
+If swapping in different content would make the new component look out of place, the vocabulary was not matched closely enough.
+
+## Data Visualization Surfaces
+
+### Dashboard defaults
+
+Dashboards are utility surfaces: orient the user, show status, enable action. No hero sections, no marketing copy. Every element must earn its place by answering a question the user has.
+
+- Primary layout: status summary at top, detail below; or sidebar filters + main chart area.
+- Whitespace: tighter than marketing pages; users scan, not read. Use generous column spacing, not generous row height.
+- Number density: many numbers on screen at once is not a problem. Crowding without alignment is. Use `font-variant-numeric: tabular-nums` for all numeric columns. Right-align numbers. Left-align labels.
+
+### Chart selection
+
+| Use case | Chart type |
+|---|---|
+| Comparing values across categories | Bar chart (horizontal if labels are long) |
+| Trend over time | Line chart; avoid bars for time series with many points |
+| Part-whole relationships | Treemap (6+ segments) or stacked bar; pie only for 2-4 segments |
+| Distribution | Histogram or box plot; never pie chart |
+| Correlation | Scatter plot; do not use line chart |
+
+Pie charts with more than 4 segments communicate nothing. Use a treemap or ranked list instead.
+
+### Number-dense interfaces
+
+- `font-variant-numeric: tabular-nums` on every number column so digits align vertically.
+- Right-align all numbers; left-align all text labels. Mixed alignment in the same column is always wrong.
+- Subtle row separators: `1px` line at `rgba(0,0,0,0.06)` (light) or `rgba(255,255,255,0.05)` (dark). Alternating row backgrounds only if the table is very wide (12+ columns).
+- Column spacing: at least `16px` between adjacent columns; more between logically distinct groups.
+
+### Using a product as a benchmark
+
+When the user references a product for visual benchmark ("make it feel like Grafana" / "similar to Linear analytics"): extract 3-5 concrete data-visualization-specific properties from that product, not general aesthetic properties. Useful properties: chart color palette (exact values), grid line weight and opacity, axis label size and color, tooltip border-radius and shadow, empty-state treatment. Do not extract "minimal" or "clean" as properties; those are not actionable.
 
 ## Reflex Fonts to Reject
 
-LLMs default to these because they dominate training data. Using them signals "no decision was made." Pick from foundries with a clear voice instead. The ban is on reflex use as a display face; informed product-UI use (e.g. Inter for a dense data table) is allowed when justified.
+LLMs default to these because they dominate training data. Using them signals "no decision was made." Pick from foundries with a clear voice instead. The ban is on reflex use as a display face; informed product-UI use (e.g. Inter for a dense data table) is allowed when justified. This list is not exhaustive -- any font used reflexively without a stated reason qualifies.
 
 Reject: Inter, DM Sans, DM Serif Display, DM Serif Text, Outfit, Plus Jakarta Sans, Instrument Sans, Instrument Serif, Space Grotesk, Space Mono, IBM Plex Sans, IBM Plex Serif, IBM Plex Mono, Syne, Fraunces, Newsreader, Lora, Crimson Pro, Crimson Text, Playfair Display, Cormorant, Cormorant Garamond.
 
@@ -124,7 +176,7 @@ If the answer is not obvious from the context, default to light. If the user's c
 
 ## Absolute Bans (CSS-Pattern Level)
 
-These patterns appear in the majority of AI-generated interfaces. Each one has a specific rewrite.
+These patterns appear in the majority of AI-generated interfaces. Each one has a specific rewrite. Not exhaustive -- any CSS pattern applied as a mindless default rather than an intentional choice belongs in the same category.
 
 | Pattern | Why | Rewrite |
 |---|---|---|
@@ -146,6 +198,36 @@ Complements the motion timing in the main SKILL.md constraints.
 - Icon swaps: use a 120ms cross-fade with `opacity` and a subtle `scale(0.9)` to `scale(1)`. No rotation unless rotation is semantically meaningful (e.g. a chevron indicating direction change).
 - Do not use `transition: all` even as a quick prototype shortcut. It animates layout, color, and font-size simultaneously, causing visible jank.
 
+## Reference-site Brand Presets (awesome-design-md)
+
+`VoltAgent/awesome-design-md` maintains 66+ curated DESIGN.md files extracted from real-world brand sites. Running `npx getdesign@latest add <brand>` drops the file into the project root, giving the agent concrete token values to decompose rather than reasoning from memory.
+
+**Usage rule:** never auto-run the command. Offer it as an option during direction lock, run it only with explicit user approval, and treat the result as seed decomposition material, not a finished direction.
+
+**Brands in the catalog** (recognize these when a user names a reference):
+
+| Category | Brands |
+|---|---|
+| AI & LLM | Claude, Cohere, ElevenLabs, Mistral, Ollama, Replicate, RunwayML, Together AI, xAI |
+| Dev Tools & IDEs | Cursor, Expo, Lovable, Raycast, Superhuman, Vercel, Warp |
+| Backend / DB / DevOps | ClickHouse, Composio, HashiCorp, MongoDB, PostHog, Sanity, Sentry, Supabase |
+| Productivity & SaaS | Cal.com, Intercom, Linear, Mintlify, Notion, Resend, Zapier |
+| Design & Creative | Airtable, Clay, Figma, Framer, Miro, Webflow |
+| Fintech & Crypto | Binance, Coinbase, Kraken, Revolut, Stripe, Wise |
+| E-commerce & Retail | Airbnb, Meta, Nike, Shopify |
+| Media & Consumer | Apple, IBM, NVIDIA, Pinterest, PlayStation, SpaceX, Spotify, Uber |
+| Automotive | BMW, Bugatti, Ferrari, Lamborghini, Tesla |
+
+**Conflict resolution:** this skill's rules always win. If the preset recommends a font on the Reflex Fonts blocklist (e.g. Inter as a display face), discard it and apply the Font Selection Procedure. If it proposes a pattern in the Absolute Bans table (e.g. purple-to-blue gradient), discard it. State the override in the handoff summary.
+
+Source: [github.com/VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md)
+
+## Reference Material Priority
+
+When source code and a screenshot are both available for a reference UI: read the code. Source files contain exact token values; screenshots require guessing. Reconstruct from what is written, not what is visible.
+
+When only a URL is provided: fetching it returns extracted text only, with no layout information. For visual references ("make it look like X"), ask for a screenshot rather than inferring visual design from stripped HTML.
+
 ## DESIGN.md Scaffold (Optional, Production UIs)
 
 For a multi-page or production UI, emit a short `DESIGN.md`-style summary before writing the first component. This forces enumeration of decisions that would otherwise be left implicit and lets the user correct direction early. The nine sections:
@@ -158,7 +240,7 @@ For a multi-page or production UI, emit a short `DESIGN.md`-style summary before
 6. **Depth and Elevation** - shadow system or background-color-step system; describe each level
 7. **Do's and Don'ts** - 5 to 10 guardrails specific to this project, not generic rules
 8. **Responsive Behavior** - breakpoints, how navigation collapses, touch target minimums
-9. **Agent Prompt Guide** - a quick color reference (name: value pairs) + 3 to 5 example component prompts ready to paste into a follow-up request. Prompts must be specific enough to execute without further lookup: every value, every radius, every letter-spacing, every weight inlined. Example standard (values are illustrative, use the project's own tokens): "Create a hero on `{bg-canvas}`, headline at 48px weight 600, line-height 1.00, letter-spacing -0.022em, color `{text-primary}`, CTA at `{accent}` with `{btn-radius}` radius" — that level of specificity, not "hero with primary color and CTA button"
+9. **Agent Prompt Guide** - a quick color reference (name: value pairs) + 3 to 5 example component prompts ready to paste into a follow-up request. Prompts must be specific enough to execute without further lookup: every value, every radius, every letter-spacing, every weight inlined. Example standard (values are illustrative, use the project's own tokens): "Create a hero on `{bg-canvas}`, headline at 48px weight 600, line-height 1.00, letter-spacing -0.022em, color `{text-primary}`, CTA at `{accent}` with `{btn-radius}` radius"; that level of specificity, not "hero with primary color and CTA button"
 
 For a single component or quick prototype, skip this. The three-line thesis in SKILL.md is sufficient.
 
@@ -168,4 +250,4 @@ Would a stranger glancing at the first viewport say "an AI made this" immediatel
 
 ---
 
-*Rules in Reflex Fonts, Font Selection, OKLCH, Theme Matrix, Absolute Bans, Motion Specifics, and AI Slop Test adapted from [pbakaus/impeccable](https://github.com/pbakaus/impeccable) (Apache 2.0). DESIGN.md Scaffold adapted from [getdesign.md](https://getdesign.md) (MIT); concept credited to Google Stitch.*
+*Rules in Reflex Fonts, Font Selection, OKLCH, Theme Matrix, Absolute Bans, Motion Specifics, and AI Slop Test adapted from [pbakaus/impeccable](https://github.com/pbakaus/impeccable) (Apache 2.0). DESIGN.md Scaffold adapted from [getdesign.md](https://getdesign.md) (MIT); concept credited to Google Stitch. Brand preset catalog from [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) (MIT).*

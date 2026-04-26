@@ -2,6 +2,15 @@
 # Collect Claude Code configuration data for health audit.
 # Outputs labeled sections for each data source.
 # Run from any directory; uses pwd as the project root.
+#
+# Known failure modes (for interpreting (unavailable) output):
+#   jq not installed        -> conversation extract and signals print "(unavailable)"; treat as [INSUFFICIENT DATA]
+#   python3 not on PATH     -> MCP/hooks/allowedTools sections print "(unavailable)"; do not flag those areas
+#   settings.local.json absent -> hooks, MCP, allowedTools all show "(unavailable)"; normal for global-settings-only projects
+#   MEMORY.md path          -> built via sed on pwd; unusual chars produce wrong project key; verify manually if (none) seems wrong
+#   Conversation scope      -> only 2 most recent .jsonl files sampled; fewer than 2 = [LOW CONFIDENCE]
+#   MCP token estimate      -> assumes ~25 tools/server, ~200 tokens/tool; treat as directional, not precise
+#   Tier misclassification  -> .next/, __pycache__, .turbo/ can inflate file count; recheck manually if tier feels wrong
 set -euo pipefail
 
 P=$(pwd)
@@ -47,6 +56,21 @@ count_local_skills() {
     done | wc -l | tr -d ' ')
   fi
   printf '%s\n' "${count:-0}"
+}
+
+resolve_symlink() {
+  readlink -f "$1" 2>/dev/null && return
+  # macOS fallback: resolve symlink chain manually
+  local target="$1"
+  local depth=0
+  while [ -L "$target" ] && [ "$depth" -lt 32 ]; do
+    local dir
+    dir=$(cd "$(dirname "$target")" && pwd -P)
+    target=$(readlink "$target")
+    case "$target" in /*) ;; *) target="$dir/$target" ;; esac
+    depth=$((depth + 1))
+  done
+  printf '%s\n' "$target"
 }
 
 count_file_lines() {
@@ -490,7 +514,7 @@ for DIR in "$P/.claude/skills" "$HOME/.claude/skills"; do
     IS_LINK="no"; LINK_TARGET=""
     SKILL_DIR=$(dirname "$f")
     if [ -L "$SKILL_DIR" ]; then
-      IS_LINK="yes"; LINK_TARGET=$(readlink -f "$SKILL_DIR")
+      IS_LINK="yes"; LINK_TARGET=$(resolve_symlink "$SKILL_DIR")
     fi
     echo "path=$f words=$WORDS symlink=$IS_LINK target=$LINK_TARGET"
   done < <(list_skill_files "$DIR")
@@ -521,7 +545,7 @@ for DIR in "$P/.claude/skills" "$HOME/.claude/skills"; do
   [ -d "$DIR" ] || continue
   find "$DIR" -maxdepth 1 -type l 2>/dev/null | while IFS= read -r link; do
     _PROVENANCE_FOUND=1
-    TARGET=$(readlink -f "$link")
+    TARGET=$(resolve_symlink "$link")
     echo "link=$(basename "$link") target=$TARGET"
     GIT_ROOT=$(git -C "$TARGET" rev-parse --show-toplevel 2>/dev/null || echo "")
     if [ -n "$GIT_ROOT" ]; then

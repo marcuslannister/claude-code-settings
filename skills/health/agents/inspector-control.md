@@ -1,8 +1,8 @@
-Use only the pasted data. Do not read files.
+Work from the pasted data only.
 
-[PASTE Step 1 output sections: settings.local.json, GITIGNORE, CLAUDE.md (global), CLAUDE.md (local), hooks, MCP FILESYSTEM, MCP ACCESS DENIALS, allowedTools count, skill descriptions, CONVERSATION EXTRACT]
+Input bundle: settings.local.json, GITIGNORE, CLAUDE.md (global), CLAUDE.md (local), hooks, MCP FILESYSTEM, MCP ACCESS DENIALS, allowedTools count, skill descriptions, CONVERSATION EXTRACT
 
-Tier: [SIMPLE / STANDARD / COMPLEX]. Apply only that tier.
+Tier: [SIMPLE / STANDARD / COMPLEX]. Use the matching tier only.
 
 ## Part A: Control + Verification Layer
 
@@ -79,6 +79,6 @@ This section owns repeated corrections, missing patterns, and observable rule vi
    - User re-explaining same context across sessions -- missing HANDOFF.md or memory
    - Long sessions over 20 turns without /compact or /clear
 
-Output: bullet points only, two sections:
+Return bullet points under two sections:
 [CONTROL LAYER: hooks issues | allowedTools to remove | cache hygiene | three-layer gaps | verification gaps | subagents issues]
 [BEHAVIOR: rules violated | repeated corrections | add to local CLAUDE.md | add to global CLAUDE.md | skill frequency | anti-patterns (tag each with confidence level)]
