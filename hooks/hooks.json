@@ -1,6 +1,26 @@
 {
   "description": "Claude Code Settings plugin hooks",
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/ken/.claude/hooks/enforce-modern-cli.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/ken/.claude/hooks/redirect-to-anvil.sh"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
