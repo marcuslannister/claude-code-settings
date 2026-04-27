@@ -29,10 +29,14 @@ A distribution of Claude Code configuration — skills, subagents, hooks, rules,
 - Never commit `.claude/settings.local.json` or anything under `sessions/`, `projects/`, `shell-snapshots/`, `file-history/` — all gitignored.
 - When modifying a skill, re-run `/health` afterwards to catch oversized SKILL.md, missing frontmatter, or description drift.
 
-## Shell tooling
-- Prefer `rg "pattern"` for text search and `rg --files` for file listing.
-- Prefer `fd name` for path discovery and `fd -t d name` for directory discovery.
-- Fall back to `grep` or `find` only when `rg` or `fd` is unavailable.
+## Prefer modern CLI tools:
+
+- Use `rg` instead of `grep`.
+- Use `fd` instead of `find` for simple file discovery.
+- Use `sd` instead of `sed` for find-and-replace.
+- Use `eza` instead of `ls`.
+
+Only use the classic tools when the modern tool cannot express the task safely or exactly.
 
 ## Never
 
