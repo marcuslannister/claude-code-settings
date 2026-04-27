@@ -198,15 +198,6 @@
             "timeout": 10
           }
         ]
-      },
-      {
-        "matcher": "Bash|Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/redirect-to-anvil.sh"
-          }
-        ]
       }
     ]
   },
