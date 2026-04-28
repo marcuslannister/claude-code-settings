@@ -53,6 +53,7 @@
     "type": "command",
     "command": "~/.claude/status-line.sh"
   },
+  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file.",
   "hooks": {
     "PreToolUse": [
       {
