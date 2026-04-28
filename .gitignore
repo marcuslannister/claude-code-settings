@@ -182,3 +182,4 @@ WARP.md
 /image-cache
 stats-cache.json
 /backups
+cache/
