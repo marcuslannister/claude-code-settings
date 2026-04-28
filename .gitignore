@@ -183,3 +183,4 @@ WARP.md
 stats-cache.json
 /backups
 cache/
+.usage-cache.json
