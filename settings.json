@@ -53,6 +53,29 @@
     "type": "command",
     "command": "~/.claude/status-line.sh"
   },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/enforce-modern-cli.sh" }
+        ]
+      },
+      {
+        "matcher": "Bash|Read",
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/redirect-to-anvil.sh" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "~/.claude/skills/autonomous-skill/hooks/stop-hook.sh" }
+        ]
+      }
+    ]
+  },
   "extraKnownMarketplaces": {
     "openai-codex": {
       "source": {

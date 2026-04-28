@@ -51,8 +51,9 @@ check_segment() {
 while IFS= read -r part; do
   check_segment "$part"
 done < <(
+  # Split on ; and & only — not on |, so downstream pipeline use of
+  # grep/sed/etc. (e.g. `ps aux | grep foo`) is allowed.
   printf '%s\n' "$command" |
-    tr '|' '\n' |
     tr ';' '\n' |
     tr '&' '\n'
 )
