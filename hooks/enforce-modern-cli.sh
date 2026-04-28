@@ -2,6 +2,16 @@
 set -euo pipefail
 
 input="$(cat)"
+tool_name="$(jq -r '.tool_name // empty' <<<"$input")"
+
+# Gate: only act on shell-running tools. Catches future tool names
+# (Shell, Exec, mcp__*-shell-*, mcp__*-exec-*) without needing matcher updates.
+case "$tool_name" in
+  Bash|Shell|Exec) ;;
+  *[Ss]hell*|*[Ee]xec*) ;;
+  *) exit 0 ;;
+esac
+
 command="$(jq -r '.tool_input.command // empty' <<<"$input")"
 
 [ -z "$command" ] && exit 0
