@@ -1,3 +1,8 @@
+---
+name: grader
+description: Evaluate expectations against an execution transcript and outputs. Grades assertions pass/fail with evidence, verifies claims, and critiques evals for the skill-creator benchmarking pipeline.
+---
+
 # Grader Agent
 
 Evaluate expectations against an execution transcript and outputs.

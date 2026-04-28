@@ -173,6 +173,31 @@ Generate or edit images using Google Gemini API via nanobanana. Use when creatin
 </details>
 
 <details>
+<summary>gpt-image-skill - Generate images with OpenAI GPT Image API</summary>
+
+### [gpt-image-skill](./skills/gpt-image-skill)
+
+Generate or edit images using OpenAI's GPT Image models (gpt-image-2, gpt-image-1, etc).
+
+**Triggered by**: "gpt image", "openai image", "generate image with openai", "draw image", "AI绘图", "画图"
+
+**Key Features:**
+
+- Image generation with multiple models (gpt-image-2, gpt-image-1.5, gpt-image-1, gpt-image-1-mini)
+- Image editing with up to 3 reference images
+- Multiple sizes (square, portrait, landscape, auto)
+- Quality control (auto, high, medium, low)
+- Transparent background support
+- Multiple output formats (png, jpeg, webp)
+
+**Requirements:**
+
+- `OPENAI_API_KEY` configured in `~/.gpt-image.env` or exported
+- Python3 with openai, Pillow (install via `pip install -r requirements.txt` in the skill directory)
+
+</details>
+
+<details>
 <summary>youtube-transcribe-skill - Extract YouTube subtitles</summary>
 
 ### [youtube-transcribe-skill](plugins/youtube-transcribe-skill)
@@ -521,15 +546,7 @@ For Claude Code 2.0+ extension in VSCode, if you're not using a Claude.ai subscr
       "value": "gpt-5-mini"
     },
     {
-      "name": "DISABLE_NON_ESSENTIAL_MODEL_CALLS",
-      "value": "1"
-    },
-    {
       "name": "DISABLE_TELEMETRY",
-      "value": "1"
-    },
-    {
-      "name": "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC",
       "value": "1"
     }
   ]
