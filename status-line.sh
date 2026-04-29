@@ -261,25 +261,31 @@ format_reset_time() {
 }
 
 build_usage_bar() {
-    local response five_h seven_d resets seven_int filled empty bar="" color five_pct reset_str
+    local response five_h resets five_int filled empty bar="" color five_pct reset_str
 
     response=$(fetch_api_usage)
     [[ -z "$response" ]] && return 0
 
-    read -r five_h seven_d resets <<< "$(echo "$response" | jq -r '"\(.five_hour.utilization // "") \(.seven_day.utilization // "") \(.five_hour.resets_at // "")"' 2>/dev/null)"
-    [[ -z "$five_h" || "$five_h" == "null" || -z "$seven_d" || "$seven_d" == "null" ]] && return 0
+    read -r five_h resets <<< "$(echo "$response" | jq -r '"\(.five_hour.utilization // "") \(.five_hour.resets_at // "")"' 2>/dev/null)"
+    [[ -z "$five_h" || "$five_h" == "null" ]] && return 0
 
-    seven_int=${seven_d%.*}
-    seven_int=${seven_int:-0}
+    five_int=${five_h%.*}
+    five_int=${five_int:-0}
 
-    filled=$(awk "BEGIN {printf \"%.0f\", ($seven_d / 100) * $USAGE_BAR_WIDTH}")
+    # Round to nearest, but show ≥1 block whenever utilization is non-zero
+    # so a small but real % (e.g. 6%) doesn't render as an empty bar.
+    filled=$(awk -v p="$five_h" -v w="$USAGE_BAR_WIDTH" 'BEGIN {
+        n = int(p/100*w + 0.5)
+        if (n == 0 && p+0 > 0) n = 1
+        if (n > w) n = w
+        printf "%d", n
+    }')
     filled=${filled:-0}
-    [[ $filled -gt $USAGE_BAR_WIDTH ]] && filled=$USAGE_BAR_WIDTH
     empty=$((USAGE_BAR_WIDTH - filled))
 
-    if [[ $seven_int -ge $CONTEXT_CRIT_PCT ]]; then
+    if [[ $five_int -ge $CONTEXT_CRIT_PCT ]]; then
         color=$C_RED
-    elif [[ $seven_int -ge $CONTEXT_WARN_PCT ]]; then
+    elif [[ $five_int -ge $CONTEXT_WARN_PCT ]]; then
         color=$C_YELLOW
     else
         color=$C_GREEN
