@@ -2,7 +2,7 @@
   "mcpServers": {
     "anvil": {
       "type": "stdio",
-      "command": "$HOME/.emacs.d/anvil-stdio.sh",
+      "command": "${HOME}/.emacs.d/anvil-stdio.sh",
       "args": [
         "--server-id=anvil",
         "--init-function=anvil-enable",
@@ -12,7 +12,7 @@
     },
     "anvil-emacs-eval": {
       "type": "stdio",
-      "command": "$HOME/.emacs.d/anvil-stdio.sh",
+      "command": "${HOME}/.emacs.d/anvil-stdio.sh",
       "args": [
         "--server-id=emacs-eval"
       ],
