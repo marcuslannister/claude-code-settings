@@ -49,33 +49,44 @@
     ]
   },
   "model": "opus",
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/status-line.sh"
-  },
-  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file.",
   "hooks": {
     "PreToolUse": [
       {
         "matcher": ".*",
         "hooks": [
-          { "type": "command", "command": "~/.claude/hooks/enforce-modern-cli.sh" }
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/enforce-modern-cli.sh"
+          }
         ]
       },
       {
         "matcher": ".*",
         "hooks": [
-          { "type": "command", "command": "~/.claude/hooks/redirect-to-anvil.sh" }
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/redirect-to-anvil.sh"
+          }
         ]
       }
     ],
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "~/.claude/skills/autonomous-skill/hooks/stop-hook.sh" }
+          {
+            "type": "command",
+            "command": "~/.claude/skills/autonomous-skill/hooks/stop-hook.sh"
+          }
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/status-line.sh"
+  },
+  "enabledPlugins": {
+    "codex@openai-codex": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -87,7 +98,5 @@
   },
   "alwaysThinkingEnabled": true,
   "theme": "light",
-  "enabledPlugins": {
-    "codex@openai-codex": true
-  }
+  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
 }
