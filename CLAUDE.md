@@ -8,7 +8,7 @@ A distribution of Claude Code configuration — skills, subagents, hooks, rules,
 |------|---------|---------|
 | `settings.json` | Shared defaults: model, env, permissions, statusLine | `~/.claude/settings.json` |
 | `.claude/settings.local.json` | Per-clone local overrides (gitignored) | `~/.claude/settings.local.json` |
-| `.mcp.json` | MCP servers shipped with the plugin | `~/.claude/.mcp.json` |
+| `.mcp.json` | MCP servers — only loaded when this repo is installed via the plugin marketplace. **Not auto-loaded** from `~/.claude/.mcp.json` in direct-install mode; use `claude mcp add -s user` instead (writes to `~/.claude.json`). | plugin root |
 | `skills/` | Skill bundles (each has `SKILL.md` + assets) | `~/.claude/skills/` |
 | `agents/` | Subagent definitions | `~/.claude/agents/` |
 | `rules/` | Coaching or behavior rules included via global CLAUDE.md | referenced by user's global CLAUDE.md |
