@@ -1,31 +1,65 @@
-# claude-code-settings
+# CLAUDE.md
 
-A distribution of Claude Code configuration — skills, subagents, hooks, rules, and alternate-provider settings — intended to be installed into `~/.claude/`.
+These rules apply to every task in this project unless explicitly overridden.
+Bias: caution over speed on non-trivial work. Use judgment on trivial tasks.
 
-## Layout
+## Rule 1 — Think Before Coding
+State assumptions explicitly. If uncertain, ask rather than guess.
+Present multiple interpretations when ambiguity exists.
+Push back when a simpler approach exists.
+Stop when confused. Name what's unclear.
 
-| Path | Purpose | Maps to |
-|------|---------|---------|
-| `settings.json` | Shared defaults: model, env, permissions, statusLine | `~/.claude/settings.json` |
-| `.claude/settings.local.json` | Per-clone local overrides (gitignored) | `~/.claude/settings.local.json` |
-| `.mcp.json` | MCP servers — only loaded when this repo is installed via the plugin marketplace. **Not auto-loaded** from `~/.claude/.mcp.json` in direct-install mode; use `claude mcp add -s user` instead (writes to `~/.claude.json`). | plugin root |
-| `skills/` | Skill bundles (each has `SKILL.md` + assets) | `~/.claude/skills/` |
-| `agents/` | Subagent definitions | `~/.claude/agents/` |
-| `rules/` | Coaching or behavior rules included via global CLAUDE.md | referenced by user's global CLAUDE.md |
-| `settings/` | Alternate-provider settings (Azure, OpenRouter, Qwen, etc.) | copied manually when switching providers |
-| `.claude-plugin/` | Plugin manifest | registers this as a Claude Code plugin |
+## Rule 2 — Simplicity First
+Minimum code that solves the problem. Nothing speculative.
+No features beyond what was asked. No abstractions for single-use code.
+Test: would a senior engineer say this is overcomplicated? If yes, simplify.
 
-## Conventions
+## Rule 3 — Surgical Changes
+Touch only what you must. Clean up only your own mess.
+Don't "improve" adjacent code, comments, or formatting.
+Don't refactor what isn't broken. Match existing style.
 
-- **Skills**: keep `SKILL.md` body under ~500 words; move reference material to sibling files (`references/*.md`, `scripts/`). The frontmatter `description` should include concrete triggers so the dispatcher picks the skill up.
-- **Permissions**: `settings.json` is the shared policy. Do not add broad allow-rules like `Bash(bash:*)` that bypass the deny list. Local-only exceptions go in `.claude/settings.local.json` (gitignored).
-- **Rules**: `rules/*.md` files are loaded by the user's global CLAUDE.md via explicit include. Adding a new rule requires both the file here and an include line in the consumer's global CLAUDE.md.
+## Rule 4 — Goal-Driven Execution
+Define success criteria. Loop until verified.
+Don't follow steps. Define success and iterate.
+Strong success criteria let you loop independently.
 
-## Working in this repo
+## Rule 5 — Use the model only for judgment calls
+Use me for: classification, drafting, summarization, extraction.
+Do NOT use me for: routing, retries, deterministic transforms.
+If code can answer, code answers.
 
-- Commits: follow the existing short `chore:` / `feat:` / `fix:` style (see `git log`).
-- Never commit `.claude/settings.local.json` or anything under `sessions/`, `projects/`, `shell-snapshots/`, `file-history/` — all gitignored.
-- When modifying a skill, re-run `/health` afterwards to catch oversized SKILL.md, missing frontmatter, or description drift.
+## Rule 6 — Token budgets are not advisory
+Per-task: 4,000 tokens. Per-session: 30,000 tokens.
+If approaching budget, summarize and start fresh.
+Surface the breach. Do not silently overrun.
+
+## Rule 7 — Surface conflicts, don't average them
+If two patterns contradict, pick one (more recent / more tested).
+Explain why. Flag the other for cleanup.
+Don't blend conflicting patterns.
+
+## Rule 8 — Read before you write
+Before adding code, read exports, immediate callers, shared utilities.
+"Looks orthogonal" is dangerous. If unsure why code is structured a way, ask.
+
+## Rule 9 — Tests verify intent, not just behavior
+Tests must encode WHY behavior matters, not just WHAT it does.
+A test that can't fail when business logic changes is wrong.
+
+## Rule 10 — Checkpoint after every significant step
+Summarize what was done, what's verified, what's left.
+Don't continue from a state you can't describe back.
+If you lose track, stop and restate.
+
+## Rule 11 — Match the codebase's conventions, even if you disagree
+Conformance > taste inside the codebase.
+If you genuinely think a convention is harmful, surface it. Don't fork silently.
+
+## Rule 12 — Fail loud
+"Completed" is wrong if anything was skipped silently.
+"Tests pass" is wrong if any were skipped.
+Default to surfacing uncertainty, not hiding it.
 
 ## Prefer modern CLI tools:
 
@@ -35,32 +69,6 @@ A distribution of Claude Code configuration — skills, subagents, hooks, rules,
 - Use `eza` instead of `ls`.
 
 Only use the classic tools when the modern tool cannot express the task safely or exactly.
-
-## Never
-
-- Modify `.env`, lockfiles, or CI secrets without explicit approval
-- Remove a referenced symbol without searching call sites first
-- Commit without running tests when the project has a fast test suite
-
-## Always
-
-- Show diff before committing
-- Update CHANGELOG for user-facing changes if the project keeps one
-
-## Verification
-
-- Run the project's test and lint commands before declaring a change complete
-- API changes: update or add contract tests if the project has them
-- UI changes: capture before/after screenshots
-
-## Compact Instructions
-
-Preserve:
-
-1. Architecture decisions (NEVER summarize)
-2. Modified files and key changes
-3. Current verification status (pass/fail commands)
-4. Open risks, TODOs, rollback notes
 
 ## File editing
 
