@@ -169,6 +169,7 @@ plans/*.md
 plugins/install-counts-cache.json
 plugins/blocklist.json
 plugins/installed_plugins.json
+plugins/data/
 sessions/
 session-env/
 /tasks

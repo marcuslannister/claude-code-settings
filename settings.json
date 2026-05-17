@@ -46,8 +46,7 @@
       "Bash(git clean -fd:*)",
       "Bash(npm publish:*)",
       "Bash(eval:*)"
-    ],
-    "defaultMode": "auto"
+    ]
   },
   "model": "opus",
   "hooks": {
@@ -80,6 +79,5 @@
   },
   "alwaysThinkingEnabled": true,
   "theme": "light",
-  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file.",
-  "skipAutoPermissionPrompt": true
+  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
 }
