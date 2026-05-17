@@ -46,7 +46,8 @@
       "Bash(git clean -fd:*)",
       "Bash(npm publish:*)",
       "Bash(eval:*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "model": "opus",
   "hooks": {
@@ -57,25 +58,6 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/enforce-modern-cli.sh"
-          }
-        ]
-      },
-      {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/redirect-to-anvil.sh"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/skills/autonomous-skill/hooks/stop-hook.sh"
           }
         ]
       }
@@ -98,5 +80,6 @@
   },
   "alwaysThinkingEnabled": true,
   "theme": "light",
-  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
+  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file.",
+  "skipAutoPermissionPrompt": true
 }
