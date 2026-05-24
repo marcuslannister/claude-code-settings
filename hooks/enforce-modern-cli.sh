@@ -28,6 +28,18 @@ deny() {
   exit 0
 }
 
+ask() {
+  local reason="$1"
+  jq -n --arg reason "$reason" '{
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      permissionDecision: "ask",
+      permissionDecisionReason: $reason
+    }
+  }'
+  exit 0
+}
+
 check_segment() {
   local segment="$1"
 
@@ -47,10 +59,10 @@ check_segment() {
       deny "Use rg instead of grep. Example: rg -n \"pattern\" path"
       ;;
     find)
-      deny "Use fd instead of find for simple file search. Example: fd -t f \"name\" path"
+      ask "Prefer fd for simple file search (e.g. fd -t f \"name\" path). Approve if you need find's -exec / -print0 / -newer / -mtime."
       ;;
     sed)
-      deny "Use sd instead of sed for find-and-replace. Example: sd 'old' 'new' file.txt"
+      ask "Prefer sd for find-and-replace (e.g. sd 'old' 'new' file). Approve if you need sed's -i, -n, address ranges, or multi-line scripts."
       ;;
     ls)
       deny "Use eza instead of ls. Example: eza -la --git"
