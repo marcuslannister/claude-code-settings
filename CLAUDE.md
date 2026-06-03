@@ -32,8 +32,7 @@ Personal global rules. Apply to every task unless explicitly overridden. Bias: c
 
 ## Locating the workspace, cloning repos, or finding OSS code
 
-- Workspace: `~/Projects`. Missing steipete repo: clone `https://github.com/steipete/<repo>.git`. 3rd-party/OSS: `~/Projects/oss`.
-- `../agent-skills` = `https://github.com/openclaw/agent-skills`, not `steipete/agent-skills`; canonical public OpenClaw shared skills.
+- Workspace: `~/Projects`. 3rd-party/OSS: `~/Projects/oss`.
 - Read `~/Projects/agent-scripts/tools.md` when the tool catalog matters.
 
 ## Editing this file or a skill ("make a note")
@@ -63,11 +62,6 @@ Personal global rules. Apply to every task unless explicitly overridden. Bias: c
 
 ## Secrets, API keys, credentials, test/deploy accounts
 
-- Secrets/API keys/live creds: use `$one-password`; env only if already exported; `op` is skill/tmux-only, no broad enumeration/secret output.
-- 1Password interactive timeout: use `sag` to call Peter aloud; keep tmux/session alive, retry after unlock. Do not silently abandon.
-- New API keys: immediately store in 1Password service account via `$one-password`; temp files/env only for current task.
-- Email/Google account for testing: use `gog+clawdbot@gmail.com`.
-- OpenClaw deployments: use `service@openclaw.org` accounts only.
 - Never run `env`, `set`, `export -p`, or broad secret regex dumps in a normal shell. Query exact names only; redact values.
 - After touching secrets/env, public `gh` writes unset token env where possible: `env -u GITHUB_TOKEN -u GH_TOKEN -u HOMEBREW_GITHUB_API_TOKEN ...`.
 
