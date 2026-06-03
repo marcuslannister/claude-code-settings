@@ -89,8 +89,9 @@
   "enabledPlugins": {
     "codex@openai-codex": true,
     "claude-code-setup@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
     "visual-explainer@visual-explainer-marketplace": true,
-    "typescript-lsp@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
