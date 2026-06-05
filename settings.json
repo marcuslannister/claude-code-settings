@@ -91,7 +91,8 @@
     "claude-code-setup@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "visual-explainer@visual-explainer-marketplace": true,
-    "frontend-design@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -111,10 +112,16 @@
         "source": "github",
         "repo": "nicobailon/visual-explainer"
       }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
   "theme": "light",
-  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file.",
-  "skipDangerousModePermissionPrompt": true
+  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
 }
