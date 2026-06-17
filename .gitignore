@@ -185,3 +185,10 @@ stats-cache.json
 /backups
 cache/
 .usage-cache.json
+
+# Runtime caches / markers (cleanup)
+.last-cleanup
+plugins/.last_inuse_sweep
+plugins/plugin-catalog-cache.json
+paste-cache/
+teams/
