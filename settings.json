@@ -48,7 +48,7 @@
       "Bash(eval:*)"
     ]
   },
-  "model": "opus",
+  "model": "claude-fable-5",
   "hooks": {
     "PreToolUse": [
       {
@@ -283,7 +283,8 @@
     "visual-explainer@visual-explainer-marketplace": true,
     "frontend-design@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "claude-mem@thedotmack": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -308,6 +309,12 @@
       "source": {
         "source": "github",
         "repo": "obra/superpowers-marketplace"
+      }
+    },
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
       }
     }
   },
