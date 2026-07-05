@@ -282,9 +282,9 @@
     "typescript-lsp@claude-plugins-official": true,
     "visual-explainer@visual-explainer-marketplace": true,
     "frontend-design@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "claude-mem@thedotmack": true
+    "claude-mem@thedotmack": true,
+    "waza@waza": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -305,16 +305,16 @@
         "repo": "nicobailon/visual-explainer"
       }
     },
-    "superpowers-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "obra/superpowers-marketplace"
-      }
-    },
     "thedotmack": {
       "source": {
         "source": "github",
         "repo": "thedotmack/claude-mem"
+      }
+    },
+    "waza": {
+      "source": {
+        "source": "github",
+        "repo": "tw93/Waza"
       }
     }
   },
