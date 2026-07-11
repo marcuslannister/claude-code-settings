@@ -98,7 +98,7 @@ MODEL_ID=$(echo "$INPUT" | jq -r '.model.id // ""')
 CWD=$(echo "$INPUT" | jq -r '.workspace.current_dir // "."')
 
 # Detect 1M context models (Anthropic, Vertex, Bedrock all use "1m" in model ID)
-if echo "$MODEL_ID" | grep -qi '1m'; then
+if echo "$MODEL_ID" | grep -qiE '[][_-]1m([][_-]|$)'; then
     CTX_LIMIT=$CTX_LIMIT_1M
 else
     CTX_LIMIT=$DEFAULT_CTX_LIMIT
@@ -132,23 +132,36 @@ get_git_info() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 get_token_metrics() {
-    [[ ! -f "$TRANSCRIPT" ]] && echo "0 0" && return 0
+    # Emits 8 integers, deduped by message id — Claude transcripts repeat the
+    # same usage object across several rows per response (thinking + text + tool
+    # rows share one .message.id), so summing rows would multiply the cost:
+    #   last_input last_cache_read last_cache_create
+    #   cum_input cum_cache_read cum_cache_create_5m cum_cache_create_1h cum_output
+    # Cache creation is split into 5-minute / 1-hour writes (nested
+    # .cache_creation counters) for correct pricing; falls back to the flat
+    # cache_creation_input_tokens (as 5-minute) on older transcripts.
+    # Context-fill (the last_* trio) comes from the last non-sidechain message;
+    # cumulative figures still include subagent/sidechain usage (it is billed).
+    [[ ! -f "$TRANSCRIPT" ]] && echo "0 0 0 0 0 0 0 0" && return 0
 
-    local in_tok cache_read cache_create out_tok total_in
-
-    in_tok=$(grep -oE '"input_tokens":[0-9]+' "$TRANSCRIPT" 2>/dev/null | grep -oE '[0-9]+' | tail -1)
-    cache_read=$(grep -oE '"cache_read_input_tokens":[0-9]+' "$TRANSCRIPT" 2>/dev/null | grep -oE '[0-9]+' | tail -1)
-    cache_create=$(grep -oE '"cache_creation_input_tokens":[0-9]+' "$TRANSCRIPT" 2>/dev/null | grep -oE '[0-9]+' | tail -1)
-    out_tok=$(grep -oE '"output_tokens":[0-9]+' "$TRANSCRIPT" 2>/dev/null | grep -oE '[0-9]+' | awk '{s+=$1} END {print s+0}')
-
-    # Default to 0 if empty
-    in_tok=${in_tok:-0}
-    cache_read=${cache_read:-0}
-    cache_create=${cache_create:-0}
-    out_tok=${out_tok:-0}
-
-    total_in=$((in_tok + cache_read + cache_create))
-    echo "$total_in $out_tok"
+    jq -rs '
+      [ .[] | select(.message.usage) | {id: .message.id, u: .message.usage, side: (.isSidechain // false)} ]
+      | reduce .[] as $r ({seen:{}, list:[]};
+          if .seen[$r.id] then .
+          else .seen[$r.id] = true | .list += [$r] end)
+      | .list as $m
+      | [ $m[].u ] as $u
+      | (([ $m[] | select(.side | not) ] | last) // $m[-1] // {u:{}} | .u) as $last
+      | [ ($last.input_tokens // 0),
+          ($last.cache_read_input_tokens // 0),
+          ($last.cache_creation_input_tokens // 0),
+          ([ $u[] | (.input_tokens // 0) ] | add // 0),
+          ([ $u[] | (.cache_read_input_tokens // 0) ] | add // 0),
+          ([ $u[] | (.cache_creation.ephemeral_5m_input_tokens // .cache_creation_input_tokens // 0) ] | add // 0),
+          ([ $u[] | (.cache_creation.ephemeral_1h_input_tokens // 0) ] | add // 0),
+          ([ $u[] | (.output_tokens // 0) ] | add // 0)
+        ] | map(floor) | join(" ")
+    ' "$TRANSCRIPT" 2>/dev/null || echo "0 0 0 0 0 0 0 0"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -179,17 +192,42 @@ get_session_duration() {
 # Cost Calculation
 # ─────────────────────────────────────────────────────────────────────────────
 
+# Proxy mode: routed off first-party Anthropic (custom base URL or a cloud
+# backend), so first-party list prices don't reflect real spend.
+is_proxy_mode() {
+    # Cloud backends count as proxy only when explicitly enabled (1/true) —
+    # an explicit =0 means disabled, not enabled.
+    local f
+    for f in "${CLAUDE_CODE_USE_VERTEX:-}" "${CLAUDE_CODE_USE_BEDROCK:-}" "${CLAUDE_CODE_USE_FOUNDRY:-}"; do
+        case "$f" in 1|[Tt][Rr][Uu][Ee]) return 0 ;; esac
+    done
+    local url="${ANTHROPIC_BASE_URL:-}"
+    [[ -z "$url" ]] && return 1
+    local host="${url#*://}"; host="${host%%/*}"; host="${host%%:*}"
+    host=$(printf '%s' "$host" | tr '[:upper:]' '[:lower:]')  # host compare is case-insensitive
+    [[ "$host" == "api.anthropic.com" ]] && return 1
+    return 0
+}
+
+# Cumulative session cost. Anthropic list prices, $/MTok (input/output),
+# verified 2026-07-11 — see docs/adr/0001. Cache-aware: reads bill at 0.1x
+# input, 5-minute writes at 1.25x, 1-hour writes at 2x. Suppressed to "—"
+# off first-party.
 calculate_cost() {
-    local total_in=$1 out_tok=$2
+    local cum_in=$1 cum_cread=$2 cum_cc5m=$3 cum_cc1h=$4 cum_out=$5
     local price_in price_out
 
+    if is_proxy_mode; then echo "—"; return 0; fi
+
     case "$MODEL_ID" in
-        *opus*)   price_in=15;   price_out=75 ;;
-        *haiku*)  price_in=0.25; price_out=1.25 ;;
-        *)        price_in=3;    price_out=15 ;;  # sonnet/default
+        *opus*)   price_in=5;  price_out=25 ;;
+        *haiku*)  price_in=1;  price_out=5  ;;
+        *)        price_in=3;  price_out=15 ;;  # sonnet/default
     esac
 
-    awk "BEGIN {printf \"%.2f\", ($total_in * $price_in / 1000000) + ($out_tok * $price_out / 1000000)}"
+    awk -v i="$cum_in" -v cr="$cum_cread" -v c5="$cum_cc5m" -v c1="$cum_cc1h" -v o="$cum_out" \
+        -v pin="$price_in" -v pout="$price_out" \
+        'BEGIN { printf "%.2f", (pin*(i + 0.1*cr + 1.25*c5 + 2.0*c1) + pout*o) / 1000000 }'
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -261,6 +299,8 @@ format_reset_time() {
 }
 
 build_usage_bar() {
+    is_proxy_mode && return 0   # utilization is first-party-only (see CONTEXT.md)
+
     local response five_h resets five_int filled empty bar="" color five_pct reset_str
 
     response=$(fetch_api_usage)
@@ -335,24 +375,26 @@ build_progress_bar() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 main() {
-    local total_in out_tok ctx_pct duration cost git_info
+    local li lr lc ci cr c5 c1 co
+    read -r li lr lc ci cr c5 c1 co <<< "$(get_token_metrics)"
+    : "${li:=0}" "${lr:=0}" "${lc:=0}" "${ci:=0}" "${cr:=0}" "${c5:=0}" "${c1:=0}" "${co:=0}"
 
-    read -r total_in out_tok <<< "$(get_token_metrics)"
-    total_in=${total_in:-0}
-    out_tok=${out_tok:-0}
+    local total_in cum_in ctx_pct duration cost git_info
+    total_in=$((li + lr + lc))        # current context fill (last message)
+    cum_in=$((ci + cr + c5 + c1))     # cumulative input incl. cache (session)
 
     ctx_pct=$(awk "BEGIN {printf \"%.1f\", ($total_in / $CTX_LIMIT) * 100}")
     duration=$(get_session_duration)
-    cost=$(calculate_cost "$total_in" "$out_tok")
+    cost=$(calculate_cost "$ci" "$cr" "$c5" "$c1" "$co")
     git_info=$(get_git_info)
 
-    # Output
+    # Output — ↑↓ are cumulative session tokens; the bar is current context fill.
     printf "%b➜%b  %b%s%b%s %b[%s]%b %b[↑%dk/↓%dk \$%s]%b %s%s %b⏱ %s%b" \
         "$C_BOLD_GREEN" "$C_RESET" \
         "$C_CYAN" "$DIR" "$C_RESET" \
         "$git_info" \
         "$C_DIM" "$MODEL" "$C_RESET" \
-        "$C_DIM" "$((total_in / 1000))" "$((out_tok / 1000))" "$cost" "$C_RESET" \
+        "$C_DIM" "$((cum_in / 1000))" "$((co / 1000))" "$cost" "$C_RESET" \
         "$(build_progress_bar "$ctx_pct")" \
         "$(build_usage_bar)" \
         "$C_CYAN" "$duration" "$C_RESET"
