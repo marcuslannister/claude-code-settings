@@ -193,6 +193,9 @@ plugins/plugin-catalog-cache.json
 paste-cache/
 teams/
 
+# Local hooks (machine-specific, not shared)
+hooks/UserPromptSubmit/onecli_gateway_detect.sh
+
 # Local agent runtime state — may contain live credentials, never commit
 daemon/
 daemon.lock
