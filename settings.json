@@ -57,37 +57,6 @@
     }
   },
   "hooks": {
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/format-json.sh",
-            "type": "command"
-          }
-        ],
-        "matcher": "Write|Edit|MultiEdit"
-      }
-    ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/enforce-modern-cli.sh",
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      },
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/redirect-to-anvil.sh",
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash|Read"
-      }
-    ],
     "UserPromptSubmit": [
       {
         "hooks": [
