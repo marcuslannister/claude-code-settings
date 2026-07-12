@@ -6,7 +6,7 @@
       "context": "Chat",
       "bindings": {
         "ctrl+v": null,
-        "cmd+v": "chat:imagePaste"
+        "alt+v": "chat:imagePaste"
       }
     }
   ]
