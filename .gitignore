@@ -203,3 +203,9 @@ daemon.status.json
 jobs/
 policy-limits.json
 remote-settings.json
+.credentials.json
+daemon-auth-status.json
+daemon-auth-cooldown
+telemetry/
+settings.json.bak
+settings.json.*[0-9]a
