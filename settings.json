@@ -14,6 +14,7 @@
     "pr": ""
   },
   "permissions": {
+    "defaultMode": "auto",
     "allow": [
       "Skill(codex-skill)",
       "Skill(claude-code-settings:codex-skill)",
@@ -50,7 +51,7 @@
       "Bash(eval:*)"
     ]
   },
-  "model": "opus",
+  "model": "sonnet",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -79,6 +80,10 @@
             "type": "command",
             "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "[ -n \"${ZELLIJ_PANE_ID:-}\" ] && command -v zellij >/dev/null 2>&1 && zellij pipe --plugin smart-tabs --name pane_status -- '{\"pane_id\":\"'$ZELLIJ_PANE_ID'\",\"status\":\"done\"}' >/dev/null 2>&1 || true"
           }
         ]
       }
@@ -102,6 +107,10 @@
             "type": "command",
             "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "[ -n \"${ZELLIJ_PANE_ID:-}\" ] && command -v zellij >/dev/null 2>&1 && zellij pipe --plugin smart-tabs --name pane_status -- '{\"pane_id\":\"'$ZELLIJ_PANE_ID'\",\"status\":\"running\"}' >/dev/null 2>&1 || true"
           }
         ]
       }
@@ -114,6 +123,10 @@
             "type": "command",
             "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "[ -n \"${ZELLIJ_PANE_ID:-}\" ] && command -v zellij >/dev/null 2>&1 && zellij pipe --plugin smart-tabs --name pane_status -- '{\"pane_id\":\"'$ZELLIJ_PANE_ID'\",\"status\":\"pending\"}' >/dev/null 2>&1 || true"
           }
         ]
       }
@@ -197,7 +210,7 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
   "theme": "light",
   "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
