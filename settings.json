@@ -14,7 +14,6 @@
     "pr": ""
   },
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "Skill(codex-skill)",
       "Skill(claude-code-settings:codex-skill)",
@@ -49,9 +48,10 @@
       "Bash(git clean -fd:*)",
       "Bash(npm publish:*)",
       "Bash(eval:*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
-  "model": "sonnet",
+  "model": "opus",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -60,97 +60,6 @@
           {
             "type": "command",
             "command": "bash $HOME/.claude/hooks/UserPromptSubmit/onecli_gateway_detect.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "[ -n \"${ZELLIJ_PANE_ID:-}\" ] && command -v zellij >/dev/null 2>&1 && zellij pipe --plugin smart-tabs --name pane_status -- '{\"pane_id\":\"'$ZELLIJ_PANE_ID'\",\"status\":\"done\"}' >/dev/null 2>&1 || true"
-          }
-        ]
-      }
-    ],
-    "StopFailure": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "[ -n \"${ZELLIJ_PANE_ID:-}\" ] && command -v zellij >/dev/null 2>&1 && zellij pipe --plugin smart-tabs --name pane_status -- '{\"pane_id\":\"'$ZELLIJ_PANE_ID'\",\"status\":\"running\"}' >/dev/null 2>&1 || true"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "[ -n \"${ZELLIJ_PANE_ID:-}\" ] && command -v zellij >/dev/null 2>&1 && zellij pipe --plugin smart-tabs --name pane_status -- '{\"pane_id\":\"'$ZELLIJ_PANE_ID'\",\"status\":\"pending\"}' >/dev/null 2>&1 || true"
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10
           }
         ]
       }
