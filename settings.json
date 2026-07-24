@@ -1,176 +1,18 @@
 {
-  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file.",
-  "alwaysThinkingEnabled": true,
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
-  "effortLevel": "xhigh",
-  "enabledPlugins": {
-    "claude-code-setup@claude-plugins-official": false,
-    "claude-mem@thedotmack": true,
-    "codex@openai-codex": true,
-    "frontend-design@claude-plugins-official": false,
-    "mattpocock-skills@mattpocock": true,
-    "skill-creator@claude-plugins-official": false,
-    "typescript-lsp@claude-plugins-official": false,
-    "visual-explainer@visual-explainer-marketplace": false,
-    "waza@waza": false
-  },
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "PROXY_MANAGED",
-    "ANTHROPIC_BASE_URL": "http://127.0.0.1:15721",
-    "ANTHROPIC_DEFAULT_FABLE_MODEL": "claude-fable-5",
-    "ANTHROPIC_DEFAULT_FABLE_MODEL_NAME": "gpt-5.6-sol",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME": "gpt-5.6-terra",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL_NAME": "gpt-5.6-sol",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL_NAME": "gpt-5.6-luna",
     "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
-    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "372000",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "372000",
     "CLAUDE_CODE_NO_FLICKER": "1",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "gpt-5.6-sol",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_TELEMETRY": "1",
     "NO_PROXY": "localhost,127.0.0.1,::1",
     "no_proxy": "localhost,127.0.0.1,::1"
   },
-  "extraKnownMarketplaces": {
-    "claude-plugins-official": {
-      "source": {
-        "repo": "anthropics/claude-plugins-official",
-        "source": "github"
-      }
-    },
-    "mattpocock": {
-      "source": {
-        "repo": "mattpocock/skills",
-        "source": "github"
-      }
-    },
-    "openai-codex": {
-      "source": {
-        "repo": "openai/codex-plugin-cc",
-        "source": "github"
-      }
-    },
-    "thedotmack": {
-      "source": {
-        "repo": "thedotmack/claude-mem",
-        "source": "github"
-      }
-    },
-    "visual-explainer-marketplace": {
-      "source": {
-        "repo": "nicobailon/visual-explainer",
-        "source": "github"
-      }
-    },
-    "waza": {
-      "source": {
-        "repo": "tw93/Waza",
-        "source": "github"
-      }
-    }
+  "attribution": {
+    "commit": "",
+    "pr": ""
   },
-  "hooks": {
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "hooks": [
-          {
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10,
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "StopFailure": [
-      {
-        "hooks": [
-          {
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10,
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "command": "bash $HOME/.claude/hooks/UserPromptSubmit/onecli_gateway_detect.sh",
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      },
-      {
-        "hooks": [
-          {
-            "command": "if [ -x '$HOME/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '$HOME/.orca/agent-hooks/claude-hook.sh'; fi",
-            "timeout": 10,
-            "type": "command"
-          }
-        ]
-      }
-    ]
-  },
-  "model": "sonnet",
   "permissions": {
     "allow": [
       "Skill(codex-skill)",
@@ -182,16 +24,6 @@
       "Skill(autonomous-skill)",
       "Skill(claude-code-settings:autonomous-skill)",
       "Bash(codex:*)"
-    ],
-    "ask": [
-      "Bash(sudo:*)",
-      "Bash(chmod 777:*)",
-      "Bash(git push --force:*)",
-      "Bash(git push -f:*)",
-      "Bash(git reset --hard:*)",
-      "Bash(git clean -fd:*)",
-      "Bash(npm publish:*)",
-      "Bash(eval:*)"
     ],
     "deny": [
       "Bash(rm -rf:*)",
@@ -206,12 +38,89 @@
       "Read(**/*secret*)",
       "Read(**/*.pem)",
       "Read(**/*.key)"
+    ],
+    "ask": [
+      "Bash(sudo:*)",
+      "Bash(chmod 777:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -fd:*)",
+      "Bash(npm publish:*)",
+      "Bash(eval:*)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "sonnet",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/UserPromptSubmit/onecli_gateway_detect.sh"
+          }
+        ]
+      }
     ]
   },
-  "skipDangerousModePermissionPrompt": true,
   "statusLine": {
-    "command": "~/.claude/context-bar.sh",
-    "type": "command"
+    "type": "command",
+    "command": "~/.claude/context-bar.sh"
   },
-  "theme": "light"
+  "enabledPlugins": {
+    "claude-code-setup@claude-plugins-official": false,
+    "claude-mem@thedotmack": true,
+    "codex@openai-codex": true,
+    "frontend-design@claude-plugins-official": false,
+    "skill-creator@claude-plugins-official": false,
+    "typescript-lsp@claude-plugins-official": false,
+    "visual-explainer@visual-explainer-marketplace": false,
+    "waza@waza": false,
+    "mattpocock-skills@mattpocock": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    },
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    },
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    },
+    "visual-explainer-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "nicobailon/visual-explainer"
+      }
+    },
+    "waza": {
+      "source": {
+        "source": "github",
+        "repo": "tw93/Waza"
+      }
+    },
+    "mattpocock": {
+      "source": {
+        "source": "github",
+        "repo": "mattpocock/skills"
+      }
+    }
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "light",
+  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
 }
