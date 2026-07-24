@@ -23,7 +23,8 @@
       "Skill(claude-code-settings:youtube-transcribe-skill)",
       "Skill(autonomous-skill)",
       "Skill(claude-code-settings:autonomous-skill)",
-      "Bash(codex:*)"
+      "Bash(codex:*)",
+      "mcp__codegraph__*"
     ],
     "deny": [
       "Bash(rm -rf:*)",
@@ -60,6 +61,14 @@
           {
             "type": "command",
             "command": "bash $HOME/.claude/hooks/UserPromptSubmit/onecli_gateway_detect.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codegraph prompt-hook"
           }
         ]
       }
