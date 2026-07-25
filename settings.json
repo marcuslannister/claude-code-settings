@@ -106,15 +106,6 @@
     ],
     "UserPromptSubmit": [
       {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash $HOME/.claude/hooks/UserPromptSubmit/onecli_gateway_detect.sh"
-          }
-        ]
-      },
-      {
         "hooks": [
           {
             "type": "command",
