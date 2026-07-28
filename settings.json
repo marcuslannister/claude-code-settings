@@ -52,7 +52,6 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus",
   "hooks": {
     "PermissionRequest": [
       {
@@ -125,7 +124,9 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/context-bar.sh"
+    "command": "ccstatusline",
+    "padding": 0,
+    "refreshInterval": 10
   },
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": false,
