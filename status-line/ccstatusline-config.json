@@ -1,0 +1,110 @@
+{
+  "version": 3,
+  "lines": [
+    [
+      {
+        "id": "1",
+        "type": "model",
+        "color": "cyan"
+      },
+      {
+        "id": "f7e2756f-a302-4bf6-b14b-ab9fccc4144a",
+        "type": "separator"
+      },
+      {
+        "id": "b8baaec1-0183-42d7-a95f-031872ef2752",
+        "type": "thinking-effort"
+      },
+      {
+        "id": "2",
+        "type": "separator"
+      },
+      {
+        "id": "5",
+        "type": "git-branch",
+        "color": "magenta"
+      },
+      {
+        "id": "7",
+        "type": "git-changes",
+        "color": "yellow"
+      },
+      {
+        "id": "c35117dc-1505-4043-a469-e906761d0c25",
+        "type": "separator"
+      },
+      {
+        "id": "d3f20921-e2c5-4818-abab-17fc5092144a",
+        "type": "context-bar"
+      }
+    ],
+    [
+      {
+        "id": "65dc8e7e-59d1-4500-bb62-d244f4f8d0f4",
+        "type": "current-working-dir",
+        "metadata": {
+          "segments": "1"
+        }
+      },
+      {
+        "id": "c0f53ee2-71df-456c-9dca-19752649f220",
+        "type": "separator"
+      },
+      {
+        "id": "ae02f25f-6950-46f0-8aaa-d27d9327c662",
+        "type": "tokens-total"
+      },
+      {
+        "id": "806d1e8d-e042-45fc-8c56-cea14606cad6",
+        "type": "separator"
+      },
+      {
+        "id": "bec8df9d-6fc4-4c1a-bec5-5313abc42118",
+        "type": "session-cost"
+      },
+      {
+        "id": "8d92907c-b393-4301-943f-d2103ecad307",
+        "type": "separator"
+      },
+      {
+        "id": "33d7f387-c332-4b51-b518-7f1de542571c",
+        "type": "session-usage"
+      },
+      {
+        "id": "b595a0c4-31b0-4dda-be9c-f670d3c136aa",
+        "type": "separator"
+      },
+      {
+        "id": "24fba8b6-f0be-4866-9a67-737603eb5f0f",
+        "type": "weekly-usage"
+      }
+    ],
+    []
+  ],
+  "flexMode": "full",
+  "compactThreshold": 60,
+  "colorLevel": 3,
+  "defaultPaddingSide": "both",
+  "inheritSeparatorColors": false,
+  "globalBold": false,
+  "gitCacheTtlSeconds": 5,
+  "minimalistMode": false,
+  "powerline": {
+    "enabled": false,
+    "separators": [
+      ""
+    ],
+    "separatorInvertBackground": [
+      false
+    ],
+    "startCaps": [],
+    "endCaps": [],
+    "autoAlign": false,
+    "continueThemeAcrossLines": false
+  },
+  "installation": {
+    "method": "pinned",
+    "installedVersion": "2.2.27"
+  },
+  "exportedBy": "2.2.27"
+}
