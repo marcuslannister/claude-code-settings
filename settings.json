@@ -71,6 +71,14 @@
             "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' processing \"$PPID\""
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude tool-complete"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -91,6 +99,14 @@
             "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' idle \"$PPID\""
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude session-start"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -99,6 +115,14 @@
           {
             "type": "command",
             "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' idle \"$PPID\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude stop"
           }
         ]
       }
@@ -117,6 +141,34 @@
           {
             "type": "command",
             "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' processing \"$PPID\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude prompt-submit"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude notification"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude session-end"
           }
         ]
       }
@@ -182,5 +234,6 @@
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
   "theme": "light",
-  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
+  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file.",
+  "model": "opus"
 }
