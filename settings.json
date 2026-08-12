@@ -179,7 +179,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "./scripts/context-bar.sh",
+    "command": "~/.claude/status-line/context-bar.sh",
     "padding": 0,
     "refreshInterval": 10
   },

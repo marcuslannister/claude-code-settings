@@ -8,3 +8,4 @@
 - Add `context-bar.sh` status line script and switch to it.
 - Move status line assets (`context-bar.sh`, `status-line.sh`, `ccstatusline-config.json`) into a `status-line/` folder.
 - Trim `README.md` to what the repo actually ships and fix the kiro/spec-kit plugin links.
+- Fix the status line command to an absolute path so it renders in every project, not only the `agent-scripts` checkout.
