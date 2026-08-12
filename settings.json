@@ -7,11 +7,13 @@
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_TELEMETRY": "1",
     "no_proxy": "localhost,127.0.0.1,::1",
-    "NO_PROXY": "localhost,127.0.0.1,::1"
+    "NO_PROXY": "localhost,127.0.0.1,::1",
+    "DISABLE_AUTOUPDATER": "1"
   },
   "attribution": {
     "commit": "",
-    "pr": ""
+    "pr": "",
+    "sessionUrl": false
   },
   "permissions": {
     "allow": [
@@ -52,6 +54,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "hooks": {
     "PermissionRequest": [
       {
@@ -176,7 +179,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "ccstatusline",
+    "command": "./scripts/context-bar.sh",
     "padding": 0,
     "refreshInterval": 10
   },
@@ -187,7 +190,6 @@
     "frontend-design@claude-plugins-official": false,
     "mattpocock-skills@mattpocock": true,
     "skill-creator@claude-plugins-official": false,
-    "superpowers@claude-plugins-official": false,
     "typescript-lsp@claude-plugins-official": false,
     "visual-explainer@visual-explainer-marketplace": false,
     "waza@waza": false
@@ -232,8 +234,8 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
+  "promptSuggestionEnabled": false,
   "skipDangerousModePermissionPrompt": true,
   "theme": "light",
-  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file.",
-  "model": "opus"
+  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
 }
