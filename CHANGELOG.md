@@ -9,3 +9,4 @@
 - Move status line assets (`context-bar.sh`, `status-line.sh`, `ccstatusline-config.json`) into a `status-line/` folder.
 - Trim `README.md` to what the repo actually ships and fix the kiro/spec-kit plugin links.
 - Fix the status line command to an absolute path so it renders in every project, not only the `agent-scripts` checkout.
+- Run the CodeGraph prompt hook under `$SHELL` (`"shell": "bash"`) instead of `/bin/sh`, which does not read the Zsh configuration that puts the npm global bin directory on `PATH`.

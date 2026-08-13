@@ -135,7 +135,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "codegraph prompt-hook"
+            "command": "codegraph prompt-hook",
+            "shell": "bash"
           }
         ]
       },
