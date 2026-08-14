@@ -180,6 +180,7 @@ settings.local.json
 # Project specific
 WARP.md
 .research
+/skills/
 /image-cache
 stats-cache.json
 /backups

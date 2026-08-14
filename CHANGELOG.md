@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Ignore the local `skills/` directory.
 - Enable CodeGraph MCP tools and prompt context injection.
 - Use Opus by default and remove Orca and Zellij hooks that could block Claude Code tool calls.
 - Default model to Sonnet 5.
