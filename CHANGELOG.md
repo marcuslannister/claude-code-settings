@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Re-pin `opus[1m]` as the default model after Muxy reset it to `sonnet`.
+- Remove Otty hooks, superseded by the Muxy and tty7 hooks.
 - Ignore the local `skills/` directory.
 - Enable CodeGraph MCP tools and prompt context injection.
 - Use Opus by default and remove Orca and Zellij hooks that could block Claude Code tool calls.

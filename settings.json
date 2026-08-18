@@ -1,22 +1,222 @@
 {
-  "env": {
-    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_NO_FLICKER": "1",
-    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
-    "DISABLE_TELEMETRY": "1",
-    "no_proxy": "localhost,127.0.0.1,::1",
-    "NO_PROXY": "localhost,127.0.0.1,::1",
-    "DISABLE_AUTOUPDATER": "1"
+  "_hooks_note" : "Hook registrations live here under .hooks; no separate hooks\/hooks.json file.",
+  "alwaysThinkingEnabled" : true,
+  "attribution" : {
+    "commit" : "",
+    "pr" : "",
+    "sessionUrl" : false
   },
-  "attribution": {
-    "commit": "",
-    "pr": "",
-    "sessionUrl": false
+  "effortLevel" : "high",
+  "enabledPlugins" : {
+    "claude-code-setup@claude-plugins-official" : false,
+    "claude-mem@thedotmack" : true,
+    "codex@openai-codex" : true,
+    "frontend-design@claude-plugins-official" : false,
+    "mattpocock-skills@mattpocock" : true,
+    "skill-creator@claude-plugins-official" : false,
+    "typescript-lsp@claude-plugins-official" : false,
+    "visual-explainer@visual-explainer-marketplace" : false,
+    "waza@waza" : false
   },
-  "permissions": {
-    "allow": [
+  "env" : {
+    "CLAUDE_CODE_ATTRIBUTION_HEADER" : "0",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC" : "1",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS" : "1",
+    "CLAUDE_CODE_NO_FLICKER" : "1",
+    "DISABLE_AUTOUPDATER" : "1",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS" : "1",
+    "DISABLE_TELEMETRY" : "1",
+    "no_proxy" : "localhost,127.0.0.1,::1",
+    "NO_PROXY" : "localhost,127.0.0.1,::1"
+  },
+  "extraKnownMarketplaces" : {
+    "claude-plugins-official" : {
+      "source" : {
+        "repo" : "anthropics\/claude-plugins-official",
+        "source" : "github"
+      }
+    },
+    "mattpocock" : {
+      "source" : {
+        "repo" : "mattpocock\/skills",
+        "source" : "github"
+      }
+    },
+    "openai-codex" : {
+      "source" : {
+        "repo" : "openai\/codex-plugin-cc",
+        "source" : "github"
+      }
+    },
+    "thedotmack" : {
+      "source" : {
+        "repo" : "thedotmack\/claude-mem",
+        "source" : "github"
+      }
+    },
+    "visual-explainer-marketplace" : {
+      "source" : {
+        "repo" : "nicobailon\/visual-explainer",
+        "source" : "github"
+      }
+    },
+    "waza" : {
+      "source" : {
+        "repo" : "tw93\/Waza",
+        "source" : "github"
+      }
+    }
+  },
+  "hooks" : {
+    "Notification" : [
+      {
+        "hooks" : [
+          {
+            "command" : "\"\/Applications\/tty7.app\/Contents\/MacOS\/tty7-app\" agent-hook claude notification",
+            "type" : "command"
+          }
+        ]
+      },
+      {
+        "hooks" : [
+          {
+            "command" : "'$HOME\/Library\/Application Support\/Muxy\/hooks\/muxy-claude-hook.sh' notification # muxy-notification-hook",
+            "timeout" : 10,
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ],
+    "PermissionRequest" : [
+      {
+        "hooks" : [
+          {
+            "command" : "'$HOME\/Library\/Application Support\/Muxy\/hooks\/muxy-claude-hook.sh' permission-request # muxy-notification-hook",
+            "timeout" : 10,
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ],
+    "PostToolUse" : [
+      {
+        "hooks" : [
+          {
+            "command" : "\"\/Applications\/tty7.app\/Contents\/MacOS\/tty7-app\" agent-hook claude tool-complete",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "PreToolUse" : [
+      {
+        "hooks" : [
+          {
+            "command" : "'$HOME\/Library\/Application Support\/Muxy\/hooks\/muxy-claude-hook.sh' pre-tool-use # muxy-notification-hook",
+            "timeout" : 10,
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ],
+    "SessionEnd" : [
+      {
+        "hooks" : [
+          {
+            "command" : "\"\/Applications\/tty7.app\/Contents\/MacOS\/tty7-app\" agent-hook claude session-end",
+            "type" : "command"
+          }
+        ]
+      },
+      {
+        "hooks" : [
+          {
+            "command" : "'$HOME\/Library\/Application Support\/Muxy\/hooks\/muxy-claude-hook.sh' session-end # muxy-notification-hook",
+            "timeout" : 10,
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ],
+    "SessionStart" : [
+      {
+        "hooks" : [
+          {
+            "command" : "\"\/Applications\/tty7.app\/Contents\/MacOS\/tty7-app\" agent-hook claude session-start",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "Stop" : [
+      {
+        "hooks" : [
+          {
+            "command" : "\"\/Applications\/tty7.app\/Contents\/MacOS\/tty7-app\" agent-hook claude stop",
+            "type" : "command"
+          }
+        ]
+      },
+      {
+        "hooks" : [
+          {
+            "command" : "'$HOME\/Library\/Application Support\/Muxy\/hooks\/muxy-claude-hook.sh' stop # muxy-notification-hook",
+            "timeout" : 10,
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ],
+    "StopFailure" : [
+      {
+        "hooks" : [
+          {
+            "command" : "'$HOME\/Library\/Application Support\/Muxy\/hooks\/muxy-claude-hook.sh' stop-failure # muxy-notification-hook",
+            "timeout" : 10,
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ],
+    "UserPromptSubmit" : [
+      {
+        "hooks" : [
+          {
+            "command" : "codegraph prompt-hook",
+            "shell" : "bash",
+            "type" : "command"
+          }
+        ]
+      },
+      {
+        "hooks" : [
+          {
+            "command" : "\"\/Applications\/tty7.app\/Contents\/MacOS\/tty7-app\" agent-hook claude prompt-submit",
+            "type" : "command"
+          }
+        ]
+      },
+      {
+        "hooks" : [
+          {
+            "command" : "'$HOME\/Library\/Application Support\/Muxy\/hooks\/muxy-claude-hook.sh' user-prompt-submit # muxy-notification-hook",
+            "timeout" : 10,
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ]
+  },
+  "model" : "opus[1m]",
+  "permissions" : {
+    "allow" : [
       "Skill(codex-skill)",
       "Skill(claude-code-settings:codex-skill)",
       "Skill(nanobanana-skill)",
@@ -28,21 +228,7 @@
       "Bash(codex:*)",
       "mcp__codegraph__*"
     ],
-    "deny": [
-      "Bash(rm -rf:*)",
-      "Bash(rm -fr:*)",
-      "Read(.env)",
-      "Read(.env.*)",
-      "Read(**/.env)",
-      "Read(**/.env.*)",
-      "Read(~/.ssh/**)",
-      "Read(~/.aws/**)",
-      "Read(**/*credential*)",
-      "Read(**/*secret*)",
-      "Read(**/*.pem)",
-      "Read(**/*.key)"
-    ],
-    "ask": [
+    "ask" : [
       "Bash(sudo:*)",
       "Bash(chmod 777:*)",
       "Bash(git push --force:*)",
@@ -52,191 +238,29 @@
       "Bash(npm publish:*)",
       "Bash(eval:*)"
     ],
-    "defaultMode": "auto"
-  },
-  "model": "opus[1m]",
-  "hooks": {
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' awaiting \"$PPID\" ctx"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' processing \"$PPID\""
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude tool-complete"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' processing \"$PPID\""
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' idle \"$PPID\""
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude session-start"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' idle \"$PPID\""
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude stop"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "codegraph prompt-hook",
-            "shell": "bash"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "OTTY_CLI='/Applications/Otty.app/Contents/MacOS/otty-cli' '/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh' processing \"$PPID\""
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude prompt-submit"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude notification"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude session-end"
-          }
-        ]
-      }
+    "defaultMode" : "auto",
+    "deny" : [
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**\/.env)",
+      "Read(**\/.env.*)",
+      "Read(~\/.ssh\/**)",
+      "Read(~\/.aws\/**)",
+      "Read(**\/*credential*)",
+      "Read(**\/*secret*)",
+      "Read(**\/*.pem)",
+      "Read(**\/*.key)"
     ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/status-line/context-bar.sh",
-    "padding": 0,
-    "refreshInterval": 10
+  "promptSuggestionEnabled" : false,
+  "skipDangerousModePermissionPrompt" : true,
+  "statusLine" : {
+    "command" : "~\/.claude\/status-line\/context-bar.sh",
+    "padding" : 0,
+    "refreshInterval" : 10,
+    "type" : "command"
   },
-  "enabledPlugins": {
-    "claude-code-setup@claude-plugins-official": false,
-    "claude-mem@thedotmack": true,
-    "codex@openai-codex": true,
-    "frontend-design@claude-plugins-official": false,
-    "mattpocock-skills@mattpocock": true,
-    "skill-creator@claude-plugins-official": false,
-    "typescript-lsp@claude-plugins-official": false,
-    "visual-explainer@visual-explainer-marketplace": false,
-    "waza@waza": false
-  },
-  "extraKnownMarketplaces": {
-    "claude-plugins-official": {
-      "source": {
-        "source": "github",
-        "repo": "anthropics/claude-plugins-official"
-      }
-    },
-    "mattpocock": {
-      "source": {
-        "source": "github",
-        "repo": "mattpocock/skills"
-      }
-    },
-    "openai-codex": {
-      "source": {
-        "source": "github",
-        "repo": "openai/codex-plugin-cc"
-      }
-    },
-    "thedotmack": {
-      "source": {
-        "source": "github",
-        "repo": "thedotmack/claude-mem"
-      }
-    },
-    "visual-explainer-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "nicobailon/visual-explainer"
-      }
-    },
-    "waza": {
-      "source": {
-        "source": "github",
-        "repo": "tw93/Waza"
-      }
-    }
-  },
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
-  "promptSuggestionEnabled": false,
-  "skipDangerousModePermissionPrompt": true,
-  "theme": "light",
-  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
+  "theme" : "light"
 }
