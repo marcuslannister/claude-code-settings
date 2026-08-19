@@ -54,6 +54,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -216,7 +217,8 @@
     "skill-creator@claude-plugins-official": false,
     "typescript-lsp@claude-plugins-official": false,
     "visual-explainer@visual-explainer-marketplace": false,
-    "waza@waza": false
+    "waza@waza": false,
+    "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -254,11 +256,16 @@
         "source": "github",
         "repo": "tw93/Waza"
       }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
-  "model": "opus[1m]",
   "promptSuggestionEnabled": false,
   "skipDangerousModePermissionPrompt": true,
   "theme": "light",

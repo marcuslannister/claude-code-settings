@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Enable the `ponytail` plugin and its marketplace, and ignore its `.ponytail-active` session marker.
 - Redesign `context-bar.sh`: emoji segments, thinking effort, git line changes with an untracked count, and a `modus-operandi-tinted` theme.
 - Re-pin `opus[1m]` as the default model after Muxy reset it to `sonnet`.
 - Remove Otty hooks, superseded by the Muxy and tty7 hooks.
