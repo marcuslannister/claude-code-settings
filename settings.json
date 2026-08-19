@@ -54,7 +54,6 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -218,7 +217,8 @@
     "typescript-lsp@claude-plugins-official": false,
     "visual-explainer@visual-explainer-marketplace": false,
     "waza@waza": false,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "nowledge-mem@nowledge-community": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -261,6 +261,12 @@
       "source": {
         "source": "github",
         "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "nowledge-community": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/nowledge-co/community.git"
       }
     }
   },
