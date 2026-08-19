@@ -210,3 +210,6 @@ daemon-auth-cooldown
 telemetry/
 settings.json.bak
 settings.json.*[0-9]a
+
+# Ponytail session marker
+.ponytail-active
