@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Disable the `claude-mem` plugin.
 - Disable `autoMemoryEnabled`.
 - Add the herdr `SessionStart` hook (`hooks/herdr-agent-state.sh`) to report agent session state to the herdr daemon.
 - Enable the `ponytail` plugin and its marketplace, and ignore its `.ponytail-active` session marker.
