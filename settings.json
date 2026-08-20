@@ -137,6 +137,16 @@
             "command": "\"/Applications/tty7.app/Contents/MacOS/tty7-app\" agent-hook claude session-start"
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '$HOME/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [

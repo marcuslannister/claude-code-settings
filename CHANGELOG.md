@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add the herdr `SessionStart` hook (`hooks/herdr-agent-state.sh`) to report agent session state to the herdr daemon.
 - Enable the `ponytail` plugin and its marketplace, and ignore its `.ponytail-active` session marker.
 - Redesign `context-bar.sh`: emoji segments, thinking effort, git line changes with an untracked count, and a `modus-operandi-tinted` theme.
 - Re-pin `opus[1m]` as the default model after Muxy reset it to `sonnet`.
