@@ -15,6 +15,7 @@
     "pr": "",
     "sessionUrl": false
   },
+  "autoMemoryEnabled": false,
   "permissions": {
     "allow": [
       "Skill(codex-skill)",
