@@ -107,6 +107,27 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/hooks/block-git-destructive.sh\""
+          },
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/hooks/block-env-dump.sh\""
+          },
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/hooks/enforce-modern-cli.sh\""
+          },
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/hooks/gh-json.sh\""
+          }
+        ]
       }
     ],
     "SessionEnd": [
