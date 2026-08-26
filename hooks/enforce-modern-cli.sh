@@ -46,6 +46,11 @@ check_segment() {
   # Trim leading whitespace without using sed.
   segment="${segment#"${segment%%[!$' \t\r\n']*}"}"
 
+  # Drop a leading shell keyword, so `if ls; then ...` still reads as `ls`.
+  while [[ "$segment" =~ ^(if|then|elif|else|do|while|until|!)[[:space:]]+(.*)$ ]]; do
+    segment="${BASH_REMATCH[2]}"
+  done
+
   # Drop simple env assignments like FOO=bar command.
   while [[ "$segment" =~ ^[A-Za-z_][A-Za-z0-9_]*=([^[:space:]]+)[[:space:]]+(.*)$ ]]; do
     segment="${BASH_REMATCH[2]}"
