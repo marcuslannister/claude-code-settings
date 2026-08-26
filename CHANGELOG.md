@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `PreToolUse` Bash guard hooks that enforce the hard rules deterministically: `block-git-destructive.sh` (push, `reset --hard`, `clean`, `restore`, `checkout --`, `rebase`, `filter-branch`, `commit --amend`, `worktree`), `block-env-dump.sh` (environment dumps and printed secret values), and `gh-json.sh` (`gh` reads without `--json`, and `gh api --paginate`).
+- Share command parsing across the guard hooks in `hooks/lib.sh`: it unwraps `bash -c '...'` payloads, removes quote syntax without losing the token, splits on the shell operators, and strips keywords, environment assignments, leading paths, and transparent prefixes such as `command` and `env`.
+- Wire `hooks/enforce-modern-cli.sh` into `settings.json`, where it had never been registered, and teach it to see past a leading shell keyword (`if ls; then`).
+- Cover the guard hooks with `hooks/test-hooks.sh`, a 91-case self-check that runs without Claude Code.
 - Symlink `rules/` to `../agent-scripts/rules` so the topic rule files have one editable source.
 - Disable `autoDreamEnabled`.
 - Disable the `claude-mem` plugin.
