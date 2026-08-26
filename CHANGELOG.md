@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Symlink `rules/` to `../agent-scripts/rules` so the topic rule files have one editable source.
 - Disable `autoDreamEnabled`.
 - Disable the `claude-mem` plugin.
 - Disable `autoMemoryEnabled`.
