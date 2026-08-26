@@ -17,7 +17,9 @@ for seg in "${SEGMENTS[@]}"; do
   args=${BASH_REMATCH[3]}
   arg() { grep -qE -- "$1" <<<"$args"; }
 
-  arg '^push\b'                 && deny "\`git push\`. Never ship automatically."
+  # `git push` is deliberately not blocked here. A hook cannot tell an
+  # authorised ship from an unprompted one, and blocking it made `ship`
+  # impossible. The rule in CLAUDE.md governs pushes.
   arg '^reset\b.*--hard'        && deny "\`git reset --hard\`."
   arg '^restore\b'              && deny "\`git restore\`."
   arg '^filter-(branch|repo)\b' && deny "\`git filter-branch\`/\`filter-repo\` rewrites published history."

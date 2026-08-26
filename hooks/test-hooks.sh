@@ -27,8 +27,10 @@ decision() { # decision <expected: allow|deny|ask> <command>
   fi
 }
 
-check block-git-destructive.sh 2 'git push origin main'
-check block-git-destructive.sh 2 'git -C /tmp/repo push --force'
+# `git push` is intentionally allowed: a hook cannot tell an authorised ship
+# from an unprompted one. CLAUDE.md governs pushes.
+check block-git-destructive.sh 0 'git push origin main'
+check block-git-destructive.sh 0 'git -C /tmp/repo push --force'
 check block-git-destructive.sh 2 'git reset --hard HEAD~1'
 check block-git-destructive.sh 2 'git commit -m x --amend'
 check block-git-destructive.sh 2 'git rebase main'
@@ -44,28 +46,28 @@ check block-git-destructive.sh 2 'git checkout -f main'
 check block-git-destructive.sh 0 'git checkout -b feature/x'
 check block-git-destructive.sh 0 'git checkout main'
 # Prefixes that used to hide the command word.
-check block-git-destructive.sh 2 '/usr/bin/git push'
-check block-git-destructive.sh 2 'FOO=1 git push'
-check block-git-destructive.sh 2 'if git push; then echo x; fi'
+check block-git-destructive.sh 2 '/usr/bin/git clean -fd'
+check block-git-destructive.sh 2 'FOO=1 git clean -fd'
+check block-git-destructive.sh 2 'if git clean -fd; then echo x; fi'
 
 # A nested shell payload is inspected, not discarded as a string.
-check block-git-destructive.sh 2 "bash -lc 'git push origin main'"
+check block-git-destructive.sh 2 "bash -lc 'git restore .'"
 check block-git-destructive.sh 2 'bash -c "git clean -fd"'
 check block-git-destructive.sh 2 "/bin/sh -c 'git reset --hard'"
 check block-git-destructive.sh 0 "bash -lc 'git status -sb'"
 # An exempt command beside a destructive one does not excuse it.
 check block-git-destructive.sh 2 'git clean -fd; git clean -n'
 check block-git-destructive.sh 2 'git rebase main; git rebase --continue'
-check block-git-destructive.sh 2 'git status && git push'
+check block-git-destructive.sh 2 'git status && git clean -fd'
 check block-git-destructive.sh 0 'git clean -n; git rebase --continue'
 
-# A quoted token still runs: `git 'push'` is a push.
-check block-git-destructive.sh 2 "git 'push' origin main"
+# A quoted token still runs: `git 'clean'` is a clean.
+check block-git-destructive.sh 2 "git 'clean' -fd"
 check block-git-destructive.sh 2 'git "reset" --hard'
 # Transparent prefixes run the next word as the command.
-check block-git-destructive.sh 2 'command git push'
-check block-git-destructive.sh 2 'exec git push'
-check block-git-destructive.sh 2 'env -u GIT_DIR git push'
+check block-git-destructive.sh 2 'command git clean -fd'
+check block-git-destructive.sh 2 'exec git clean -fd'
+check block-git-destructive.sh 2 'env -u GIT_DIR git clean -fd'
 check block-git-destructive.sh 0 'env -u GIT_DIR git status'
 
 check block-env-dump.sh 2 'env'
