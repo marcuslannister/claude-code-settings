@@ -116,6 +116,18 @@ check block-env-dump.sh 0 'set -x'
 check block-env-dump.sh 2 'if echo $GITHUB_TOKEN; then :; fi'
 check block-env-dump.sh 2 'echo "${GH_TOKEN}"'
 
+# Isolate the Anvil probe cache from the real one (/tmp/.anvil-probe-$UID) so
+# these checks never race a live Claude Code session's redirect decisions,
+# and clean up via trap so an interrupted run can't leave stale state behind.
+export ANVIL_PROBE_CACHE
+ANVIL_PROBE_CACHE=$(mktemp "${TMPDIR:-/tmp}/anvil-probe-test.XXXXXX")
+trap 'rm -f "$ANVIL_PROBE_CACHE"' EXIT
+
+# enforce-modern-cli.sh's sed -i suggestion only fires when Anvil isn't
+# available (redirect-to-anvil.sh owns the case when it is); force the probe
+# cache to 'no' so that check is deterministic regardless of the real daemon.
+echo no > "$ANVIL_PROBE_CACHE"
+
 decision deny  'grep -r foo .'
 decision deny  'ls'
 decision allow 'find . -name x'
@@ -162,6 +174,39 @@ check gh-json.sh 2 'gh label list'
 check gh-json.sh 2 'gh variable list'
 check gh-json.sh 2 'gh secret list'
 check gh-json.sh 0 'gh label list --json name'
+
+# Flip the (still isolated) probe cache to 'ok' for the checks that assume
+# Anvil is reachable, including enforce-modern-cli.sh's sed -i suppression.
+REDIRECT=./redirect-to-anvil.sh
+echo ok > "$ANVIL_PROBE_CACHE"
+
+redirect_decision() { # redirect_decision <expected: allow|deny> <tool_name> <tool_input-json>
+  out=$(printf '{"tool_name":"%s","tool_input":%s}' "$2" "$3" | "$REDIRECT" 2>/dev/null)
+  actual=allow
+  [ -n "$out" ] && actual=$(jq -r '.hookSpecificOutput.permissionDecision' <<<"$out")
+  if [ "$actual" != "$1" ]; then
+    echo "FAIL redirect-to-anvil.sh: expected $1, got $actual for: $2 $3"
+    fail=1
+  fi
+}
+
+redirect_decision deny  Bash '{"command":"git status"}'
+redirect_decision allow Bash '{"command":"git push origin main"}'
+redirect_decision deny  Bash '{"command":"curl https://example.com"}'
+redirect_decision deny  Bash '{"command":"curl -I https://example.com"}'
+redirect_decision allow Bash '{"command":"curl -X POST https://example.com -d foo"}'
+# Flags placed after the URL must still be scanned, not just token 2.
+redirect_decision allow Bash '{"command":"curl https://example.com --head -o out.html"}'
+redirect_decision allow Bash '{"command":"curl https://example.com -X POST -d foo"}'
+redirect_decision deny  Bash '{"command":"sed -i s/a/b/ f.txt"}'
+redirect_decision allow Bash '{"command":"sed -n 1,5p f.txt"}'
+redirect_decision deny  Read '{"file_path":"/tmp/x.org"}'
+redirect_decision allow Read '{"file_path":"/tmp/x.md"}'
+# A wrapped/prefixed sed -i must still be caught (same normalization as
+# block-git-destructive.sh's segment parsing).
+redirect_decision deny  Bash '{"command":"echo ok; sed -i s/a/b/ f.txt"}'
+redirect_decision deny  Bash '{"command":"FOO=1 sed -i s/a/b/ f.txt"}'
+redirect_decision deny  Bash '{"command":"/usr/bin/sed -i s/a/b/ f.txt"}'
 
 [ "$fail" = 0 ] && echo "all hook checks passed"
 exit "$fail"

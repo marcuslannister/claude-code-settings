@@ -65,6 +65,30 @@ normalize_segment() {
   printf '%s' "${first##*/}${rest:+ $rest}"
 }
 
+# Cached Anvil probe (60s TTL) — avoids spawning emacsclient on every hook fire.
+# Returns 0 if the Emacs daemon answers, 1 otherwise. Shared by any hook that
+# needs to know whether an Anvil MCP redirect is available before it fires.
+# ANVIL_PROBE_CACHE overrides the cache path (tests use an isolated file so
+# they never race the real probe a concurrent Claude Code session relies on).
+anvil_available() {
+  local cache="${ANVIL_PROBE_CACHE:-/tmp/.anvil-probe-${UID:-$(id -u)}}"
+  if [[ -f $cache ]]; then
+    local mtime now
+    mtime=$(/usr/bin/stat -f %m "$cache" 2>/dev/null || /usr/bin/stat -c %Y "$cache" 2>/dev/null || echo 0)
+    now=$(date +%s)
+    if (( now - mtime < 60 )); then
+      [[ $(cat "$cache") == ok ]]
+      return
+    fi
+  fi
+  # --timeout bounds a stuck-but-listening daemon; without it a blocked
+  # socket hangs the probe (and every hook waiting on it) indefinitely.
+  if command -v emacsclient >/dev/null 2>&1 && emacsclient --timeout=2 -e t >/dev/null 2>&1; then
+    echo ok > "$cache"; return 0
+  fi
+  echo no > "$cache"; return 1
+}
+
 read_command() {
   local c seg
   c=$(strip_quotes "$(unwrap_shell "$(jq -r '.tool_input.command // empty' <<<"$1")")")

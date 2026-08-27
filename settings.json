@@ -121,11 +121,22 @@
           },
           {
             "type": "command",
-            "command": "\"$HOME/.claude/hooks/enforce-modern-cli.sh\""
+            "command": "\"$HOME/.claude/hooks/enforce-modern-cli.sh\"",
+            "timeout": 5
           },
           {
             "type": "command",
             "command": "\"$HOME/.claude/hooks/gh-json.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/hooks/redirect-to-anvil.sh\"",
+            "timeout": 5
           }
         ]
       }
