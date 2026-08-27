@@ -208,5 +208,11 @@ redirect_decision deny  Bash '{"command":"echo ok; sed -i s/a/b/ f.txt"}'
 redirect_decision deny  Bash '{"command":"FOO=1 sed -i s/a/b/ f.txt"}'
 redirect_decision deny  Bash '{"command":"/usr/bin/sed -i s/a/b/ f.txt"}'
 
+# enforce-modern-cli.sh must stay quiet on sed -i now that Anvil owns it,
+# including on the same wrapped forms redirect-to-anvil.sh now catches.
+decision allow 'sed -i s/a/b/ f'
+decision allow 'echo ok; sed -i s/a/b/ f'
+decision allow 'FOO=1 sed -i s/a/b/ f'
+
 [ "$fail" = 0 ] && echo "all hook checks passed"
 exit "$fail"

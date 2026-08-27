@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
 input="$(cat)"
 tool_name="$(jq -r '.tool_name // empty' <<<"$input")"
@@ -87,7 +88,10 @@ check_segment() {
       for tok in $rest; do
         [[ "$tok" =~ ^-[^-]*i || "$tok" == --in-place* ]] && has_i=1
       done
-      if [[ $has_i -eq 1 ]]; then
+      # redirect-to-anvil.sh already denies sed -i in favor of Anvil's
+      # file-replace-string/-regexp when the Emacs daemon is reachable;
+      # only fall back to the sd suggestion when Anvil isn't available.
+      if [[ $has_i -eq 1 ]] && ! anvil_available; then
         ask "Prefer sd for find-and-replace (e.g. sd 'old' 'new' file). Approve if you need sed's -i, -n, address ranges, or multi-line scripts."
       fi
       ;;
