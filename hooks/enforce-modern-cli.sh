@@ -64,7 +64,19 @@ check_segment() {
       deny "Use rg instead of grep. Example: rg -n \"pattern\" path"
       ;;
     find)
-      ask "Prefer fd for simple file search (e.g. fd -t f \"name\" path). Approve if you need find's -exec / -print0 / -newer / -mtime."
+      # fd can't cover every find predicate, so unrecognized flags must stay
+      # approvable (ask), never a hard deny. Only skip the ask when every
+      # flag used is one fd directly replaces.
+      local rest="${segment#*find}" simple=1 tok
+      for tok in $rest; do
+        case "$tok" in
+          -maxdepth|-mindepth|-type|-name|-iname|-path|-ipath) ;;
+          -*) simple=0 ;;
+        esac
+      done
+      if [[ $simple -eq 0 ]]; then
+        ask "Prefer fd for simple file search (e.g. fd -t f \"name\" path). Approve if you need a find predicate fd can't express (-exec, -print0, -newer, -mtime, -inum, ...)."
+      fi
       ;;
     sed)
       # sd only does find-and-replace and always edits in place; a sed call
