@@ -17,9 +17,27 @@ for seg in "${SEGMENTS[@]}"; do
   args=${BASH_REMATCH[3]}
   arg() { grep -qE -- "$1" <<<"$args"; }
 
-  # `git push` is deliberately not blocked here. A hook cannot tell an
+  # A plain `git push` is deliberately not blocked here. A hook cannot tell an
   # authorised ship from an unprompted one, and blocking it made `ship`
-  # impossible. The rule in CLAUDE.md governs pushes.
+  # impossible. The rule in CLAUDE.md governs plain pushes. A force push
+  # rewrites published history regardless of ship authorisation, so it stays
+  # blocked, same as `rebase`/`filter-branch` below. Checked token-by-token
+  # (not substring) so `--force-if-includes` (a no-op without
+  # `--force-with-lease`) and branches like `push origin feature-f` don't
+  # false-positive, and bundled short flags (`-fu`) and forced refspecs
+  # (`+branch`) don't false-negative.
+  if arg '^push\b'; then
+    force=
+    for tok in ${args#push}; do
+      case $tok in
+        --force | --force-with-lease | --force-with-lease=*) force=1 ;;
+        --*) ;;                              # other long options never force alone
+        -*) [[ $tok == *f* ]] && force=1 ;;  # short cluster, e.g. -f, -fu, -uf
+        +*) force=1 ;;                       # forced refspec, e.g. +main
+      esac
+    done
+    [[ $force ]] && deny "\`git push\` with a force flag or a forced refspec (\`+ref\`) rewrites published history."
+  fi
   arg '^reset\b.*--hard'        && deny "\`git reset --hard\`."
   arg '^restore\b'              && deny "\`git restore\`."
   arg '^filter-(branch|repo)\b' && deny "\`git filter-branch\`/\`filter-repo\` rewrites published history."

@@ -27,10 +27,21 @@ decision() { # decision <expected: allow|deny|ask> <command>
   fi
 }
 
-# `git push` is intentionally allowed: a hook cannot tell an authorised ship
-# from an unprompted one. CLAUDE.md governs pushes.
+# A plain `git push` is intentionally allowed: a hook cannot tell an
+# authorised ship from an unprompted one. CLAUDE.md governs plain pushes.
+# `--force` rewrites published history regardless, so it stays blocked.
 check block-git-destructive.sh 0 'git push origin main'
-check block-git-destructive.sh 0 'git -C /tmp/repo push --force'
+check block-git-destructive.sh 2 'git -C /tmp/repo push --force'
+check block-git-destructive.sh 2 'git push -f origin main'
+check block-git-destructive.sh 2 'git push --force-with-lease origin main'
+# Bundled short flags and forced refspecs also force.
+check block-git-destructive.sh 2 'git push -fu origin main'
+check block-git-destructive.sh 2 'git push -uf origin main'
+check block-git-destructive.sh 2 'git push origin +main'
+# A branch/refspec that merely ends in `-f`, or a lease-adjacent option that
+# does not by itself force, must not false-positive.
+check block-git-destructive.sh 0 'git push origin feature-f'
+check block-git-destructive.sh 0 'git push --force-if-includes origin main'
 check block-git-destructive.sh 2 'git reset --hard HEAD~1'
 check block-git-destructive.sh 2 'git commit -m x --amend'
 check block-git-destructive.sh 2 'git rebase main'
