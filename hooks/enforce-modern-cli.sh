@@ -67,7 +67,17 @@ check_segment() {
       ask "Prefer fd for simple file search (e.g. fd -t f \"name\" path). Approve if you need find's -exec / -print0 / -newer / -mtime."
       ;;
     sed)
-      ask "Prefer sd for find-and-replace (e.g. sd 'old' 'new' file). Approve if you need sed's -i, -n, address ranges, or multi-line scripts."
+      # sd only does find-and-replace and always edits in place; a sed call
+      # with no -i (including bundled short opts like -ni) can't modify
+      # files, so sd can't replace it either (e.g. `sed -n '10,20p' file`
+      # to print a line range) — allow silently.
+      local rest="${segment#*sed}" has_i=0 tok
+      for tok in $rest; do
+        [[ "$tok" =~ ^-[^-]*i || "$tok" == --in-place* ]] && has_i=1
+      done
+      if [[ $has_i -eq 1 ]]; then
+        ask "Prefer sd for find-and-replace (e.g. sd 'old' 'new' file). Approve if you need sed's -i, -n, address ranges, or multi-line scripts."
+      fi
       ;;
     ls)
       deny "Use eza instead of ls. Example: eza -la --git"
