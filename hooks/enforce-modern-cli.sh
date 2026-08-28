@@ -41,6 +41,28 @@ ask() {
   exit 0
 }
 
+# Truncate a string at the first pipe that is not inside single or double
+# quotes, so `-name '*|*'` or sed's `s|old|new|` don't get mistaken for a
+# pipeline separator.
+truncate_at_unquoted_pipe() {
+  local str="$1" i=0 c in_s=0 in_d=0 out=""
+  local len=${#str}
+  while (( i < len )); do
+    c="${str:i:1}"
+    if [[ $in_s -eq 0 && $in_d -eq 0 && "$c" == "|" ]]; then
+      break
+    fi
+    if [[ $in_d -eq 0 && "$c" == "'" ]]; then
+      (( in_s ^= 1 ))
+    elif [[ $in_s -eq 0 && "$c" == '"' ]]; then
+      (( in_d ^= 1 ))
+    fi
+    out+="$c"
+    (( i++ ))
+  done
+  printf '%s' "$out"
+}
+
 check_segment() {
   local segment="$1"
 
@@ -69,6 +91,9 @@ check_segment() {
       # approvable (ask), never a hard deny. Only skip the ask when every
       # flag used is one fd directly replaces.
       local rest="${segment#*find}" simple=1 tok
+      # Stop at the first unquoted pipe: downstream commands' flags (e.g.
+      # `| head -5`) aren't find's own arguments and must not count against it.
+      rest="$(truncate_at_unquoted_pipe "$rest")"
       for tok in $rest; do
         case "$tok" in
           -maxdepth|-mindepth|-type|-name|-iname|-path|-ipath) ;;
@@ -85,6 +110,7 @@ check_segment() {
       # files, so sd can't replace it either (e.g. `sed -n '10,20p' file`
       # to print a line range) — allow silently.
       local rest="${segment#*sed}" has_i=0 tok
+      rest="$(truncate_at_unquoted_pipe "$rest")"
       for tok in $rest; do
         [[ "$tok" =~ ^-[^-]*i || "$tok" == --in-place* ]] && has_i=1
       done
