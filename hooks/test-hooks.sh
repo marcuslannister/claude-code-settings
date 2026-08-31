@@ -16,13 +16,22 @@ check() { # check <script> <expected-exit> <command>
   fi
 }
 
-decision() { # decision <expected: allow|deny|ask> <command>
+decision() { # decision <expected: allow|deny> <command>
   out=$(payload "$2" | "$MODERN" 2>/dev/null)
   # No output at all means the hook stayed silent, which permits the command.
   actual=allow
   [ -n "$out" ] && actual=$(jq -r '.hookSpecificOutput.permissionDecision' <<<"$out")
   if [ "$actual" != "$1" ]; then
     echo "FAIL enforce-modern-cli.sh: expected $1, got $actual for: $2"
+    fail=1
+  fi
+}
+
+rewrite() { # rewrite <expected-command> <command>
+  out=$(payload "$2" | "$MODERN" 2>/dev/null)
+  actual=$(jq -r '.hookSpecificOutput.updatedInput.command // empty' <<<"$out")
+  if [ "$actual" != "$1" ]; then
+    echo "FAIL enforce-modern-cli.sh: expected rewrite $1, got $actual for: $2"
     fail=1
   fi
 }
@@ -123,18 +132,19 @@ export ANVIL_PROBE_CACHE
 ANVIL_PROBE_CACHE=$(mktemp "${TMPDIR:-/tmp}/anvil-probe-test.XXXXXX")
 trap 'rm -f "$ANVIL_PROBE_CACHE"' EXIT
 
-# enforce-modern-cli.sh's sed -i suggestion only fires when Anvil isn't
-# available (redirect-to-anvil.sh owns the case when it is); force the probe
-# cache to 'no' so that check is deterministic regardless of the real daemon.
+# The modern-CLI hook now owns exact `find` and `sed -i` rewrites.
 echo no > "$ANVIL_PROBE_CACHE"
 
 decision deny  'grep -r foo .'
 decision deny  'ls'
-decision allow 'find . -name x'
+rewrite 'fd --glob x .' 'find . -name x'
+rewrite "fd --glob '*.ts' src" "find src -name '*.ts'"
 decision allow 'find . -maxdepth 3'
-decision ask   'find . -inum 42'
-decision ask   'find . -exec rm {} ;'
-decision ask   'sed -i s/a/b/ f'
+decision allow 'find . -inum 42'
+decision allow 'find . -exec rm {} ;'
+rewrite "sd 'a' 'b' f" 'sed -i s/a/b/ f'
+rewrite "sd 'a' 'b' f" "sed -i 's/a/b/' f"
+decision allow 'sed -i s/a/b/g f'
 decision allow 'git grep foo'
 decision allow 'rg foo'
 # Downstream pipeline use stays allowed.
@@ -175,8 +185,7 @@ check gh-json.sh 2 'gh variable list'
 check gh-json.sh 2 'gh secret list'
 check gh-json.sh 0 'gh label list --json name'
 
-# Flip the (still isolated) probe cache to 'ok' for the checks that assume
-# Anvil is reachable, including enforce-modern-cli.sh's sed -i suppression.
+# Flip the isolated probe cache to 'ok' for the Anvil checks.
 REDIRECT=./redirect-to-anvil.sh
 echo ok > "$ANVIL_PROBE_CACHE"
 
@@ -198,21 +207,13 @@ redirect_decision allow Bash '{"command":"curl -X POST https://example.com -d fo
 # Flags placed after the URL must still be scanned, not just token 2.
 redirect_decision allow Bash '{"command":"curl https://example.com --head -o out.html"}'
 redirect_decision allow Bash '{"command":"curl https://example.com -X POST -d foo"}'
-redirect_decision deny  Bash '{"command":"sed -i s/a/b/ f.txt"}'
+redirect_decision allow Bash '{"command":"sed -i s/a/b/ f.txt"}'
 redirect_decision allow Bash '{"command":"sed -n 1,5p f.txt"}'
 redirect_decision deny  Read '{"file_path":"/tmp/x.org"}'
 redirect_decision allow Read '{"file_path":"/tmp/x.md"}'
-# A wrapped/prefixed sed -i must still be caught (same normalization as
-# block-git-destructive.sh's segment parsing).
-redirect_decision deny  Bash '{"command":"echo ok; sed -i s/a/b/ f.txt"}'
-redirect_decision deny  Bash '{"command":"FOO=1 sed -i s/a/b/ f.txt"}'
-redirect_decision deny  Bash '{"command":"/usr/bin/sed -i s/a/b/ f.txt"}'
-
-# enforce-modern-cli.sh must stay quiet on sed -i now that Anvil owns it,
-# including on the same wrapped forms redirect-to-anvil.sh now catches.
-decision allow 'sed -i s/a/b/ f'
-decision allow 'echo ok; sed -i s/a/b/ f'
-decision allow 'FOO=1 sed -i s/a/b/ f'
+redirect_decision allow Bash '{"command":"echo ok; sed -i s/a/b/ f.txt"}'
+redirect_decision allow Bash '{"command":"FOO=1 sed -i s/a/b/ f.txt"}'
+redirect_decision allow Bash '{"command":"/usr/bin/sed -i s/a/b/ f.txt"}'
 
 [ "$fail" = 0 ] && echo "all hook checks passed"
 exit "$fail"

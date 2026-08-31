@@ -4,7 +4,6 @@
 #
 # - Bash git (read-only)     → mcp__anvil-emacs-eval__git-*
 # - Bash curl (plain GET)    → mcp__anvil-emacs-eval__http-fetch / http-head
-# - Bash sed -i (in-place)   → mcp__anvil-emacs-eval__file-replace-string / -regexp
 # - Read on *.org            → mcp__anvil-emacs-eval__org-read-*
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
@@ -25,9 +24,7 @@ deny() {
 
 case "$tool" in
   Bash)
-    # read_command (lib.sh) normalizes each ;/&/|-separated segment — strips
-    # env assignments, leading paths, and shell keywords — so `FOO=1 sed -i`,
-    # `/usr/bin/sed -i`, and `echo ok; sed -i` are judged the same as `sed -i`.
+    # read_command (lib.sh) normalizes each segment before Git and curl checks.
     read_command "$input"
     for seg in "${SEGMENTS[@]}"; do
       first=${seg%%[[:space:]]*}
@@ -83,12 +80,6 @@ case "$tool" in
               deny "Use \`mcp__anvil-emacs-eval__http-fetch\`."
             fi
           fi
-          ;;
-        sed)
-          anvil_available || exit 0
-          for tok in ${seg#sed}; do
-            [[ $tok =~ ^-[^-]*i || $tok == --in-place* ]] && deny "Use \`mcp__anvil-emacs-eval__file-replace-string\` or \`file-replace-regexp\` — ships only the diff, no full-file round trip."
-          done
           ;;
       esac
     done
