@@ -26,6 +26,10 @@
       "Skill(autonomous-skill)",
       "Skill(claude-code-settings:autonomous-skill)",
       "Bash(codex:*)",
+      "Bash(eza:*)",
+      "Bash(fd:*)",
+      "Bash(rg:*)",
+      "Bash(echo:*)",
       "mcp__codegraph__*"
     ],
     "deny": [

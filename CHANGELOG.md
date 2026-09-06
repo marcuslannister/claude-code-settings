@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Allow `eza`, `fd`, `rg`, and `echo` in the Bash allowlist, since `enforce-modern-cli.sh` already steers commands toward them.
 - Standardise the guard hooks on JSON `permissionDecision` output and fail closed: every hook now answers with a decision on stdout instead of mixing exit-2-plus-stderr with JSON, and a hook that crashes or cannot run blocks the command rather than silently reading as an allow. `enforce-modern-cli.sh` drops its own segment splitter in favour of `lib.sh`'s shared parser, which closes three bypasses that the weaker splitter let through (`bash -c 'ls -la'`, `command ls`, `env ls`). `lib.sh` now records the operator before each segment, so the downstream-pipeline exemption (`ps aux | rg foo` allowed, `ls; rg foo` not) is expressed through the shared parser instead of a second one, and `(`/`)` group commands rather than separate them so `producer | (rg x)` keeps its pipe.
 - Add `hooks/test-hooks.sh`, a 100-check self-check for the guard hooks. Silence counts as a failure, so a hook that crashes fails the suite instead of passing as an allow.
 - Remove `redirect-to-anvil.sh`'s `sed -i` deny: `enforce-modern-cli.sh` now rewrites `sed -i` straight to `sd` instead of asking the user to switch to `file-replace-string`/`file-replace-regexp` by hand.
