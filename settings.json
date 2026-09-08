@@ -192,5 +192,6 @@
   "autoDreamEnabled": false,
   "skipDangerousModePermissionPrompt": true,
   "theme": "light",
-  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file."
+  "_hooks_note": "Hook registrations live here under .hooks; no separate hooks/hooks.json file.",
+  "model": "opus"
 }

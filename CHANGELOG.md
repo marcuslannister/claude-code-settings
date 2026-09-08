@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Update `hooks/herdr-agent-state.sh` to herdr integration version 9: it exits early under Cursor and on any event other than `SessionStart`, which replaces the explicit `SubagentStop` guard. Drop the duplicate absolute-path `SessionStart` registration that the herdr reinstall added to `settings.json`, since the `$HOME` form above it already runs the same hook.
+- Set the default model to `opus`.
 - Remove the tty7 and Muxy hooks (`Notification`, `PermissionRequest`, `PostToolUse`, `SessionEnd`, `StopFailure`, and part of `SessionStart`/`UserPromptSubmit`) from `settings.json`, and delete the stray `settings.json.muxy-backup`.
 - Allow `eza`, `fd`, `rg`, and `echo` in the Bash allowlist, since `enforce-modern-cli.sh` already steers commands toward them.
 - Standardise the guard hooks on JSON `permissionDecision` output and fail closed: every hook now answers with a decision on stdout instead of mixing exit-2-plus-stderr with JSON, and a hook that crashes or cannot run blocks the command rather than silently reading as an allow. `enforce-modern-cli.sh` drops its own segment splitter in favour of `lib.sh`'s shared parser, which closes three bypasses that the weaker splitter let through (`bash -c 'ls -la'`, `command ls`, `env ls`). `lib.sh` now records the operator before each segment, so the downstream-pipeline exemption (`ps aux | rg foo` allowed, `ls; rg foo` not) is expressed through the shared parser instead of a second one, and `(`/`)` group commands rather than separate them so `producer | (rg x)` keeps its pipe.
