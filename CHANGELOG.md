@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Disable the `codex`, `mattpocock-skills`, and `ponytail` plugins in `settings.json`.
 - Change the context-bar status line's chat-message icon from 💬 to 📝, since Kitty can render 💬 with Apple Color Emoji as a clipped square bitmap in a two-column cell.
 - Enable the `eli5` plugin and add its `claude-community` marketplace. Remove the `model` override from `settings.json` so the client default applies instead of a pinned `opus`.
 - Update `hooks/herdr-agent-state.sh` to herdr integration version 9: it exits early under Cursor and on any event other than `SessionStart`, which replaces the explicit `SubagentStop` guard. Drop the duplicate absolute-path `SessionStart` registration that the herdr reinstall added to `settings.json`, since the `$HOME` form above it already runs the same hook.
