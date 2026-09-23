@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Re-enable the `mattpocock-skills` and `ponytail` plugins in `settings.json`.
 - Update `hooks/herdr-agent-state.sh` to herdr integration version 10.
 - Disable the `codex`, `mattpocock-skills`, and `ponytail` plugins in `settings.json`.
 - Change the context-bar status line's chat-message icon from 💬 to 📝, since Kitty can render 💬 with Apple Color Emoji as a clipped square bitmap in a two-column cell.
