@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Register the Orca agent-state hook in `settings.json` for `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PostCompact`, `SessionEnd`, `Stop`, `StopFailure`, `SubagentStart`, `SubagentStop`, `TeammateIdle`, `SessionStart`, and `UserPromptSubmit`.
 - Re-enable the `mattpocock-skills` and `ponytail` plugins in `settings.json`.
 - Update `hooks/herdr-agent-state.sh` to herdr integration version 10.
 - Disable the `codex`, `mattpocock-skills`, and `ponytail` plugins in `settings.json`.
