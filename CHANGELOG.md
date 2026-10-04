@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Ignore the runtime `plugins/plugin-directory-cache-v2.json` cache and the per-project `ponytail-modes/` state.
+- Pass the agent PID to the Orca agent-state hook as `ORCA_HOOK_AGENT_PID`, and re-enable the `codex` plugin in `settings.json`.
 - Register the Orca agent-state hook in `settings.json` for `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PostCompact`, `SessionEnd`, `Stop`, `StopFailure`, `SubagentStart`, `SubagentStop`, `TeammateIdle`, `SessionStart`, and `UserPromptSubmit`.
 - Re-enable the `mattpocock-skills` and `ponytail` plugins in `settings.json`.
 - Update `hooks/herdr-agent-state.sh` to herdr integration version 10.

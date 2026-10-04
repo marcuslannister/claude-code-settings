@@ -213,3 +213,5 @@ settings.json.*[0-9]a
 
 # Ponytail session marker
 .ponytail-active
+plugins/plugin-directory-cache-v2.json
+ponytail-modes/
