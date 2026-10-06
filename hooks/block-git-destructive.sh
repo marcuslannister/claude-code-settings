@@ -42,7 +42,14 @@ for seg in "${SEGMENTS[@]}"; do
   arg '^restore\b'              && deny "\`git restore\`."
   arg '^filter-(branch|repo)\b' && deny "\`git filter-branch\`/\`filter-repo\` rewrites published history."
   arg '^commit\b.*--amend'      && deny "\`git commit --amend\`. No amend unless asked."
-  arg '^worktree\b'             && deny "\`git worktree\`. No CLI worktree unless asked."
+  # One exemption: removing a harness worktree (Agent isolation creates them
+  # under .claude/worktrees/) is cleanup. Without --force, Git refuses to
+  # remove a worktree that has changes, so no work is lost.
+  if arg '^worktree\b'; then
+    { arg '^worktree[[:space:]]+remove[[:space:]]+([^-[:space:]][^[:space:]]*/)?\.claude/worktrees/[^/[:space:]]+/?[[:space:]]*$' \
+      && ! arg '\.\.'; } \
+      || deny "\`git worktree\`. No CLI worktree unless asked; only \`git worktree remove .claude/worktrees/<name>\` without --force is exempt."
+  fi
   # `git checkout -- <path>` and `git checkout -f` discard working-tree changes,
   # exactly as `git restore` does. A plain branch checkout stays allowed.
   arg '^checkout\b.*( -- |-f\b|--force\b)' \
