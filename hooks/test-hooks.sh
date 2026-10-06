@@ -37,6 +37,18 @@ rewrite() { # rewrite <expected-command> <command>
   fi
 }
 
+# Only removing a harness worktree under .claude/worktrees/ without --force is exempt.
+check block-git-destructive.sh allow 'git worktree remove .claude/worktrees/agent-ab12'
+check block-git-destructive.sh allow 'git -C /tmp/repo worktree remove /tmp/repo/.claude/worktrees/agent-ab12/'
+check block-git-destructive.sh allow 'git worktree remove .claude/worktrees/a && git worktree remove .claude/worktrees/b && git branch -d impl/x'
+check block-git-destructive.sh deny 'git worktree remove --force .claude/worktrees/agent-ab12'
+check block-git-destructive.sh deny 'git worktree remove -f .claude/worktrees/agent-ab12'
+check block-git-destructive.sh deny 'git worktree remove ../sibling-checkout'
+check block-git-destructive.sh deny 'git worktree remove .claude/worktrees/..'
+check block-git-destructive.sh deny 'git worktree remove .claude/worktrees/../../repo'
+check block-git-destructive.sh deny 'git worktree add .claude/worktrees/new'
+check block-git-destructive.sh deny 'git worktree prune'
+check block-git-destructive.sh deny 'git worktree remove .claude/worktrees/a && git reset --hard'
 # A plain `git push` is intentionally allowed: a hook cannot tell an
 # authorised ship from an unprompted one. CLAUDE.md governs plain pushes.
 # `--force` rewrites published history regardless, so it stays blocked.
