@@ -83,7 +83,7 @@
         ]
       },
       {
-        "matcher": "Bash|Read",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
