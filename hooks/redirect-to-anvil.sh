@@ -2,9 +2,9 @@
 # PreToolUse hook: redirect built-in calls to Anvil MCP equivalents
 # when the Emacs daemon is reachable. No-op when Anvil is unavailable.
 #
-# - Bash git (read-only)     → mcp__anvil-emacs-eval__git-*
-# - Bash curl (plain GET)    → mcp__anvil-emacs-eval__http-fetch / http-head
-# - Read on *.org            → mcp__anvil-emacs-eval__org-read-*
+# - Bash git (read-only)     → mcp__anvil__git-*
+# - Bash curl (plain GET)    → mcp__anvil__http-fetch / http-head
+# Org files are not redirected: Anvil's org module is disabled (rules/tooling.md).
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
@@ -20,31 +20,45 @@ case "$tool" in
       case "$first" in
         git)
           anvil_available || guard_allow
-          sub=$(awk '{print $2}' <<<"$seg")
+          # Skip global options (git -C dir, --no-pager, -c k=v) so they
+          # cannot hide the subcommand.
+          read -ra words <<<"$seg"
+          i=1
+          while (( i < ${#words[@]} )); do
+            case "${words[i]}" in
+              -C|-c|--git-dir|--work-tree|--namespace|--config-env) i=$((i + 2)) ;;
+              -*) i=$((i + 1)) ;;
+              *) break ;;
+            esac
+          done
+          sub=${words[i]:-}
+          args=("${words[@]:i+1}")
           case "$sub" in
             status)
-              guard_deny "Use \`mcp__anvil-emacs-eval__git-status\` — structured plist with ahead/behind counts and bucketed paths."
+              guard_deny "Use \`mcp__anvil__git-status\` — structured plist with ahead/behind counts and bucketed paths."
               ;;
             log)
-              guard_deny "Use \`mcp__anvil-emacs-eval__git-log\` — returns hash/date/author/subject plists."
+              guard_deny "Use \`mcp__anvil__git-log\` — returns hash/date/author/subject plists."
               ;;
             diff)
-              guard_deny "Use \`mcp__anvil-emacs-eval__git-diff-names\` (paths) or \`git-diff-stats\` (file/insert/delete counts)."
+              # --check is a whitespace gate, not a read; no Anvil tool does it.
+              [[ " $seg " == *" --check "* ]] && continue
+              # An explicit pathspec reads named files' content, which no Anvil tool shows.
+              [[ " $seg " == *" -- "* ]] && continue
+              guard_deny "Use \`mcp__anvil__git-diff-names\` (paths) or \`git-diff-stats\` (file/insert/delete counts)."
               ;;
             rev-parse)
-              guard_deny "Use \`mcp__anvil-emacs-eval__git-head-sha\` or \`git-repo-root\`."
+              guard_deny "Use \`mcp__anvil__git-head-sha\` or \`git-repo-root\`."
               ;;
             branch)
               # Only redirect bare 'git branch' (read-only). Allow -d/-D/-m/-c/--set-upstream etc.
-              rest=$(awk '{$1=""; $2=""; print $0}' <<<"$seg" | tr -d '[:space:]')
-              if [[ -z $rest ]]; then
-                guard_deny "Use \`mcp__anvil-emacs-eval__git-branch-current\` — returns the current branch name."
+              if (( ${#args[@]} == 0 )); then
+                guard_deny "Use \`mcp__anvil__git-branch-current\` — returns the current branch name."
               fi
               ;;
             worktree)
-              sub3=$(awk '{print $3}' <<<"$seg")
-              if [[ $sub3 == list ]]; then
-                guard_deny "Use \`mcp__anvil-emacs-eval__git-worktree-list\` — structured plists."
+              if [[ ${args[0]:-} == list ]]; then
+                guard_deny "Use \`mcp__anvil__git-worktree-list\` — structured plists."
               fi
               ;;
           esac
@@ -64,21 +78,14 @@ case "$tool" in
           done
           if [[ $unsupported -eq 0 && $has_url -eq 1 ]]; then
             if [[ $is_head -eq 1 ]]; then
-              guard_deny "Use \`mcp__anvil-emacs-eval__http-head\` for a HEAD request."
+              guard_deny "Use \`mcp__anvil__http-head\` for a HEAD request."
             else
-              guard_deny "Use \`mcp__anvil-emacs-eval__http-fetch\`."
+              guard_deny "Use \`mcp__anvil__http-fetch\`."
             fi
           fi
           ;;
       esac
     done
-    ;;
-  Read)
-    path=$(jq -r '.tool_input.file_path // ""' <<<"$input")
-    if [[ $path == *.org ]]; then
-      anvil_available || guard_allow
-      guard_deny "Use \`mcp__anvil-emacs-eval__org-read-outline\` (structure) or \`org-read-headline\` / \`org-read-by-id\` (subtree). 10–20× cheaper than full Read on large org files."
-    fi
     ;;
 esac
 

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `hooks/redirect-to-anvil.sh` names the real `mcp__anvil__` Git and HTTP tools, and lets `git diff --check` through, since no Anvil tool runs that whitespace gate. It no longer redirects `.org` reads to Anvil org tools, which are disabled, so its matcher is now `Bash` only. It skips Git global options (`-C`, `-c`, `--no-pager`) before it reads the subcommand, so they no longer hide a read-only command, and it allows `git diff -- <path>` for file content.
 - Ignore the runtime `plugins/plugin-directory-cache-v2.json` cache and the per-project `ponytail-modes/` state.
 - Pass the agent PID to the Orca agent-state hook as `ORCA_HOOK_AGENT_PID`, and re-enable the `codex` plugin in `settings.json`.
 - Register the Orca agent-state hook in `settings.json` for `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PostCompact`, `SessionEnd`, `Stop`, `StopFailure`, `SubagentStart`, `SubagentStop`, `TeammateIdle`, `SessionStart`, and `UserPromptSubmit`.
