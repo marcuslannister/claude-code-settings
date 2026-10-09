@@ -65,15 +65,18 @@ case "$tool" in
           ;;
         curl)
           anvil_available || guard_allow
-          # Only a plain GET/HEAD (a URL and nothing http-fetch/http-head
-          # can't express) gets redirected; anything else is left unguarded.
+          # Only a plain GET/HEAD gets redirected: a URL plus quiet/follow/fail
+          # flags. Any other token (-6, -m 5, --noproxy, --resolve, -w, -o ...)
+          # is something http-fetch/http-head can't express, so curl stays.
           has_url=0 is_head=0 unsupported=0
           for tok in ${seg#curl}; do
             case "$tok" in
               http://*|https://*) has_url=1 ;;
               -I|--head) is_head=1 ;;
-              -X|--request|-d|--data*|-F|--form|-T|--upload-file|-o|--output|-O|--remote-name|-H|--header|-u|--user)
-                unsupported=1 ;;
+              --silent|--show-error|--location|--fail) ;;
+              '>'*|'<'*|[0-9]'>'*|'&>'*) ;;  # shell redirections, not curl options
+              -[sSLf]*) [[ $tok =~ ^-[sSLf]+$ ]] || unsupported=1 ;;
+              *) unsupported=1 ;;
             esac
           done
           if [[ $unsupported -eq 0 && $has_url -eq 1 ]]; then
