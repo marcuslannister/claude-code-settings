@@ -14,7 +14,7 @@ guard_allow() {
 }
 
 guard_deny() {
-  jq -n --arg reason "$1" '{
+  jq -n --arg reason "$1 Nothing in this command ran; re-run any other parts." '{
     hookSpecificOutput: {
       hookEventName: "PreToolUse",
       permissionDecision: "deny",
