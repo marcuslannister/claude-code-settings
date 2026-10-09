@@ -2,8 +2,8 @@
 # PreToolUse hook: redirect built-in calls to Anvil MCP equivalents
 # when the Emacs daemon is reachable. No-op when Anvil is unavailable.
 #
-# - Bash git (read-only)     → mcp__anvil__git-*
-# - Bash curl (plain GET)    → mcp__anvil__http-fetch / http-head
+# - Bash git (read-only)     → mcp__anvil-emacs-eval__git-*
+# - Bash curl (plain GET)    → mcp__anvil-emacs-eval__http-fetch / http-head
 # Org files are not redirected: Anvil's org module is disabled (rules/tooling.md).
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
@@ -35,30 +35,30 @@ case "$tool" in
           args=("${words[@]:i+1}")
           case "$sub" in
             status)
-              guard_deny "Use \`mcp__anvil__git-status\` — structured plist with ahead/behind counts and bucketed paths."
+              guard_deny "Use \`mcp__anvil-emacs-eval__git-status\` — structured plist with ahead/behind counts and bucketed paths."
               ;;
             log)
-              guard_deny "Use \`mcp__anvil__git-log\` — returns hash/date/author/subject plists."
+              guard_deny "Use \`mcp__anvil-emacs-eval__git-log\` — returns hash/date/author/subject plists."
               ;;
             diff)
               # --check is a whitespace gate, not a read; no Anvil tool does it.
               [[ " $seg " == *" --check "* ]] && continue
               # An explicit pathspec reads named files' content, which no Anvil tool shows.
               [[ " $seg " == *" -- "* ]] && continue
-              guard_deny "Use \`mcp__anvil__git-diff-names\` (paths) or \`git-diff-stats\` (file/insert/delete counts)."
+              guard_deny "Use \`mcp__anvil-emacs-eval__git-diff-names\` (paths) or \`git-diff-stats\` (file/insert/delete counts)."
               ;;
             rev-parse)
-              guard_deny "Use \`mcp__anvil__git-head-sha\` or \`git-repo-root\`."
+              guard_deny "Use \`mcp__anvil-emacs-eval__git-head-sha\` or \`git-repo-root\`."
               ;;
             branch)
               # Only redirect bare 'git branch' (read-only). Allow -d/-D/-m/-c/--set-upstream etc.
               if (( ${#args[@]} == 0 )); then
-                guard_deny "Use \`mcp__anvil__git-branch-current\` — returns the current branch name."
+                guard_deny "Use \`mcp__anvil-emacs-eval__git-branch-current\` — returns the current branch name."
               fi
               ;;
             worktree)
               if [[ ${args[0]:-} == list ]]; then
-                guard_deny "Use \`mcp__anvil__git-worktree-list\` — structured plists."
+                guard_deny "Use \`mcp__anvil-emacs-eval__git-worktree-list\` — structured plists."
               fi
               ;;
           esac
@@ -78,9 +78,9 @@ case "$tool" in
           done
           if [[ $unsupported -eq 0 && $has_url -eq 1 ]]; then
             if [[ $is_head -eq 1 ]]; then
-              guard_deny "Use \`mcp__anvil__http-head\` for a HEAD request."
+              guard_deny "Use \`mcp__anvil-emacs-eval__http-head\` for a HEAD request."
             else
-              guard_deny "Use \`mcp__anvil__http-fetch\`."
+              guard_deny "Use \`mcp__anvil-emacs-eval__http-fetch\`."
             fi
           fi
           ;;
