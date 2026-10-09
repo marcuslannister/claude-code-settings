@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `hooks/redirect-to-anvil.sh` redirects `curl` only for a plain download: a URL plus `-s`/`-S`/`-L`/`-f` flags. Any other option (`-6`, `-m`, `--noproxy`, `--resolve`, `-w`, `-k`) leaves `curl` allowed, since `http-fetch` cannot express it; shell redirections such as `>/dev/null` do not count as options. Before, diagnostic calls like `curl -6 -m 5 URL` were denied.
 - `hooks/redirect-to-anvil.sh` names the real `mcp__anvil-emacs-eval__` Git and HTTP tools, and lets `git diff --check` through, since no Anvil tool runs that whitespace gate. It no longer redirects `.org` reads to Anvil org tools, which are disabled, so its matcher is now `Bash` only. It skips Git global options (`-C`, `-c`, `--no-pager`) before it reads the subcommand, so they no longer hide a read-only command, and it allows `git diff -- <path>` for file content.
 - Ignore the runtime `plugins/store/` UI state.
 - Ignore the runtime `plugins/plugin-directory-cache-v2.json` cache and the per-project `ponytail-modes/` state.
