@@ -11,6 +11,7 @@ E_THINKING="💭"
 E_PATH="📁"
 E_BRANCH="🌿"
 E_CONTEXT="🪟"
+E_CACHE="💾"
 
 # Color codes
 # Defaults are 256-color and assume a dark terminal background. A theme may
@@ -24,10 +25,10 @@ C_UNTRACKED='\033[38;5;179m' # gold for the untracked file count
 C_SEP=""      # separators between segments
 C_BRANCH=""   # git branch segment
 C_BAR_FILL="" # filled part of the context bar
-C_BAR_WARN="" # bar fill past BAR_WARN_PCT (empty = no threshold colors)
+C_BAR_WARN="" # bar fill past BAR_WARN_PCT, and the cache bar under 20% left (empty = no threshold colors)
 C_BAR_ERR=""  # bar fill past BAR_ERR_PCT
-BAR_WARN_PCT=60
-BAR_ERR_PCT=85
+BAR_WARN_PCT=80
+BAR_ERR_PCT=90
 
 case "$COLOR" in
     orange)   C_ACCENT='\033[38;5;173m' ;;
@@ -49,7 +50,7 @@ case "$COLOR" in
         #   added      fg-added-intense                   #006700
         #   deleted    fg-removed-intense                 #aa2222
         #   untracked  fg-changed                         #553d00
-        #   bar fill   accent-3/red-warmer/red-intense  orange/red by usage
+        #   bar fill   accent-3/yellow/red-intense  orange, yellow 80%+, red 90%+
         #   bar track  fg-dim                             #595959
         C_ACCENT='\033[38;2;0;49;169m'
         C_VALUE='\033[38;2;89;89;89m'
@@ -59,7 +60,7 @@ case "$COLOR" in
         C_DELETED='\033[38;2;170;34;34m'
         C_UNTRACKED='\033[38;2;85;61;0m'
         C_BAR_FILL='\033[38;2;137;64;0m'
-        C_BAR_WARN='\033[38;2;151;37;0m'
+        C_BAR_WARN='\033[38;2;196;160;0m'  # yellow #c4a000
         C_BAR_ERR='\033[38;2;208;0;0m'
         C_BAR_EMPTY='\033[38;2;89;89;89m'
         ;;
@@ -94,7 +95,6 @@ fi
 # Get git branch, uncommitted line changes (+added,-deleted), and untracked count
 branch=""
 diff_stat=""
-diff_plain=""
 if [[ -n "$cwd" && -d "$cwd" ]]; then
     branch=$(git -C "$cwd" branch --show-current 2>/dev/null)
     if [[ -n "$branch" ]]; then
@@ -110,19 +110,15 @@ if [[ -n "$cwd" && -d "$cwd" ]]; then
             wc -l | tr -d ' ')
 
         parts=""
-        parts_plain=""
         if [[ "${added:-0}" -gt 0 || "${deleted:-0}" -gt 0 ]]; then
             parts="${C_ADDED}+${added}${C_SEP},${C_DELETED}-${deleted}"
-            parts_plain="+${added},-${deleted}"
         fi
         if [[ "${untracked:-0}" -gt 0 ]]; then
-            [[ -n "$parts" ]] && { parts+="${C_SEP},"; parts_plain+=","; }
+            [[ -n "$parts" ]] && { parts+="${C_SEP},"; }
             parts+="${C_UNTRACKED}?${untracked}"
-            parts_plain+="?${untracked}"
         fi
         if [[ -n "$parts" ]]; then
             diff_stat="${C_SEP}(${parts}${C_SEP})"
-            diff_plain="(${parts_plain})"
         fi
     fi
 fi
@@ -148,6 +144,7 @@ build_bar() {
     local pct=$1 filled i bar="" fill="$C_BAR_FILL"
     [[ -n "$C_BAR_WARN" && $pct -ge $BAR_WARN_PCT ]] && fill="$C_BAR_WARN"
     [[ -n "$C_BAR_ERR" && $pct -ge $BAR_ERR_PCT ]] && fill="$C_BAR_ERR"
+    [[ -n "$2" ]] && fill="$2"  # optional fill color from the caller
     filled=$(((pct * BAR_WIDTH + 50) / 100))
     for ((i=0; i<BAR_WIDTH; i++)); do
         if [[ $i -lt $filled ]]; then
@@ -199,54 +196,50 @@ pct=$(((used * 200 + max_context) / (2 * max_context)))  # round to nearest perc
 [[ $pct -gt 100 ]] && pct=100
 used_display=$(format_tokens "$used")
 ctx="${C_SEP}[$(build_bar "$pct")${C_SEP}]${C_VALUE} ${used_display}/${max_display} (${pct_prefix}${pct}%)"
-ctx_plain="[$(printf '%*s' "$BAR_WIDTH" '' | tr ' ' 'x')] ${used_display}/${max_display} (${pct_prefix}${pct}%)"
 
-# Build output: model | thinking | path | branch(+added,-deleted) | context
+# Prompt cache: time left before the cached prefix goes cold. prompt_cache is
+# absent until the first API response; missing fields (older versions) are skipped
+eval "$(echo "$input" | jq -r '
+    def v: if . == null then "" else . end;
+    .prompt_cache // empty |
+    @sh "cache_warm=\(.warm | tostring) cache_ttl=\(.ttl | v) cache_exp=\(.expires_at | v)",
+    @sh "cache_hit=\(.hit_ratio | if . == null then "" else . * 100 | round end)",
+    @sh "cache_misses=\(.misses | v) cache_recache=\(.recache_tokens_if_cold | v)",
+    @sh "cache_cause=\(.last_miss_cause.causes // [] | join(", "))"
+')"
+cache=""
+if [[ -n "$cache_warm" ]]; then
+    cache_left=$(( ${cache_exp:-0} - $(date +%s) ))
+    if [[ "$cache_warm" == true && -n "$cache_exp" && $cache_left -gt 0 ]]; then
+        case "$cache_ttl" in 5m) cache_total=300 ;; 1h) cache_total=3600 ;; *) cache_total=0 ;; esac
+        if [[ $cache_left -ge 60 ]]; then cache_left_display="$((cache_left / 60))m"; else cache_left_display="${cache_left}s"; fi
+        if [[ $cache_total -gt 0 ]]; then
+            cache_pct=$(( (cache_left * 100 + cache_total / 2) / cache_total ))
+            [[ $cache_pct -gt 100 ]] && cache_pct=100
+            cache_fill="$C_BAR_FILL"
+            [[ $((cache_left * 5)) -lt $cache_total ]] && cache_fill="${C_BAR_WARN:-$C_BAR_FILL}"  # under 20% left
+            cache="${C_SEP}[$(build_bar "$cache_pct" "$cache_fill")${C_SEP}]${C_VALUE} ${cache_left_display}/${cache_ttl} (${cache_pct}%)"
+        else
+            cache="${C_VALUE}${cache_left_display} left"
+        fi
+        [[ -n "$cache_hit" ]] && cache+=" · hit ${cache_hit}%"
+        [[ -n "$cache_misses" ]] && cache+=" · misses ${cache_misses}"
+    else
+        cache="${C_SEP}[$(build_bar 0)${C_SEP}]${C_BAR_ERR:-$C_VALUE} cold${C_VALUE}"
+        [[ -n "$cache_recache" ]] && cache+=" · next message re-caches $(format_tokens "$cache_recache") tokens"
+        [[ -n "$cache_cause" ]] && cache+=" · miss: ${cache_cause}"
+    fi
+fi
+
+# Build output: model | thinking | path | branch(+added,-deleted),
+# then context | cache on line 2
 sep="${C_SEP} | "
 output="${E_MODEL}${C_VALUE} ${model}"
 [[ -n "$effort" ]] && output+="${sep}${E_THINKING}${C_VALUE} ${effort}"
 [[ -n "$dir" ]] && output+="${sep}${E_PATH}${C_VALUE} ${dir}"
 [[ -n "$branch" ]] && output+="${sep}${E_BRANCH}${C_BRANCH} ${branch}${diff_stat}"
-output+="${sep}${E_CONTEXT}${C_VALUE} ${ctx}${C_RESET}"
+output+="${C_RESET}\n${E_CONTEXT}${C_VALUE} ${ctx}"
+[[ -n "$cache" ]] && output+="${sep}${E_CACHE} ${cache}"
+output+="${C_RESET}"
 
 printf '%b\n' "$output"
-
-# Get user's last message (text only, not tool results, skip unhelpful messages)
-if [[ -n "$transcript_path" && -f "$transcript_path" ]]; then
-    # Calculate visible length (without ANSI codes) - bar chars + content.
-    # Emoji count as one character here but take two terminal columns, so add
-    # one column per icon shown.
-    wide=2  # model and context icons are always shown
-    plain_output="${E_MODEL} ${model}"
-    [[ -n "$effort" ]] && { plain_output+=" | ${E_THINKING} ${effort}"; wide=$((wide + 1)); }
-    [[ -n "$dir" ]] && { plain_output+=" | ${E_PATH} ${dir}"; wide=$((wide + 1)); }
-    [[ -n "$branch" ]] && { plain_output+=" | ${E_BRANCH} ${branch}${diff_plain}"; wide=$((wide + 1)); }
-    plain_output+=" | ${E_CONTEXT} ${ctx_plain}"
-    max_len=$((${#plain_output} + wide))
-    last_user_msg=$(jq -rs '
-        # Messages to skip (not useful as context)
-        def is_unhelpful:
-            startswith("[Request interrupted") or
-            startswith("[Request cancelled") or
-            . == "";
-
-        [.[] | select(.type == "user") |
-         select(.message.content | type == "string" or
-                (type == "array" and any(.[]; .type == "text")))] |
-        reverse |
-        map(.message.content |
-            if type == "string" then .
-            else [.[] | select(.type == "text") | .text] | join(" ") end |
-            gsub("\n"; " ") | gsub("  +"; " ")) |
-        map(select(is_unhelpful | not)) |
-        first // ""
-    ' < "$transcript_path" 2>/dev/null)
-
-    if [[ -n "$last_user_msg" ]]; then
-        if [[ ${#last_user_msg} -gt $max_len ]]; then
-            echo "📝 ${last_user_msg:0:$((max_len - 3))}..."
-        else
-            echo "📝 ${last_user_msg}"
-        fi
-    fi
-fi
