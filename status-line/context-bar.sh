@@ -139,7 +139,7 @@ format_tokens() {
 }
 
 # Draw a bar of BAR_WIDTH segments for a percentage
-BAR_WIDTH=16
+BAR_WIDTH=10
 build_bar() {
     local pct=$1 filled i bar="" fill="$C_BAR_FILL"
     [[ -n "$C_BAR_WARN" && $pct -ge $BAR_WARN_PCT ]] && fill="$C_BAR_WARN"

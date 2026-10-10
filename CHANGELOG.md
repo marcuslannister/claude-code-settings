@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Shorten the context-bar status line bars from 16 to 10 blocks.
 - Add a prompt cache segment (💾) to the context-bar status line, from the `prompt_cache` status line data: while warm, a bar of the time left in the cache TTL with the hit ratio and miss count; when cold, the tokens the next message re-caches and the last miss cause. Move the context bar to line 2 beside it and drop the last-message line. Bar fills turn yellow (`#c4a000`) at 80% context use or under 20% cache time left, and red at 90% context use, up from 60% and 85%.
 - `hooks/lib.sh` appends "Nothing in this command ran; re-run any other parts." to every deny reason, since a deny blocks the whole command, including segments the hook did not object to.
 - `hooks/redirect-to-anvil.sh` redirects `curl` only for a plain download: a URL plus `-s`/`-S`/`-L`/`-f` flags. Any other option (`-6`, `-m`, `--noproxy`, `--resolve`, `-w`, `-k`) leaves `curl` allowed, since `http-fetch` cannot express it; shell redirections such as `>/dev/null` do not count as options. Before, diagnostic calls like `curl -6 -m 5 URL` were denied.
