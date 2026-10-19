@@ -216,3 +216,5 @@ settings.json.*[0-9]a
 plugins/plugin-directory-cache-v2.json
 plugins/store/
 ponytail-modes/
+.ponytail-band
+state/
