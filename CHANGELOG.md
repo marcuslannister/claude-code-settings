@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Remove the Orca and Paseo hooks from `settings.json`, and drop the `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PostCompact`, `SessionEnd`, `Stop`, `StopFailure`, `SubagentStart`, `SubagentStop`, `TeammateIdle`, and `Notification` events, which had no other hooks.
 - Ignore the runtime `.ponytail-band` marker and `state/` directory.
 - Register the Paseo hook in `settings.json` for `UserPromptSubmit`, `Stop`, `StopFailure`, `SessionEnd`, and the new `Notification` event; it runs only when `PASEO_TERMINAL_ID` is set. Add the herdr `session` hook for `SessionStart`, enable the `rust-analyzer-lsp` plugin, and set a medium effort level for `claude-opus-5-5` in `modelSettings`.
 - Update `hooks/herdr-agent-state.sh` to herdr integration version 11.
