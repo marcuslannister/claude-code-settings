@@ -277,5 +277,39 @@ redirect_decision allow Bash '{"command":"echo ok; sed -i s/a/b/ f.txt"}'
 redirect_decision allow Bash '{"command":"FOO=1 sed -i s/a/b/ f.txt"}'
 redirect_decision allow Bash '{"command":"/usr/bin/sed -i s/a/b/ f.txt"}'
 
+# A distributed skill copy carries a marker naming its source; edits go there.
+copy_root=$(mktemp -d "${TMPDIR:-/tmp}/skill-copy-test.XXXXXX")
+trap 'rm -f "$ANVIL_PROBE_CACHE"; rm -rf "$copy_root"' EXIT
+mkdir -p "$copy_root/copy/refs" "$copy_root/plain"
+printf '%s\nskill-matrix\n' "$copy_root/source" > "$copy_root/copy/.agent-scripts-copy"
+
+copy_decision() { # copy_decision <expected: allow|deny> <tool_name> <tool_input-json>
+  actual=$(verdict "$(printf '{"tool_name":"%s","tool_input":%s}' "$2" "$3" | ./block-skill-copy-edit.sh 2>/dev/null)")
+  if [ "$actual" != "$1" ]; then
+    echo "FAIL block-skill-copy-edit.sh: expected $1, got $actual for: $2 $3"
+    fail=1
+  fi
+}
+
+copy_decision deny  Edit  "{\"file_path\":\"$copy_root/copy/SKILL.md\"}"
+copy_decision deny  Write "{\"file_path\":\"$copy_root/copy/refs/notes.md\"}"
+copy_decision deny  mcp__anvil-emacs-eval__file-replace-string "{\"path\":\"$copy_root/copy/SKILL.md\"}"
+# data-set-path: `file` is the file, `path` is a JSON key path.
+copy_decision deny  mcp__anvil-emacs-eval__data-set-path "{\"file\":\"$copy_root/copy/x.json\",\"path\":\"a.b\"}"
+copy_decision deny  mcp__anvil-emacs-eval__file-batch-across "{\"file-ops-json\":\"[{\\\"path\\\":\\\"$copy_root/plain/a.md\\\"},{\\\"path\\\":\\\"$copy_root/copy/SKILL.md\\\"}]\"}"
+# sexp rename/replace-call: `scope` is a file, a comma list, or a directory.
+copy_decision deny  mcp__anvil-emacs-eval__sexp-rename-symbol "{\"scope\":\"$copy_root/plain/a.el, $copy_root/copy/b.el\"}"
+copy_decision deny  mcp__anvil-emacs-eval__sexp-replace-call "{\"scope\":\"$copy_root/copy/refs\"}"
+copy_decision deny  mcp__anvil-emacs-eval__sexp-rename-symbol "{\"scope\":\"$copy_root\"}"
+copy_decision allow mcp__anvil-emacs-eval__sexp-rename-symbol "{\"scope\":\"$copy_root/plain\"}"
+copy_decision allow mcp__anvil-emacs-eval__sexp-rename-symbol "{\"scope\":\"project\"}"
+# A copy under a gitignored directory is still found.
+git -C "$copy_root" init -q && echo '/copy/' > "$copy_root/.gitignore"
+copy_decision deny  mcp__anvil-emacs-eval__sexp-rename-symbol "{\"scope\":\"$copy_root\"}"
+copy_decision allow Edit  "{\"file_path\":\"$copy_root/plain/SKILL.md\"}"
+copy_decision allow mcp__anvil-emacs-eval__data-set-path "{\"file\":\"$copy_root/plain/x.json\",\"path\":\"a.b\"}"
+reason=$(printf '{"tool_name":"Edit","tool_input":{"file_path":"%s"}}' "$copy_root/copy/refs/notes.md" | ./block-skill-copy-edit.sh | jq -r '.hookSpecificOutput.permissionDecisionReason')
+[[ $reason == *"$copy_root/source/refs/notes.md"* ]] || { echo "FAIL block-skill-copy-edit.sh: reason does not name the source file: $reason"; fail=1; }
+
 [ "$fail" = 0 ] && echo "all hook checks passed"
 exit "$fail"
