@@ -229,7 +229,21 @@ redirect_decision deny  Bash '{"command":"git status"}'
 redirect_decision allow Bash '{"command":"git push origin main"}'
 redirect_decision deny  Bash '{"command":"git diff --stat"}'
 redirect_decision allow Bash '{"command":"git diff --cached --check"}'
-redirect_decision deny  Bash '{"command":"git diff --check; git status"}'
+# A command of only Git reads (plus cd and pipeline consumers) goes to Anvil.
+redirect_decision deny  Bash '{"command":"cd /tmp/repo && git status && git log -3"}'
+redirect_decision deny  Bash '{"command":"git log -1 --format=%s | head -1"}'
+redirect_decision deny  Bash '{"command":"git rev-parse HEAD || git status"}'
+# Other work in the chain means no Anvil call can replace it, so the read runs.
+redirect_decision allow Bash '{"command":"git diff --check; git status"}'
+redirect_decision allow Bash '{"command":"git add f && git commit -m x && git push && git status --porcelain"}'
+redirect_decision allow Bash '{"command":"cd /tmp/repo && git rev-parse --show-toplevel; rg -n foo f.md"}'
+redirect_decision allow Bash '{"command":"git fetch -q origin && git log -1 HEAD..origin/main"}'
+redirect_decision allow Bash '{"command":"git status || echo failed"}'
+# A pipe stage or redirect with its own effect is other work too.
+redirect_decision allow Bash '{"command":"git status | tee /tmp/status"}'
+redirect_decision allow Bash '{"command":"git log -3 > /tmp/log.txt"}'
+redirect_decision allow Bash '{"command":"git log -3 | head -1 >> /tmp/log.txt"}'
+redirect_decision deny  Bash '{"command":"git status --porcelain 2>/dev/null | wc -l"}'
 # Global options must not hide the subcommand.
 redirect_decision deny  Bash '{"command":"git --no-pager diff"}'
 redirect_decision deny  Bash '{"command":"git -C /tmp/repo status --porcelain"}'
