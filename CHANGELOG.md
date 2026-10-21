@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `hooks/block-skill-copy-edit.sh`: it blocks `Edit`, `Write`, `NotebookEdit`, and the Anvil file, JSON, data, and sexp write tools on a distributed skill copy (a directory with `.agent-scripts-copy`), and names the agent-scripts source file to edit. It checks sexp `scope` paths too, including a directory that holds a copy, and it also finds copies under gitignored directories.
+- `hooks/redirect-to-anvil.sh` sends a Git read to Anvil only when the whole command is Git reads, with `cd` and read-only filters such as `| head`. In a chain that also does other work, such as commit, push, then check, or a `tee` or `>` into a file, the reads run. Before, one Git read stopped the whole chain.
 - Remove the Orca and Paseo hooks from `settings.json`, and drop the `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PostCompact`, `SessionEnd`, `Stop`, `StopFailure`, `SubagentStart`, `SubagentStop`, `TeammateIdle`, and `Notification` events, which had no other hooks.
 - Ignore the runtime `.ponytail-band` marker and `state/` directory.
 - Register the Paseo hook in `settings.json` for `UserPromptSubmit`, `Stop`, `StopFailure`, `SessionEnd`, and the new `Notification` event; it runs only when `PASEO_TERMINAL_ID` is set. Add the herdr `session` hook for `SessionStart`, enable the `rust-analyzer-lsp` plugin, and set a medium effort level for `claude-opus-5-5` in `modelSettings`.
