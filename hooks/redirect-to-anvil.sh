@@ -2,24 +2,39 @@
 # PreToolUse hook: redirect built-in calls to Anvil MCP equivalents
 # when the Emacs daemon is reachable. No-op when Anvil is unavailable.
 #
-# - Bash git (read-only)     → mcp__anvil-emacs-eval__git-*
+# - Bash git (read-only)     → mcp__anvil-emacs-eval__git-*, only when the whole
+#   command is Git reads (plus `cd` and read-only filters such as `| head`). In a chain that also
+#   does other work, such as commit-push-verify, no Anvil call can replace it.
 # - Bash curl (plain GET)    → mcp__anvil-emacs-eval__http-fetch / http-head
 # Org files are not redirected: Anvil's org module is disabled (rules/tooling.md).
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
 input=$(cat)
+
+READ_ONLY_FILTERS="head tail rg grep wc sort uniq cut cat jq tr column less"
+
+# True when the segment redirects output into a file (not /dev/null).
+writes_file() {
+  local s=${1//[0-9]>/>}
+  s=${s//>>/>}
+  s=${s//> \/dev\/null/}
+  s=${s//>\/dev\/null/}
+  [[ $s == *'>'* ]]
+}
 tool=$(jq -r '.tool_name // ""' <<<"$input")
 
 case "$tool" in
   Bash)
     # read_command (lib.sh) normalizes each segment before Git and curl checks.
     read_command "$input"
-    for seg in "${SEGMENTS[@]}"; do
+    git_reason="" other_work=0
+    for idx in "${!SEGMENTS[@]}"; do
+      seg=${SEGMENTS[idx]}
       first=${seg%%[[:space:]]*}
+      reason=""
       case "$first" in
         git)
-          anvil_available || guard_allow
           # Skip global options (git -C dir, --no-pager, -c k=v) so they
           # cannot hide the subcommand.
           read -ra words <<<"$seg"
@@ -35,34 +50,39 @@ case "$tool" in
           args=("${words[@]:i+1}")
           case "$sub" in
             status)
-              guard_deny "Use \`mcp__anvil-emacs-eval__git-status\` — structured plist with ahead/behind counts and bucketed paths."
+              reason="Use \`mcp__anvil-emacs-eval__git-status\` — structured plist with ahead/behind counts and bucketed paths."
               ;;
             log)
-              guard_deny "Use \`mcp__anvil-emacs-eval__git-log\` — returns hash/date/author/subject plists."
+              reason="Use \`mcp__anvil-emacs-eval__git-log\` — returns hash/date/author/subject plists."
               ;;
             diff)
               # --check is a whitespace gate, not a read; no Anvil tool does it.
-              [[ " $seg " == *" --check "* ]] && continue
               # An explicit pathspec reads named files' content, which no Anvil tool shows.
-              [[ " $seg " == *" -- "* ]] && continue
-              guard_deny "Use \`mcp__anvil-emacs-eval__git-diff-names\` (paths) or \`git-diff-stats\` (file/insert/delete counts)."
+              [[ " $seg " == *" --check "* || " $seg " == *" -- "* ]] \
+                || reason="Use \`mcp__anvil-emacs-eval__git-diff-names\` (paths) or \`git-diff-stats\` (file/insert/delete counts)."
               ;;
             rev-parse)
-              guard_deny "Use \`mcp__anvil-emacs-eval__git-head-sha\` or \`git-repo-root\`."
+              reason="Use \`mcp__anvil-emacs-eval__git-head-sha\` or \`git-repo-root\`."
               ;;
             branch)
               # Only redirect bare 'git branch' (read-only). Allow -d/-D/-m/-c/--set-upstream etc.
               if (( ${#args[@]} == 0 )); then
-                guard_deny "Use \`mcp__anvil-emacs-eval__git-branch-current\` — returns the current branch name."
+                reason="Use \`mcp__anvil-emacs-eval__git-branch-current\` — returns the current branch name."
               fi
               ;;
             worktree)
               if [[ ${args[0]:-} == list ]]; then
-                guard_deny "Use \`mcp__anvil-emacs-eval__git-worktree-list\` — structured plists."
+                reason="Use \`mcp__anvil-emacs-eval__git-worktree-list\` — structured plists."
               fi
               ;;
           esac
+          if [[ -n $reason ]] && ! writes_file "$seg"; then
+            [[ -n $git_reason ]] || git_reason=$reason
+          else
+            other_work=1
+          fi
           ;;
+        cd) ;;
         curl)
           anvil_available || guard_allow
           # Only a plain GET/HEAD gets redirected: a URL plus quiet/follow/fail
@@ -86,9 +106,23 @@ case "$tool" in
               guard_deny "Use \`mcp__anvil-emacs-eval__http-fetch\`."
             fi
           fi
+          other_work=1
+          ;;
+        *)
+          # A read-only filter after a pipe (`git log | head`) only shapes the
+          # read's output. Any other stage, such as `tee`, has its own effect.
+          if [[ ${SEGMENT_SEPARATORS[idx]} == '|' || ${SEGMENT_SEPARATORS[idx]} == '|&' ]] \
+            && [[ " $READ_ONLY_FILTERS " == *" $first "* ]] && ! writes_file "$seg"; then
+            :
+          else
+            other_work=1
+          fi
           ;;
       esac
     done
+    if [[ -n $git_reason ]] && (( ! other_work )) && anvil_available; then
+      guard_deny "$git_reason"
+    fi
     ;;
 esac
 
