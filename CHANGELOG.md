@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `hooks/enforce-modern-cli.sh` blocks an `sd` command that has a newline inside a quoted pattern, because a multi-line `sd` can replace nothing and still exit 0. It reads the raw command, since `read_command` strips quoted spans; a newline between separate commands is still allowed. `hooks/test-hooks.sh` covers both cases.
 - Add `hooks/block-skill-copy-edit.sh`: it blocks `Edit`, `Write`, `NotebookEdit`, and the Anvil file, JSON, data, and sexp write tools on a distributed skill copy (a directory with `.agent-scripts-copy`), and names the agent-scripts source file to edit. It checks sexp `scope` paths too, including a directory that holds a copy, and it also finds copies under gitignored directories.
 - `hooks/redirect-to-anvil.sh` sends a Git read to Anvil only when the whole command is Git reads, with `cd` and read-only filters such as `| head`. In a chain that also does other work, such as commit, push, then check, or a `tee` or `>` into a file, the reads run. Before, one Git read stopped the whole chain.
 - Remove the Orca and Paseo hooks from `settings.json`, and drop the `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PostCompact`, `SessionEnd`, `Stop`, `StopFailure`, `SubagentStart`, `SubagentStop`, `TeammateIdle`, and `Notification` events, which had no other hooks.
