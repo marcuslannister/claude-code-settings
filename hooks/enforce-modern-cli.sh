@@ -32,6 +32,33 @@ rewrite_known_command() {
 
 rewrite_known_command
 
+# True when a command whose first word is sd has a newline inside quotes.
+# read_command strips quoted spans, so this walks the raw command instead.
+# A multi-line sd pattern can replace nothing and still exit 0.
+has_multiline_sd() {
+  local raw=$1 ch q="" word="" first="" i
+  for ((i = 0; i < ${#raw}; i++)); do
+    ch=${raw:i:1}
+    if [[ -n $q ]]; then
+      if [[ $ch == "$q" ]]; then q=""
+      elif [[ $ch == $'\n' && $first == sd ]]; then return 0
+      fi
+      continue
+    fi
+    case $ch in
+      "'"|'"') q=$ch ;;
+      ';'|'&'|'|'|'('|')'|$'\n') first="" word="" ;;
+      [[:space:]]) [[ -z $first && -n $word ]] && first=$word; word="" ;;
+      *) word+=$ch ;;
+    esac
+  done
+  return 1
+}
+
+if has_multiline_sd "$command"; then
+  guard_deny "Multi-line sd can replace nothing and still exit 0. Use Edit or mcp__anvil-emacs-eval__file-replace-string for multi-line text."
+fi
+
 for i in "${!SEGMENTS[@]}"; do
   # A downstream pipeline command can use grep for filtering. Commands after
   # `||` are separate decisions and remain guarded.
