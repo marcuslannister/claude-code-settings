@@ -83,6 +83,10 @@
           },
           {
             "type": "command",
+            "command": "\"$HOME/.claude/hooks/block-secret-file-read.sh\""
+          },
+          {
+            "type": "command",
             "command": "\"$HOME/.claude/hooks/enforce-modern-cli.sh\"",
             "timeout": 5
           },
