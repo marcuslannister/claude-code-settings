@@ -111,6 +111,16 @@ check block-env-dump.sh allow 'printenv GITHUB_TOKEN'
 check block-env-dump.sh allow 'env -u GITHUB_TOKEN gh pr create --body-file ./b'
 check block-env-dump.sh allow 'set -euo pipefail'
 check block-env-dump.sh allow 'git reset --soft HEAD~1'
+
+check block-secret-file-read.sh deny 'cat docker-compose.yml'
+check block-secret-file-read.sh deny "ssh vm16 'cd /srv/app && cat docker-compose.yml && du -sh data'"
+check block-secret-file-read.sh deny 'tail -n 5 .env'
+check block-secret-file-read.sh deny 'cat ~/Projects/proxy-config/mihomo/home-secret.local'
+check block-secret-file-read.sh deny 'docker compose config'
+check block-secret-file-read.sh allow "rg -v 'SECRET|TOKEN|KEY|PASSWORD' docker-compose.yml"
+check block-secret-file-read.sh allow 'cat docker-compose.yml | rg -v SECRET'
+check block-secret-file-read.sh allow 'cat README.md'
+check block-secret-file-read.sh allow 'docker compose up -d'
 # A quoted alternation is text, not a command word.
 check block-env-dump.sh allow 'rg -i "cli|env|gh" hooks/'
 check block-env-dump.sh deny 'declare -x'
