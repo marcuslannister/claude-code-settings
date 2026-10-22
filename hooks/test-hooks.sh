@@ -187,6 +187,11 @@ decision deny  'while ls; do :; done'
 decision deny  '! grep foo f'
 decision deny  'if FOO=1 /bin/ls; then :; fi'
 decision allow 'if rg foo; then echo x; fi'
+# A multi-line sd pattern can match nothing and still exit 0.
+decision deny  $'sd -F \'a\nb\' \'c\' f'
+decision deny  $'true && sd \'x\' \'y\nz\' f'
+decision allow "sd -F 'a' 'b' f"
+decision allow $'sd \'a\' \'b\' f\nrg b f'
 
 check gh-json.sh deny 'gh pr view 12'
 check gh-json.sh deny 'gh -R o/r issue list'
