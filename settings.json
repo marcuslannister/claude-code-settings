@@ -44,7 +44,8 @@
       "Read(**/*credential*)",
       "Read(**/*secret*)",
       "Read(**/*.pem)",
-      "Read(**/*.key)"
+      "Read(**/*.key)",
+      "WebFetch"
     ],
     "ask": [
       "Bash(sudo:*)",
