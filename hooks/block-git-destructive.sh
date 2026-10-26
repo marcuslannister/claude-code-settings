@@ -42,6 +42,25 @@ for seg in "${SEGMENTS[@]}"; do
   arg '^restore\b'              && deny "\`git restore\`."
   arg '^filter-(branch|repo)\b' && deny "\`git filter-branch\`/\`filter-repo\` rewrites published history."
   arg '^commit\b.*--amend'      && deny "\`git commit --amend\`. No amend unless asked."
+  # The privacy guard runs from the global core.hooksPath (agent-scripts
+  # ADR-0011). Skipping or repointing hooks bypasses it. A token after -m/-F
+  # is the message or file, so `-m -n` stays allowed.
+  if arg '^commit\b'; then
+    skip=
+    for tok in ${args#commit}; do
+      if [[ $skip ]]; then skip=; continue; fi
+      case $tok in
+        --no-verify) deny "\`git commit --no-verify\` bypasses the privacy guard. Fix the flagged line or ask the user." ;;
+        -m | -F | -c | -C) skip=1 ;;
+        --*) ;;
+        -*) [[ ${tok%%[mFcC]*} == *n* ]] && deny "\`git commit -n\` bypasses the privacy guard. Fix the flagged line or ask the user." ;;
+      esac
+    done
+  fi
+  grep -qiE -- '^git[[:space:]].*-c[[:space:]]*core\.hookspath' <<<"$seg" \
+    && deny "\`git -c core.hooksPath\` replaces the global hooks and bypasses the privacy guard."
+  arg '^config\b.*core\.[Hh]ooks[Pp]ath' && ! arg '^config\b.*(--get|--list|[[:space:]]get[[:space:]])' \
+    && deny "Changing \`core.hooksPath\` bypasses the privacy guard."
   # One exemption: removing a harness worktree (Agent isolation creates them
   # under .claude/worktrees/) is cleanup. Without --force, Git refuses to
   # remove a worktree that has changes, so no work is lost.
