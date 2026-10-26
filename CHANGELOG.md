@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Remove `keybindings.json`, which unbinds `ctrl+v` and binds `chat:imagePaste` to `alt+v`; the default keybindings apply again.
 - Add `hooks/block-secret-file-read.sh`, registered next to `block-env-dump.sh`: it blocks `cat`, `head`, `tail`, `bat`, `less`, `more`, and `nl` on a compose file, a `.env` file, or a file named `*secret*`, `*token*`, `*credential*`, or `*passw*`, and `docker compose config`, because they print secret values. It reads the raw command, so it also sees the reader inside `ssh host '...'`; a `| rg -v` filter passes. Add its checks to `hooks/test-hooks.sh`.
 - `hooks/enforce-modern-cli.sh` blocks an `sd` command that has a newline inside a quoted pattern, because a multi-line `sd` can replace nothing and still exit 0. It reads the raw command, since `read_command` strips quoted spans; a newline between separate commands is still allowed. `hooks/test-hooks.sh` covers both cases.
 - Add `hooks/block-skill-copy-edit.sh`: it blocks `Edit`, `Write`, `NotebookEdit`, and the Anvil file, JSON, data, and sexp write tools on a distributed skill copy (a directory with `.agent-scripts-copy`), and names the agent-scripts source file to edit. It checks sexp `scope` paths too, including a directory that holds a copy, and it also finds copies under gitignored directories.
