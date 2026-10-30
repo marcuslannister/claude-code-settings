@@ -133,6 +133,16 @@ check block-secret-file-read.sh allow "rg -v 'SECRET|TOKEN|KEY|PASSWORD' docker-
 check block-secret-file-read.sh allow 'cat docker-compose.yml | rg -v SECRET'
 check block-secret-file-read.sh allow 'cat README.md'
 check block-secret-file-read.sh allow 'docker compose up -d'
+# A heredoc written to a file prints nothing, whatever words it holds.
+check block-secret-file-read.sh allow $'cat > /tmp/x.md <<\'EOF\'\nuse your Windows password\nEOF\ngh pr create --body-file /tmp/x.md'
+check block-secret-file-read.sh allow $'cat >> /tmp/x.ps1 <<EOF\n(git config --get-all credential.helper)\nEOF'
+check block-secret-file-read.sh allow $'cat > /tmp/p.ps1 <<"END"\nschtasks /rp not-the-password\nEND'
+check block-secret-file-read.sh allow $'cat > /tmp/i.sh <<-EOF\n\tsecret prose\n\tEOF'
+# With no end word, bash takes the rest as heredoc text: nothing in it runs.
+check block-secret-file-read.sh allow $'cat > /tmp/a <<EOF\nnever closed\ncat .env'
+check block-secret-file-read.sh deny $'cat > /tmp/a <<EOF\nharmless\nEOF\ncat secrets.txt'
+check block-secret-file-read.sh deny $'ssh host sh -s <<\'EOF\'\ncat .env\nEOF'
+check block-secret-file-read.sh deny 'cat ~/.git-credentials'
 # A quoted alternation is text, not a command word.
 check block-env-dump.sh allow 'rg -i "cli|env|gh" hooks/'
 check block-env-dump.sh deny 'declare -x'

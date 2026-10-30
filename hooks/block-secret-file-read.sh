@@ -8,6 +8,16 @@ set -euo pipefail
 # A filter such as `| rg -v 'SECRET|TOKEN'` marks the output as redacted and passes.
 source "$(dirname "$0")/lib.sh"
 command=$(jq -r '.tool_input.command // empty' <<<"$(cat)")
+kept= end=
+while IFS= read -r line; do
+  if [[ -n $end ]]; then
+    [[ ${line#"${line%%[![:space:]]*}"} == "$end" ]] && end=
+    continue
+  fi
+  kept+=$line$'\n'
+  [[ $line =~ ^[[:space:]]*cat[[:space:]]*\>\>?.*\<\<-?[[:space:]]*[\'\"]?([A-Za-z_]+) ]] && end=${BASH_REMATCH[1]}
+done <<<"$command"
+command=$kept
 
 SQ="'"
 NAME="[^[:space:];&|\"$SQ]*"
