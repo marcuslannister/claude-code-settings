@@ -22,6 +22,16 @@ rewrite_known_command() {
   local find_re='^find[[:space:]]+([^[:space:];|&]+)[[:space:]]+-name[[:space:]]+([^[:space:];|&]+)$'
   local sed_re="^sed[[:space:]]+-i[[:space:]]+'?s/([^/[:space:]]+)/([^/[:space:]]+)/'?[[:space:]]+([^[:space:];|&]+)$"
 
+  # A plain `ls` with only l/a/A/1/h flags and one simple path maps to eza.
+  # -h is dropped (eza -h means --header); other flags still hit the deny below.
+  local ls_re='^ls([[:space:]]+-[lahA1]+)?([[:space:]]+[A-Za-z0-9_./~][A-Za-z0-9_./~-]*)?$'
+  if [[ "$command" =~ $ls_re ]]; then
+    local ls_flags=${BASH_REMATCH[1]//[[:space:]]/} ls_path=${BASH_REMATCH[2]//[[:space:]]/}
+    ls_flags=${ls_flags//h/}
+    ls_flags=${ls_flags//A/a}
+    [[ $ls_flags == - ]] && ls_flags=""
+    guard_rewrite "eza${ls_flags:+ $ls_flags}${ls_path:+ $ls_path}"
+  fi
   if [[ "$command" =~ $find_re ]]; then
     guard_rewrite "fd --glob ${BASH_REMATCH[2]} ${BASH_REMATCH[1]}"
   fi

@@ -181,7 +181,15 @@ trap 'rm -f "$ANVIL_PROBE_CACHE"' EXIT
 echo no > "$ANVIL_PROBE_CACHE"
 
 decision deny  'grep -r foo .'
-decision deny  'ls'
+# A plain ls maps to eza; -h is dropped and -A becomes -a. Anything else still denies.
+rewrite 'eza' 'ls'
+rewrite 'eza -la' 'ls -la'
+rewrite 'eza -la src' 'ls -lah src'
+rewrite 'eza -a ~/Projects' 'ls -A ~/Projects'
+decision deny  'ls -t'
+decision deny  'ls a b'
+decision deny  'ls -la | head'
+decision deny  'ls $(pwd)'
 rewrite 'fd --glob x .' 'find . -name x'
 rewrite "fd --glob '*.ts' src" "find src -name '*.ts'"
 decision allow 'find . -maxdepth 3'
