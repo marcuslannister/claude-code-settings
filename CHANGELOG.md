@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `hooks/block-secret-file-read.sh` blocks reads of mihomo `proxy_provider/` files with `cat`, `rg`, `grep`, `jq`, `yq`, `awk`, `sed`, or `sd`, before the `-v` filter pass. Their quoted JSON passwords slipped past a text mask. The message points to `ctl.sh <device> proxy REGEX`. `hooks/test-hooks.sh` covers it.
 - `hooks/enforce-modern-cli.sh` rewrites a plain `ls` to `eza` instead of blocking it: `ls`, `ls -la`, `ls -lah src`, and `ls -A ~/Projects` become `eza`, `eza -la`, `eza -la src`, and `eza -a ~/Projects`. It accepts only the flags `l`, `a`, `A`, `1`, and `h` and at most one simple path. It drops `h` (`eza -h` means `--header`) and maps `A` to `a`. Any other form (`ls -t`, two paths, `$(...)`, a pipe) is still blocked. Over 30 days of sessions, 84 of 282 `ls` calls hit the block, and each cost one call. `grep` stays blocked, because `rg` differs in flags such as `-r`. `hooks/test-hooks.sh` covers the rewrites and the cases that still deny.
 - `hooks/block-secret-file-read.sh` skips the body of a heredoc written to a file (`cat > f <<'EOF'`), so text that names a password or a credential passes. A heredoc fed to a program, such as `ssh host sh <<EOF`, is still checked. `hooks/test-hooks.sh` covers both cases.
 - Remove `keybindings.json`, which unbinds `ctrl+v` and binds `chat:imagePaste` to `alt+v`; the default keybindings apply again.
