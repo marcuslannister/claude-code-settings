@@ -143,6 +143,12 @@ check block-secret-file-read.sh allow $'cat > /tmp/a <<EOF\nnever closed\ncat .e
 check block-secret-file-read.sh deny $'cat > /tmp/a <<EOF\nharmless\nEOF\ncat secrets.txt'
 check block-secret-file-read.sh deny $'ssh host sh -s <<\'EOF\'\ncat .env\nEOF'
 check block-secret-file-read.sh deny 'cat ~/.git-credentials'
+# mihomo provider caches: quoted JSON passwords slip past -v filters and text masks.
+check block-secret-file-read.sh deny "rg -o '\"name\":\"HK[^}]*' ~/applications/mihomo/proxy_provider/local.yaml"
+check block-secret-file-read.sh deny 'rg -v password proxy_provider/local.yaml'
+check block-secret-file-read.sh deny 'cd ~/applications/mihomo && jq . proxy_provider/local.yaml'
+check block-secret-file-read.sh allow 'fd . ~/applications/mihomo/proxy_provider'
+check block-secret-file-read.sh allow 'ctl.sh home proxy HY2'
 # A quoted alternation is text, not a command word.
 check block-env-dump.sh allow 'rg -i "cli|env|gh" hooks/'
 check block-env-dump.sh deny 'declare -x'

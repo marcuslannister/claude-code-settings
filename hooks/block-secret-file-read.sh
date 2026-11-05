@@ -25,6 +25,13 @@ READER='(^|[;&|(`[:space:]])(cat|bat|head|tail|less|more|nl)[[:space:]]+([^;&|]*
 SECRET_FILE="$NAME(compose$NAME\\.ya?ml|\\.env$NAME|(secret|token|credential|passw)$NAME)"
 REDACTED='(rg|grep)[[:space:]]+-[A-Za-z]*v'
 
+# mihomo provider caches hold proxy passwords in quoted JSON, which a -v filter or a text mask misses;
+# checked before the -v pass. Read them through `ctl.sh <device> proxy REGEX`.
+PROVIDER_READ='(^|[;&|(`[:space:]])(cat|bat|head|tail|less|more|nl|rg|grep|jq|yq|awk|sed|sd)[[:space:]]+([^;&|]*[[:space:]/])?proxy_provider/'
+if [[ $command =~ $PROVIDER_READ ]]; then
+  guard_deny "Blocked: mihomo provider files hold proxy passwords. Use \`ctl.sh <home|laptop> proxy REGEX\` from proxy-config/mihomo; it masks the secret fields."
+fi
+
 [[ $command =~ $REDACTED ]] && guard_allow
 
 if [[ $command =~ $READER$SECRET_FILE ]] \
