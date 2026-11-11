@@ -170,12 +170,6 @@
         "repo": "openai/codex-plugin-cc"
       }
     },
-    "thedotmack": {
-      "source": {
-        "source": "github",
-        "repo": "thedotmack/claude-mem"
-      }
-    },
     "visual-explainer-marketplace": {
       "source": {
         "source": "github",
