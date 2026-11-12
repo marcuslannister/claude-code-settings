@@ -23,7 +23,7 @@ rewrite_known_command() {
   local sed_re="^sed[[:space:]]+-i[[:space:]]+'?s/([^/[:space:]]+)/([^/[:space:]]+)/'?[[:space:]]+([^[:space:];|&]+)$"
 
   # A plain `ls` with only l/a/A/1/h flags and one simple path maps to eza.
-  # -h is dropped (eza -h means --header); other flags still hit the deny below.
+  # -h is dropped (eza -h means --header); any other ls form runs as typed.
   local ls_re='^ls([[:space:]]+-[lahA1]+)?([[:space:]]+[A-Za-z0-9_./~][A-Za-z0-9_./~-]*)?$'
   if [[ "$command" =~ $ls_re ]]; then
     local ls_flags=${BASH_REMATCH[1]//[[:space:]]/} ls_path=${BASH_REMATCH[2]//[[:space:]]/}
@@ -77,9 +77,6 @@ for i in "${!SEGMENTS[@]}"; do
   case "$first" in
     grep)
       guard_deny "Use rg instead of grep. Example: rg -n \"pattern\" path"
-      ;;
-    ls)
-      guard_deny "Use eza instead of ls. Example: eza -la --git"
       ;;
   esac
 done

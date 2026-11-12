@@ -187,15 +187,15 @@ trap 'rm -f "$ANVIL_PROBE_CACHE"' EXIT
 echo no > "$ANVIL_PROBE_CACHE"
 
 decision deny  'grep -r foo .'
-# A plain ls maps to eza; -h is dropped and -A becomes -a. Anything else still denies.
+# A plain ls maps to eza; -h is dropped and -A becomes -a. Any other ls runs as typed.
 rewrite 'eza' 'ls'
 rewrite 'eza -la' 'ls -la'
 rewrite 'eza -la src' 'ls -lah src'
 rewrite 'eza -a ~/Projects' 'ls -A ~/Projects'
-decision deny  'ls -t'
-decision deny  'ls a b'
-decision deny  'ls -la | head'
-decision deny  'ls $(pwd)'
+decision allow 'ls -t'
+decision allow 'ls a b'
+decision allow 'ls -la | head'
+decision allow 'ls $(pwd)'
 rewrite 'fd --glob x .' 'find . -name x'
 rewrite "fd --glob '*.ts' src" "find src -name '*.ts'"
 decision allow 'find . -maxdepth 3'
@@ -214,24 +214,24 @@ decision allow 'cat f |& grep x'
 # not manufacture an exemption where the preceding operator was not a pipe.
 decision allow 'ps aux | (grep x)'
 decision deny  'true; (grep foo f)'
-decision deny  '(ls)'
+decision deny  '(grep foo f)'
 decision deny  'ps aux | (true; grep x)'
 # `||` and `&&` start a fresh command, so they are not a pipeline exemption.
 decision deny  'true || grep foo f'
 decision deny  'true && grep foo f'
 # Sharing lib.sh closed what the old inline splitter missed: a nested shell
 # payload and the transparent `command`/`env` prefixes.
-decision deny  "bash -c 'ls -la'"
-decision deny  'command ls'
-decision deny  'env ls'
+decision deny  "bash -c 'grep foo f'"
+decision deny  'command grep foo f'
+decision deny  'env grep foo f'
 # The old script also strips env assignments and leading paths.
-decision deny  'FOO=1 ls'
-decision deny  '/bin/ls -la'
+decision deny  'FOO=1 grep foo f'
+decision deny  '/usr/bin/grep foo f'
 # A leading shell keyword must not hide the command word.
-decision deny  'if ls; then echo x; fi'
-decision deny  'while ls; do :; done'
+decision deny  'if grep foo f; then echo x; fi'
+decision deny  'while grep foo f; do :; done'
 decision deny  '! grep foo f'
-decision deny  'if FOO=1 /bin/ls; then :; fi'
+decision deny  'if FOO=1 /usr/bin/grep foo f; then :; fi'
 decision allow 'if rg foo; then echo x; fi'
 # A multi-line sd pattern can match nothing and still exit 0.
 decision deny  $'sd -F \'a\nb\' \'c\' f'
