@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Point `CLAUDE.md` and `rules` at the `home` repo (`~/Projects/home`), which now holds the global agent rules.
 - Set a `xhigh` effort level for `claude-sonnet-5-5` in `modelSettings` in `settings.json`.
 - `hooks/enforce-modern-cli.sh` no longer blocks an `ls` that it cannot rewrite to `eza`; the command runs as typed. Before, `ls -t`, two paths, `$(...)`, and a pipe were denied. `grep` stays blocked. `hooks/test-hooks.sh` now uses `grep` to check the nested-shell, `command`, `env`, env-assignment, leading-path, and shell-keyword cases that used `ls`.
 - Remove the `thedotmack` marketplace (`thedotmack/claude-mem`) from `settings.json`.
