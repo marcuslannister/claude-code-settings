@@ -4,7 +4,9 @@ set -euo pipefail
 # destructive operations). Each command in the string is judged on its own, so
 # an exempt command cannot excuse a destructive one beside it.
 source "$(dirname "$0")/lib.sh"
-read_command "$(cat)"
+input=$(cat)
+read_command "$input"
+raw=$(jq -r '.tool_input.command // empty' <<<"$input")
 
 deny() {
   guard_deny "Blocked: $1
@@ -16,6 +18,7 @@ for seg in "${SEGMENTS[@]}"; do
   [[ $seg =~ ^git([[:space:]]+(-[cC][[:space:]]+[^[:space:]]+|-[^[:space:]]+))*[[:space:]]+(.*)$ ]] || continue
   args=${BASH_REMATCH[3]}
   arg() { grep -qE -- "$1" <<<"$args"; }
+  argi() { grep -qiE -- "$1" <<<"$args"; }  # git config keys are case-insensitive
 
   # A plain `git push` is deliberately not blocked here. A hook cannot tell an
   # authorised ship from an unprompted one, and blocking it made `ship`
@@ -59,7 +62,12 @@ for seg in "${SEGMENTS[@]}"; do
   fi
   grep -qiE -- '^git[[:space:]].*-c[[:space:]]*core\.hookspath' <<<"$seg" \
     && deny "\`git -c core.hooksPath\` replaces the global hooks and bypasses the privacy guard."
-  arg '^config\b.*core\.[Hh]ooks[Pp]ath' && ! arg '^config\b.*(--get|--list|[[:space:]]get[[:space:]])' \
+  # A read is `config`, only scope/display flags, the key, and nothing after it.
+  # A value, `--unset`, `--add`, or `set`/`unset` all leave a token that fails it.
+  # Quote removal erases an empty or spaced value (`core.hooksPath ""`), so it
+  # would pass as a bare read: any quote in the command keeps the deny.
+  argi '^config\b.*core\.hookspath' && ! arg '^config\b.*(--get|--list|[[:space:]]get[[:space:]])' \
+    && { [[ $raw == *\"* || $raw == *\'* ]] || ! argi '^config([[:space:]]+--(global|local|system|worktree|show-origin|show-scope|includes))*[[:space:]]+core\.hookspath[[:space:]]*$'; } \
     && deny "Changing \`core.hooksPath\` bypasses the privacy guard."
   # One exemption: removing a harness worktree (Agent isolation creates them
   # under .claude/worktrees/) is cleanup. Without --force, Git refuses to
