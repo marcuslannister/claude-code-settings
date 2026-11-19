@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the architect team subagents from the `home` research note (`docs/research/herdr-multi-agent-roles.md`, Method A): `agents/Explore.md` replaces the built-in Explore with Haiku at `low` effort, `agents/implementer.md` runs Sonnet at `xhigh`, and `agents/reviewer.md` runs Opus at `high` for bugs, regressions, and security. All three preload the `anvil-advanced-ops` skill. Add `hooks/readonly-search.sh`, set in the Explore and reviewer frontmatter: it allows one `rg`, `fd`, or `eza` command with plain words and single quotes, and blocks pipes, redirects, substitution, `rg --pre`, and `fd -x`. `hooks/test-hooks.sh` covers 31 cases.
+
 - Point `CLAUDE.md` and `rules` at the `home` repo (`~/Projects/home`), which now holds the global agent rules.
 - Set a `xhigh` effort level for `claude-sonnet-5-5` in `modelSettings` in `settings.json`.
 - `hooks/enforce-modern-cli.sh` no longer blocks an `ls` that it cannot rewrite to `eza`; the command runs as typed. Before, `ls -t`, two paths, `$(...)`, and a pipe were denied. `grep` stays blocked. `hooks/test-hooks.sh` now uses `grep` to check the nested-shell, `command`, `env`, env-assignment, leading-path, and shell-keyword cases that used `ls`.

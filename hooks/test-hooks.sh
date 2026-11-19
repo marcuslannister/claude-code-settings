@@ -362,5 +362,18 @@ copy_decision allow mcp__anvil-emacs-eval__data-set-path "{\"file\":\"$copy_root
 reason=$(printf '{"tool_name":"Edit","tool_input":{"file_path":"%s"}}' "$copy_root/copy/refs/notes.md" | ./block-skill-copy-edit.sh | jq -r '.hookSpecificOutput.permissionDecisionReason')
 [[ $reason == *"$copy_root/source/refs/notes.md"* ]] || { echo "FAIL block-skill-copy-edit.sh: reason does not name the source file: $reason"; fail=1; }
 
+# readonly-search.sh: one rg, fd, or eza command, plain words and single quotes only.
+ro=readonly-search.sh
+check $ro allow "rg -n 'foo|bar' src"; check $ro allow "fd -e md docs"; check $ro allow "eza -l"
+check $ro allow "rg 'a\$' ."; check $ro allow "fd -g '*.md' ."; check $ro allow "rg -x foo"
+check $ro allow "rg --pre-glob '*.gz' foo"
+check $ro deny "rg foo; rm x"; check $ro deny "rg foo | sh"; check $ro deny "rg foo > out"
+check $ro deny 'rg $(rm x)'; check $ro deny 'rg `rm x`'; check $ro deny "rm x"; check $ro deny ""
+check $ro deny "rg --pre sh foo"; check $ro deny "rg '--pre' sh foo"; check $ro deny "rg --pre=sh foo"
+check $ro deny "fd -x rm"; check $ro deny "fd -Hx rm"; check $ro deny "fd --exec=rm"; check $ro deny "fd -X rm"
+check $ro deny "rg foo *(e:'rm x':)"; check $ro deny 'rg "a"'; check $ro deny 'rg \" ; rm x ; \"'
+check $ro deny "rg \$'\\'' ; rm x ; ''"; check $ro deny "FOO=1 rg x"; check $ro deny "rg foo =(rm x)"
+check $ro deny "rg foo && rm x"; check $ro deny $'rg foo\nrm x'; check $ro deny "rg foo & rm x"; check $ro deny "rgx foo"
+
 [ "$fail" = 0 ] && echo "all hook checks passed"
 exit "$fail"
