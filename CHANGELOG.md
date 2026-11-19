@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `block-git-destructive.sh` allows the read-only `git config [--global|--show-origin|…] core.hooksPath` and still blocks every write; the key now matches case-insensitively, which closes a bypass of the privacy guard through `core.HOOKSPATH`. A quote anywhere in the command keeps the deny, because quote removal makes `core.hooksPath ""` look like a read.
+- `agents/reviewer.md`: when code treats an external reply (an API status, a `success` field, an exit code) as proof of an effect, the reviewer asks for evidence from the source or a live test.
 - Add the architect team subagents from the `home` research note (`docs/research/herdr-multi-agent-roles.md`, Method A): `agents/Explore.md` replaces the built-in Explore with Haiku at `low` effort, `agents/implementer.md` runs Sonnet at `xhigh`, and `agents/reviewer.md` runs Opus at `high` for bugs, regressions, and security. All three preload the `anvil-advanced-ops` skill. Add `hooks/readonly-search.sh`, set in the Explore and reviewer frontmatter: it allows one `rg`, `fd`, or `eza` command with plain words and single quotes, and blocks pipes, redirects, substitution, `rg --pre`, and `fd -x`. `hooks/test-hooks.sh` covers 31 cases.
 
 - Point `CLAUDE.md` and `rules` at the `home` repo (`~/Projects/home`), which now holds the global agent rules.
