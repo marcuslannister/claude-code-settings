@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Set `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=65` in `settings.json`, so auto compact starts at 65% context fill.
+- Add `hooks/context-handoff.sh`, run at `PostToolUse`: in a herdr pane, when context fill reaches 36% (`HANDOFF_PCT`), it tells the agent once per session to follow `~/.claude/agent-rules/handoff.md` and hand off to a new tab. `status-line/context-bar.sh` writes the fill to `$TMPDIR/claude-ctx/<session_id>`, because hook input has no window size. `hooks/test-hooks.sh` covers four cases.
 - Remove seven subagents with no calls in the last 90 days: `command-creator`, `deep-reflector`, `github-issue-fixer`, `insight-documenter`, `instruction-reflector`, `pr-reviewer`, and `ui-engineer`. `Explore`, `implementer`, and `reviewer` stay. Custom agents in `/context` went from 783 to 135 tokens.
 - `hooks/redirect-to-anvil.sh`: the comment about the disabled Anvil org module points to `rules/shell.md` in the home repo, where that note moved.
 - Add `skillOverrides` to `settings.json`: `herdr`, `metrix-bar`, and the built-in `dataviz`, `keybindings-help`, `plugin-authoring`, `fewer-permission-prompts`, `init`, `security-review`, `simplify`, `code-review`, and `claude-api` are `user-invocable-only`, so their descriptions do not load at startup and `/name` still works. Skills in `/context` went from 4.7k to 2.5k tokens.

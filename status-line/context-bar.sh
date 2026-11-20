@@ -194,6 +194,11 @@ fi
 
 pct=$(((used * 200 + max_context) / (2 * max_context)))  # round to nearest percent
 [[ $pct -gt 100 ]] && pct=100
+# hooks/context-handoff.sh reads this; hook input has no window size
+session_id=$(echo "$input" | jq -r '.session_id // empty')
+if [[ -n "$session_id" && -z "$pct_prefix" ]]; then
+    mkdir -p "${TMPDIR:-/tmp}/claude-ctx" && echo "$pct" > "${TMPDIR:-/tmp}/claude-ctx/$session_id"
+fi
 used_display=$(format_tokens "$used")
 ctx="${C_SEP}[$(build_bar "$pct")${C_SEP}]${C_VALUE} ${used_display}/${max_display} (${pct_prefix}${pct}%)"
 

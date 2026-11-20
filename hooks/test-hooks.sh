@@ -393,5 +393,19 @@ check $ro deny "rg foo *(e:'rm x':)"; check $ro deny 'rg "a"'; check $ro deny 'r
 check $ro deny "rg \$'\\'' ; rm x ; ''"; check $ro deny "FOO=1 rg x"; check $ro deny "rg foo =(rm x)"
 check $ro deny "rg foo && rm x"; check $ro deny $'rg foo\nrm x'; check $ro deny "rg foo & rm x"; check $ro deny "rgx foo"
 
+# context-handoff.sh: warns once in herdr when the status line fill reaches 36%.
+ctx_tmp=$(mktemp -d); mkdir "$ctx_tmp/claude-ctx"
+handoff() { # handoff <expected: warn|none> <herdr-env> <fill or empty>
+  [ -n "$3" ] && echo "$3" > "$ctx_tmp/claude-ctx/s1"
+  out=$(echo '{"session_id":"s1"}' | TMPDIR="$ctx_tmp" HERDR_ENV="$2" ./context-handoff.sh 2>/dev/null)
+  actual=$(jq -r 'if .hookSpecificOutput.additionalContext then "warn" else "none" end' <<<"${out:-null}")
+  if [ "$actual" != "$1" ]; then
+    echo "FAIL context-handoff.sh: expected $1, got $actual for herdr=$2 fill=$3"
+    fail=1
+  fi
+}
+handoff none 1 35; handoff none 0 50; handoff warn 1 36; handoff none 1 80
+trash "$ctx_tmp"
+
 [ "$fail" = 0 ] && echo "all hook checks passed"
 exit "$fail"

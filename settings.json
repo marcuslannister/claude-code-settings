@@ -8,7 +8,8 @@
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_TELEMETRY": "1",
     "no_proxy": "localhost,127.0.0.1,::1",
-    "NO_PROXY": "localhost,127.0.0.1,::1"
+    "NO_PROXY": "localhost,127.0.0.1,::1",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "65"
   },
   "attribution": {
     "commit": "",
@@ -136,6 +137,17 @@
             "type": "command",
             "command": "codegraph prompt-hook",
             "shell": "bash"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/hooks/context-handoff.sh\"",
+            "timeout": 5
           }
         ]
       }
