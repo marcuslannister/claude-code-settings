@@ -126,6 +126,11 @@
             "type": "command",
             "command": "bash \"$HOME/.claude/hooks/ponytail-lean.sh\"",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/eli5-lean.sh\"",
+            "timeout": 10
           }
         ]
       }
