@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `hooks/redirect-to-anvil.sh`: the comment about the disabled Anvil org module points to `rules/shell.md` in the home repo, where that note moved.
 - Add `skillOverrides` to `settings.json`: `herdr`, `metrix-bar`, and the built-in `dataviz`, `keybindings-help`, `plugin-authoring`, `fewer-permission-prompts`, `init`, `security-review`, `simplify`, `code-review`, and `claude-api` are `user-invocable-only`, so their descriptions do not load at startup and `/name` still works. Skills in `/context` went from 4.7k to 2.5k tokens.
 - Add `hooks/ponytail-lean.sh`, run at SessionStart: it adds `disable-model-invocation: true` to the ponytail `gain`, `help`, `debt`, and `audit` skills, because `skillOverrides` does not apply to plugin skills. It reapplies after a plugin update and exits 1 when the `name:` line is missing.
 - Remove the `codex@openai-codex` plugin and the `openai-codex` marketplace from `settings.json`.

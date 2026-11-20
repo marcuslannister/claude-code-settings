@@ -6,7 +6,7 @@
 #   command is Git reads (plus `cd` and read-only filters such as `| head`). In a chain that also
 #   does other work, such as commit-push-verify, no Anvil call can replace it.
 # - Bash curl (plain GET)    → mcp__anvil-emacs-eval__http-fetch / http-head
-# Org files are not redirected: Anvil's org module is disabled (rules/tooling.md).
+# Org files are not redirected: Anvil's org module is disabled (home rules/shell.md).
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
