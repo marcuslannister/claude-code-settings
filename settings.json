@@ -120,6 +120,11 @@
             "type": "command",
             "command": "bash \"$HOME/.claude/hooks/nowledge-lean.sh\"",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/ponytail-lean.sh\"",
+            "timeout": 10
           }
         ]
       }
@@ -144,7 +149,6 @@
   },
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": false,
-    "codex@openai-codex": true,
     "frontend-design@claude-plugins-official": false,
     "mattpocock-skills@mattpocock": true,
     "skill-creator@claude-plugins-official": false,
@@ -167,12 +171,6 @@
       "source": {
         "source": "github",
         "repo": "mattpocock/skills"
-      }
-    },
-    "openai-codex": {
-      "source": {
-        "source": "github",
-        "repo": "openai/codex-plugin-cc"
       }
     },
     "visual-explainer-marketplace": {
@@ -215,6 +213,19 @@
     "claude-sonnet-5-5": {
       "effortLevel": "xhigh"
     }
+  },
+  "skillOverrides": {
+    "herdr": "user-invocable-only",
+    "metrix-bar": "user-invocable-only",
+    "dataviz": "user-invocable-only",
+    "keybindings-help": "user-invocable-only",
+    "plugin-authoring": "user-invocable-only",
+    "fewer-permission-prompts": "user-invocable-only",
+    "init": "user-invocable-only",
+    "security-review": "user-invocable-only",
+    "simplify": "user-invocable-only",
+    "code-review": "user-invocable-only",
+    "claude-api": "user-invocable-only"
   },
   "promptSuggestionEnabled": false,
   "autoMemoryEnabled": false,

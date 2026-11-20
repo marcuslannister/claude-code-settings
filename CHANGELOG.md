@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `skillOverrides` to `settings.json`: `herdr`, `metrix-bar`, and the built-in `dataviz`, `keybindings-help`, `plugin-authoring`, `fewer-permission-prompts`, `init`, `security-review`, `simplify`, `code-review`, and `claude-api` are `user-invocable-only`, so their descriptions do not load at startup and `/name` still works. Skills in `/context` went from 4.7k to 2.5k tokens.
+- Add `hooks/ponytail-lean.sh`, run at SessionStart: it adds `disable-model-invocation: true` to the ponytail `gain`, `help`, `debt`, and `audit` skills, because `skillOverrides` does not apply to plugin skills. It reapplies after a plugin update and exits 1 when the `name:` line is missing.
+- Remove the `codex@openai-codex` plugin and the `openai-codex` marketplace from `settings.json`.
 - Add `hooks/nowledge-lean.sh`, run at SessionStart: it patches the installed nowledge-mem plugin so SessionStart injects a one-line search note instead of the full Context Bundle (about 6.4 KB), and UserPromptSubmit injects nothing. It reapplies the patch after a plugin update and exits 1 when the upstream code changes. `NMEM_FULL_CONTEXT=1` restores the full output.
 - Rename the `rules` pointer to `agent-rules`, because Claude Code loads every file in `rules/` at startup.
 - `block-git-destructive.sh` allows the read-only `git config [--global|--show-origin|…] core.hooksPath` and still blocks every write; the key now matches case-insensitively, which closes a bypass of the privacy guard through `core.HOOKSPATH`. A quote anywhere in the command keeps the deny, because quote removal makes `core.hooksPath ""` look like a read.
