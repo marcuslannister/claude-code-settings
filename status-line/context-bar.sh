@@ -203,32 +203,39 @@ fi
 # Rate limits (5-hour and 7-day Utilization) for the Metrix dashboard: write them
 # to a file. Needs both windows, so a partial input never replaces good data.
 # A session writes only when its own figures differ from what it wrote last
-# (marker file), so an idle session never overwrites an active session's newer figures.
+# (marker file), or when the file is missing, so an idle session never overwrites
+# an active session's newer figures.
 # shortcut: a session whose first render comes after another session's newer write
-# can overwrite it once, until that session's next refresh (at most ~10 s); no compare
-# of figures across sessions.
+# can publish its older figures. The other session's next refresh matches its own
+# marker and skips, so the older figures stay until some session's figures change;
+# no compare of figures across sessions.
 rl=$(echo "$input" | jq -c '.rate_limits
     | select(.five_hour.used_percentage != null and .five_hour.resets_at != null
         and .seven_day.used_percentage != null and .seven_day.resets_at != null)
     | {five_hour: {used_percentage: .five_hour.used_percentage, resets_at: .five_hour.resets_at},
        seven_day: {used_percentage: .seven_day.used_percentage, resets_at: .seven_day.resets_at}}' 2>/dev/null)
+# Errors here must never reach the status line: the group drops stderr, even from a failed redirect
+{
 if [[ -n "$rl" && -n "$session_id" ]]; then
     rl_mark="${TMPDIR:-/tmp}/claude-ctx/$session_id.rl"
     rl_dir="$HOME/.cache/claude-code"
     rl_prev=""
     [[ -f "$rl_mark" ]] && rl_prev=$(<"$rl_mark")
-    if [[ "$rl" != "$rl_prev" ]]; then
-        # Errors here must never reach the status line: no output, no failing exit
-        if mkdir -p "$rl_dir" "${rl_mark%/*}" 2>/dev/null &&
-            rl_tmp=$(mktemp "$rl_dir/rate-limits.XXXXXX" 2>/dev/null) &&
-            jq -nc --argjson rl "$rl" '$rl + {updated_at: (now | floor)}' > "$rl_tmp" 2>/dev/null &&
-            command mv -f "$rl_tmp" "$rl_dir/rate-limits.json" 2>/dev/null; then
-            echo "$rl" > "$rl_mark" 2>/dev/null
-        else
-            [[ -n "${rl_tmp:-}" ]] && command rm -f "$rl_tmp" 2>/dev/null
+    if [[ "$rl" != "$rl_prev" || ! -f "$rl_dir/rate-limits.json" ]]; then
+        rl_tmp=""  # set only by this run, so cleanup never removes an inherited path
+        # The marker comes first: if it cannot be written, nothing is published, so an
+        # idle session cannot publish again every 10 s. A failed publish clears the marker to retry.
+        if ! { mkdir -p "$rl_dir" "${rl_mark%/*}" &&
+            echo "$rl" > "$rl_mark" &&
+            rl_tmp=$(mktemp "$rl_dir/rate-limits.XXXXXX") &&
+            jq -nc --argjson rl "$rl" '$rl + {updated_at: (now | floor)}' > "$rl_tmp" &&
+            command mv -f "$rl_tmp" "$rl_dir/rate-limits.json"; }; then
+            [[ -n "$rl_tmp" ]] && command rm -f "$rl_tmp"
+            command rm -f "$rl_mark"
         fi
     fi
 fi
+} 2>/dev/null
 used_display=$(format_tokens "$used")
 ctx="${C_SEP}[$(build_bar "$pct")${C_SEP}]${C_VALUE} ${used_display}/${max_display} (${pct_prefix}${pct}%)"
 
