@@ -1,1 +1,1 @@
-../home/AGENTS.md
+../agent-scripts/global/AGENTS.md
