@@ -44,8 +44,10 @@ rewrite() { # rewrite <expected-command> <command>
 # `command -v` finds it. $tools holds empty stand-ins for rg, fd, eza, and sd, so
 # decision and rewrite do not depend on the machine. $bare holds only what the
 # hook runs (jq, dirname, cat) and no modern tool, so classic can test their absence.
-tools=$(mktemp -d "${TMPDIR:-/tmp}/modern-tools.XXXXXX")
-bare=$(mktemp -d "${TMPDIR:-/tmp}/modern-bare.XXXXXX")
+fixtures=$(mktemp -d "${TMPDIR:-/tmp}/hooks-fixtures.XXXXXX") || { echo "FAIL: cannot create the fixture folder"; exit 1; }
+trap 'rm -rf "$fixtures"' EXIT # later traps repeat this; an empty path above would write to /
+tools=$fixtures/tools bare=$fixtures/bare fj=$fixtures/fj
+mkdir "$tools" "$bare" "$fj" || { echo "FAIL: cannot create the fixture folders"; exit 1; }
 for t in rg fd eza sd; do printf '#!/bin/sh\n' > "$tools/$t"; chmod +x "$tools/$t"; done
 for t in jq dirname cat; do printf '#!/bin/sh\nexec "%s" "$@"\n' "$(command -v "$t")" > "$bare/$t"; chmod +x "$bare/$t"; done
 
@@ -221,7 +223,7 @@ check block-env-dump.sh deny 'echo "${GH_TOKEN}"'
 # and clean up via trap so an interrupted run can't leave stale state behind.
 export ANVIL_PROBE_CACHE
 ANVIL_PROBE_CACHE=$(mktemp "${TMPDIR:-/tmp}/anvil-probe-test.XXXXXX")
-trap 'rm -f "$ANVIL_PROBE_CACHE"' EXIT
+trap 'rm -f "$ANVIL_PROBE_CACHE"; rm -rf "$fixtures"' EXIT
 
 # The modern-CLI hook now owns exact `find` and `sed -i` rewrites.
 echo no > "$ANVIL_PROBE_CACHE"
@@ -377,7 +379,7 @@ redirect_decision allow Bash '{"command":"/usr/bin/sed -i s/a/b/ f.txt"}'
 
 # A distributed skill copy carries a marker naming its source; edits go there.
 copy_root=$(mktemp -d "${TMPDIR:-/tmp}/skill-copy-test.XXXXXX")
-trap 'rm -f "$ANVIL_PROBE_CACHE"; rm -rf "$copy_root"' EXIT
+trap 'rm -f "$ANVIL_PROBE_CACHE"; rm -rf "$copy_root" "$fixtures"' EXIT
 mkdir -p "$copy_root/copy/refs" "$copy_root/plain"
 printf '%s\nskill-matrix\n' "$copy_root/source" > "$copy_root/copy/.agent-scripts-copy"
 
@@ -439,7 +441,6 @@ handoff none 1 35; handoff none 0 50; handoff warn 1 36; handoff none 1 80
 rm -rf "$ctx_tmp"
 
 # format-json.sh must write LF. A native jq.exe on Windows writes CRLF unless lib.sh adds -b.
-fj=$(mktemp -d "${TMPDIR:-/tmp}/format-json-test.XXXXXX")
 printf '{"a":1,"b":[2,3]}\n' > "$fj/x.json"
 printf '{"tool_name":"Write","tool_input":{"file_path":"%s"}}' "$fj/x.json" | ./format-json.sh 2>/dev/null
 checks=$((checks + 1))
@@ -448,7 +449,6 @@ if [ "$((lines))" -lt 3 ] || [ "$((crs))" -ne 0 ]; then
   echo "FAIL format-json.sh: expected a formatted file with LF only, got $((lines)) lines and $((crs)) CR"
   fail=$((fail + 1))
 fi
-rm -rf "$tools" "$bare" "$fj"
 
 echo "$((checks - fail)) passed, $fail failed"
 exit $((fail > 0))
