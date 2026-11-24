@@ -202,13 +202,13 @@ fi
 
 # Rate limits (5-hour and 7-day Utilization) for the Metrix dashboard: write them
 # to a file. Needs both windows, so a partial input never replaces good data.
-# A session writes only when its own figures differ from what it wrote last
-# (marker file), or when the file is missing, so an idle session never overwrites
-# an active session's newer figures.
-# shortcut: a session whose first render comes after another session's newer write
-# can publish its older figures. The other session's next refresh matches its own
-# marker and skips, so the older figures stay until some session's figures change;
-# no compare of figures across sessions.
+# A session checks only when its own figures differ from what it wrote last
+# (marker file), or when the file is missing, and then publishes only figures newer
+# than the file's (a later resets_at, else a higher percentage). So neither an idle
+# session nor one that renders late with older figures overwrites newer figures.
+# shortcut: after an account switch whose 5-hour window resets earlier than the file's,
+# nothing is published until that window passes (delete rate-limits.json to publish
+# at once); upgrade when two accounts are used on this Mac.
 rl=$(echo "$input" | jq -c '.rate_limits
     | select(.five_hour.used_percentage != null and .five_hour.resets_at != null
         and .seven_day.used_percentage != null and .seven_day.resets_at != null)
@@ -223,13 +223,19 @@ if [[ -n "$rl" && -n "$session_id" ]]; then
     [[ -f "$rl_mark" ]] && rl_prev=$(<"$rl_mark")
     if [[ "$rl" != "$rl_prev" || ! -f "$rl_dir/rate-limits.json" ]]; then
         rl_tmp=""  # set only by this run, so cleanup never removes an inherited path
-        # The marker comes first: if it cannot be written, nothing is published, so an
-        # idle session cannot publish again every 10 s. A failed publish clears the marker to retry.
+        # Newer is decided in jq (jq.exe writes CRLF); a missing, empty or corrupt file
+        # (jq exits non-zero) counts as no old figures.
+        rl_k='[.five_hour.resets_at, .five_hour.used_percentage, .seven_day.resets_at, .seven_day.used_percentage]'
+        rl_old=$(jq -c "$rl_k" "$rl_dir/rate-limits.json") || rl_old=null
+        # The marker comes first, also when the figures are not newer: if it cannot be written,
+        # nothing is published, so an idle session cannot check again every 10 s.
+        # A failed publish clears the marker to retry.
         if ! { mkdir -p "$rl_dir" "${rl_mark%/*}" &&
             echo "$rl" > "$rl_mark" &&
-            rl_tmp=$(mktemp "$rl_dir/rate-limits.XXXXXX") &&
+            { ! echo "$rl" | jq -e --argjson old "${rl_old:-null}" "$rl_k > \$old" > /dev/null ||
+            { rl_tmp=$(mktemp "$rl_dir/rate-limits.XXXXXX") &&
             jq -nc --argjson rl "$rl" '$rl + {updated_at: (now | floor)}' > "$rl_tmp" &&
-            command mv -f "$rl_tmp" "$rl_dir/rate-limits.json"; }; then
+            command mv -f "$rl_tmp" "$rl_dir/rate-limits.json"; }; }; }; then
             [[ -n "$rl_tmp" ]] && command rm -f "$rl_tmp"
             command rm -f "$rl_mark"
         fi
