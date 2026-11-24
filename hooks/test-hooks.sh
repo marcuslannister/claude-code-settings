@@ -5,35 +5,57 @@
 # that crashes must not read as "safe" here either.
 cd "$(dirname "$0")" || exit 1
 MODERN=./enforce-modern-cli.sh
-fail=0
+fail=0 checks=0
 
-payload() { printf '{"tool_name":"Bash","tool_input":{"command":%s}}' "$(jq -Rn --arg c "$1" '$c')"; }
+payload() { printf '%s' "$1" | jq -Rsc '{tool_name:"Bash",tool_input:{command:.}}'; } # stdin, not --arg: MSYS rewrites a /usr/bin/... argument for a native jq.exe
 
 # Prints the hook's decision, or `none` when it stayed silent or emitted junk.
 verdict() { jq -r '.hookSpecificOutput.permissionDecision // "none"' 2>/dev/null <<<"$1" || echo none; }
 
 check() { # check <script> <expected: allow|deny> <command>
+  checks=$((checks + 1))
   actual=$(verdict "$(payload "$3" | "./$1" 2>/dev/null)")
   if [ "$actual" != "$2" ]; then
     echo "FAIL $1: expected $2, got $actual for: $3"
-    fail=1
+    fail=$((fail + 1))
   fi
 }
 
 decision() { # decision <expected: allow|deny> <command>
-  actual=$(verdict "$(payload "$2" | "$MODERN" 2>/dev/null)")
+  checks=$((checks + 1))
+  actual=$(verdict "$(payload "$2" | PATH="$tools:$PATH" "$MODERN" 2>/dev/null)")
   if [ "$actual" != "$1" ]; then
     echo "FAIL enforce-modern-cli.sh: expected $1, got $actual for: $2"
-    fail=1
+    fail=$((fail + 1))
   fi
 }
 
 rewrite() { # rewrite <expected-command> <command>
-  out=$(payload "$2" | "$MODERN" 2>/dev/null)
+  checks=$((checks + 1))
+  out=$(payload "$2" | PATH="$tools:$PATH" "$MODERN" 2>/dev/null)
   actual=$(jq -r '.hookSpecificOutput.updatedInput.command // empty' <<<"$out")
   if [ "$actual" != "$1" ]; then
     echo "FAIL enforce-modern-cli.sh: expected rewrite $1, got $actual for: $2"
-    fail=1
+    fail=$((fail + 1))
+  fi
+}
+
+# enforce-modern-cli.sh rewrites or denies toward a modern tool only when
+# `command -v` finds it. $tools holds empty stand-ins for rg, fd, eza, and sd, so
+# decision and rewrite do not depend on the machine. $bare holds only what the
+# hook runs (jq, dirname, cat) and no modern tool, so classic can test their absence.
+tools=$(mktemp -d "${TMPDIR:-/tmp}/modern-tools.XXXXXX")
+bare=$(mktemp -d "${TMPDIR:-/tmp}/modern-bare.XXXXXX")
+for t in rg fd eza sd; do printf '#!/bin/sh\n' > "$tools/$t"; chmod +x "$tools/$t"; done
+for t in jq dirname cat; do printf '#!/bin/sh\nexec "%s" "$@"\n' "$(command -v "$t")" > "$bare/$t"; chmod +x "$bare/$t"; done
+
+classic() { # classic <command>: without the modern tools the hook allows it unchanged
+  checks=$((checks + 1))
+  out=$(payload "$1" | PATH=$bare "$BASH" "$MODERN" 2>/dev/null)
+  actual=$(jq -r '.hookSpecificOutput | .permissionDecision + (if .updatedInput then " rewritten" else "" end)' <<<"${out:-null}" 2>/dev/null)
+  if [ "$actual" != allow ]; then
+    echo "FAIL enforce-modern-cli.sh: expected allow unchanged without modern tools, got '$actual' for: $1"
+    fail=$((fail + 1))
   fi
 }
 
@@ -282,15 +304,22 @@ check gh-json.sh deny 'gh variable list'
 check gh-json.sh deny 'gh secret list'
 check gh-json.sh allow 'gh label list --json name'
 
+# Without the modern tools on PATH, the classic commands run as typed.
+classic 'grep -r foo .'
+classic 'ls -la'
+classic 'find . -name x'
+classic 'sed -i s/a/b/ f'
+
 # Flip the isolated probe cache to 'ok' for the Anvil checks.
 REDIRECT=./redirect-to-anvil.sh
 echo ok > "$ANVIL_PROBE_CACHE"
 
 redirect_decision() { # redirect_decision <expected: allow|deny> <tool_name> <tool_input-json>
+  checks=$((checks + 1))
   actual=$(verdict "$(printf '{"tool_name":"%s","tool_input":%s}' "$2" "$3" | "$REDIRECT" 2>/dev/null)")
   if [ "$actual" != "$1" ]; then
     echo "FAIL redirect-to-anvil.sh: expected $1, got $actual for: $2 $3"
-    fail=1
+    fail=$((fail + 1))
   fi
 }
 
@@ -353,10 +382,11 @@ mkdir -p "$copy_root/copy/refs" "$copy_root/plain"
 printf '%s\nskill-matrix\n' "$copy_root/source" > "$copy_root/copy/.agent-scripts-copy"
 
 copy_decision() { # copy_decision <expected: allow|deny> <tool_name> <tool_input-json>
+  checks=$((checks + 1))
   actual=$(verdict "$(printf '{"tool_name":"%s","tool_input":%s}' "$2" "$3" | ./block-skill-copy-edit.sh 2>/dev/null)")
   if [ "$actual" != "$1" ]; then
     echo "FAIL block-skill-copy-edit.sh: expected $1, got $actual for: $2 $3"
-    fail=1
+    fail=$((fail + 1))
   fi
 }
 
@@ -378,7 +408,7 @@ copy_decision deny  mcp__anvil-emacs-eval__sexp-rename-symbol "{\"scope\":\"$cop
 copy_decision allow Edit  "{\"file_path\":\"$copy_root/plain/SKILL.md\"}"
 copy_decision allow mcp__anvil-emacs-eval__data-set-path "{\"file\":\"$copy_root/plain/x.json\",\"path\":\"a.b\"}"
 reason=$(printf '{"tool_name":"Edit","tool_input":{"file_path":"%s"}}' "$copy_root/copy/refs/notes.md" | ./block-skill-copy-edit.sh | jq -r '.hookSpecificOutput.permissionDecisionReason')
-[[ $reason == *"$copy_root/source/refs/notes.md"* ]] || { echo "FAIL block-skill-copy-edit.sh: reason does not name the source file: $reason"; fail=1; }
+checks=$((checks + 1)); [[ $reason == *"$copy_root/source/refs/notes.md"* ]] || { echo "FAIL block-skill-copy-edit.sh: reason does not name the source file: $reason"; fail=$((fail + 1)); }
 
 # readonly-search.sh: one rg, fd, or eza command, plain words and single quotes only.
 ro=readonly-search.sh
@@ -396,16 +426,29 @@ check $ro deny "rg foo && rm x"; check $ro deny $'rg foo\nrm x'; check $ro deny 
 # context-handoff.sh: warns once in herdr when the status line fill reaches 36%.
 ctx_tmp=$(mktemp -d); mkdir "$ctx_tmp/claude-ctx"
 handoff() { # handoff <expected: warn|none> <herdr-env> <fill or empty>
+  checks=$((checks + 1))
   [ -n "$3" ] && echo "$3" > "$ctx_tmp/claude-ctx/s1"
   out=$(echo '{"session_id":"s1"}' | TMPDIR="$ctx_tmp" HERDR_ENV="$2" ./context-handoff.sh 2>/dev/null)
   actual=$(jq -r 'if .hookSpecificOutput.additionalContext then "warn" else "none" end' <<<"${out:-null}")
   if [ "$actual" != "$1" ]; then
     echo "FAIL context-handoff.sh: expected $1, got $actual for herdr=$2 fill=$3"
-    fail=1
+    fail=$((fail + 1))
   fi
 }
 handoff none 1 35; handoff none 0 50; handoff warn 1 36; handoff none 1 80
-trash "$ctx_tmp"
+rm -rf "$ctx_tmp"
 
-[ "$fail" = 0 ] && echo "all hook checks passed"
-exit "$fail"
+# format-json.sh must write LF. A native jq.exe on Windows writes CRLF unless lib.sh adds -b.
+fj=$(mktemp -d "${TMPDIR:-/tmp}/format-json-test.XXXXXX")
+printf '{"a":1,"b":[2,3]}\n' > "$fj/x.json"
+printf '{"tool_name":"Write","tool_input":{"file_path":"%s"}}' "$fj/x.json" | ./format-json.sh 2>/dev/null
+checks=$((checks + 1))
+lines=$(wc -l < "$fj/x.json"); crs=$(tr -cd '\r' < "$fj/x.json" | wc -c)
+if [ "$((lines))" -lt 3 ] || [ "$((crs))" -ne 0 ]; then
+  echo "FAIL format-json.sh: expected a formatted file with LF only, got $((lines)) lines and $((crs)) CR"
+  fail=$((fail + 1))
+fi
+rm -rf "$tools" "$bare" "$fj"
+
+echo "$((checks - fail)) passed, $fail failed"
+exit $((fail > 0))
