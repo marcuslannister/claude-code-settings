@@ -7,17 +7,8 @@ set -euo pipefail
 # and the reader often sits inside `ssh host '...'`.
 # A filter such as `| rg -v 'SECRET|TOKEN'` marks the output as redacted and passes.
 source "$(dirname "$0")/lib.sh"
-command=$(jq -r '.tool_input.command // empty' <<<"$(cat)")
-kept= end=
-while IFS= read -r line; do
-  if [[ -n $end ]]; then
-    [[ ${line#"${line%%[![:space:]]*}"} == "$end" ]] && end=
-    continue
-  fi
-  kept+=$line$'\n'
-  [[ $line =~ ^[[:space:]]*cat[[:space:]]*\>\>?.*\<\<-?[[:space:]]*[\'\"]?([A-Za-z_]+) ]] && end=${BASH_REMATCH[1]}
-done <<<"$command"
-command=$kept
+# A heredoc body is data. `cat > file <<EOF` prints nothing, so its `$(...)` lines go too.
+command=$(strip_heredocs "$(jq -r '.tool_input.command // empty' <<<"$(cat)")" '(^|[;&|])[[:space:]]*cat[[:space:]]*>>?[[:space:]]*[^&[:space:]]')
 
 SQ="'"
 NAME="[^[:space:];&|\"$SQ]*"
