@@ -425,6 +425,57 @@ check $ro deny "rg foo *(e:'rm x':)"; check $ro deny 'rg "a"'; check $ro deny 'r
 check $ro deny "rg \$'\\'' ; rm x ; ''"; check $ro deny "FOO=1 rg x"; check $ro deny "rg foo =(rm x)"
 check $ro deny "rg foo && rm x"; check $ro deny $'rg foo\nrm x'; check $ro deny "rg foo & rm x"; check $ro deny "rgx foo"
 
+# A heredoc body is data: a line that starts with `set`, `env`, `git reset --hard`, or
+# `grep` is not a command. This holds for every way to write the opener, in every hook
+# that parses with read_command.
+hd_body=$'set\nenv\nexport\nprintenv\ndeclare -x\ngit reset --hard\ngit status\ngh pr view 1\ngrep -r x .'
+for hd in "<<'EOF'" '<<"EOF"' '<<\EOF' '<<EOF' '<< EOF'; do
+  hd_cmd="cat >> /tmp/x.md $hd"$'\n'"$hd_body"$'\nEOF'
+  for h in block-env-dump.sh block-git-destructive.sh gh-json.sh block-secret-file-read.sh; do
+    check $h allow "$hd_cmd"
+  done
+  decision allow "$hd_cmd"
+  check block-env-dump.sh deny "$hd_cmd"$'\nenv'          # a command after the end word is still read
+  check block-git-destructive.sh deny "$hd_cmd"$'\ngit reset --hard'
+done
+check block-env-dump.sh allow $'cat > /tmp/i.sh <<-EOF\n\tset\n\tenv\n\tEOF'
+check block-env-dump.sh deny $'cat > /tmp/i.sh <<-EOF\n\tset\n\tEOF\nenv'
+# The multi-line `sd` check reads the raw command, so it skips a body too.
+decision allow $'cat > f <<\'EOF\'\nsd \'a\nb\' file\nEOF'
+decision deny $'cat > f <<\'EOF\'\nx\nEOF\nsd \'a\nb\' file'
+# Windows: a CRLF command ends the heredoc at `EOF\r`.
+check block-git-destructive.sh allow $'cat > /tmp/x <<EOF\r\ngit reset --hard\r\nEOF\r\n'
+check block-git-destructive.sh deny $'cat > /tmp/x <<EOF\r\nx\r\nEOF\r\ngit reset --hard\r\n'
+# Two heredocs on one line: both bodies are data.
+check block-env-dump.sh allow $'cat <<\'A\' <<\'B\'\nset\nA\nenv\nB'
+check block-env-dump.sh deny $'cat <<\'A\' <<\'B\'\nset\nA\nenv\nB\nenv'
+# The command line that opens the heredoc is still checked.
+check block-git-destructive.sh deny $'git reset --hard <<\'EOF\'\nx\nEOF'
+check block-env-dump.sh deny $'env -0 && cat <<\'EOF\'\nx\nEOF'
+check block-env-dump.sh deny $'cat <<EOF $GITHUB_TOKEN\nx\nEOF'
+# An unquoted body expands: `$(...)`, a backtick, and `$VAR` still run or print.
+check block-git-destructive.sh deny $'cat <<EOF\n$(git reset --hard)\nEOF'
+check block-git-destructive.sh deny $'cat <<EOF\n`git reset --hard`\nEOF'
+check block-env-dump.sh deny $'cat <<EOF\necho $GITHUB_TOKEN\nEOF'
+check block-env-dump.sh allow $'cat <<\'EOF\'\necho $GITHUB_TOKEN\nEOF'
+check block-secret-file-read.sh deny $'cat <<EOF\n$(cat .env)\nEOF'
+check block-secret-file-read.sh deny $'cat >&2 <<EOF\n$(cat .env)\nEOF'
+check block-secret-file-read.sh allow $'cat > /tmp/x.sh <<EOF\nexport TOKEN_FILE=$HOME/.token\nEOF'
+check block-secret-file-read.sh allow $'git commit -F - <<\'EOF\'\nnote: cat .env is blocked\nEOF'
+# A shell reads the body of its heredoc as commands, so those lines stay checked.
+check block-git-destructive.sh deny $'ssh h sh -s <<\'EOF\'\ngit reset --hard\nEOF'
+check block-git-destructive.sh deny $'ssh h <<\'EOF\'\ngit reset --hard\nEOF'
+check block-git-destructive.sh deny $'cat <<\'EOF\' | bash\ngit reset --hard\nEOF'
+check block-env-dump.sh deny $'bash <<EOF\nenv\nEOF'
+# `<<` that is not a heredoc opener hides nothing: here-string, quoted text, arithmetic.
+check block-env-dump.sh allow 'cat <<< set'
+check block-git-destructive.sh deny $'cat <<< x\ngit reset --hard'
+check block-git-destructive.sh deny $'git commit -m "mention <<EOF here"\ngit reset --hard'
+check block-git-destructive.sh deny $'git commit -m "title\n\nmention <<EOF here"\ngit reset --hard'
+check block-git-destructive.sh deny $'echo $((1<<3))\ngit reset --hard'
+check block-git-destructive.sh deny $'# use <<EOF here\ngit reset --hard'
+check block-git-destructive.sh deny $'echo hi # <<EOF\ngit reset --hard'
+
 # context-handoff.sh: warns once in herdr when the status line fill reaches 36%.
 ctx_tmp=$(mktemp -d); mkdir "$ctx_tmp/claude-ctx"
 handoff() { # handoff <expected: warn|none> <herdr-env> <fill or empty>

@@ -69,7 +69,7 @@ has_multiline_sd() {
   return 1
 }
 
-if has_multiline_sd "$command"; then
+if has_multiline_sd "$(strip_heredocs "$command")"; then # a heredoc body is data, so `sd '` in it is not a command
   guard_deny "Multi-line sd can replace nothing and still exit 0. Use Edit or mcp__anvil-emacs-eval__file-replace-string for multi-line text."
 fi
 
